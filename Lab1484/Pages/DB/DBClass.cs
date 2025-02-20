@@ -17,15 +17,27 @@ namespace Lab1484.Pages.DB
         //Connection Methods:
 
         //Basic Product Reader
-        public static SqlDataReader ProductReader()
+        public static SqlDataReader ProjectReader()
         {
-            SqlCommand cmdProductRead = new SqlCommand();
-            cmdProductRead.Connection = OrgGrantDBConnection;
-            cmdProductRead.Connection.ConnectionString = OrgGrantDBConnString;
-            cmdProductRead.CommandText = "SELECT * FROM Product";
-            cmdProductRead.Connection.Open(); // Open connection here, close in Model!
+            SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
+            cmdProjectRead.Connection = OrgGrantDBConnection;
+            cmdProjectRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdProjectRead.CommandText = "SELECT * FROM Project";
+            cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
-            SqlDataReader tempReader = cmdProductRead.ExecuteReader();
+            SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
+
+            return tempReader;
+        }
+        public static SqlDataReader GrantReader()
+        {
+            SqlCommand cmdGrantRead = new SqlCommand();
+            cmdGrantRead.Connection = OrgGrantDBConnection;
+            cmdGrantRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdGrantRead.CommandText = "SELECT * FROM Grant";
+            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
 
             return tempReader;
         }

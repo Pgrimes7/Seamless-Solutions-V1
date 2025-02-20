@@ -7,5 +7,9 @@
         public double ProjectCost { get; set; }
 
         public String? AssignedEmployee { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime DateUpdated { get; set; }
+
+        public DateTime DateDue { get; set; }
     }
 }
