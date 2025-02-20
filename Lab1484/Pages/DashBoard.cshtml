@@ -1,0 +1,18 @@
+﻿@page
+@model Lab1484.Pages.DashBoardModel
+@{
+	<h1>HTML Controls and Multiple Forms on a Single Page</h1>
+	<br />
+	<h2>Select List: Single Selection Only</h2><!-- drop down with active projects-->
+    <form asp-page-handler="ProjectSelect" method="post">
+        <select asp-for="SelectedProject" class="form-select">
+            <option selected>CIS 454</option>
+            <option value="1">CIS 484</option>
+            <option value="2">CIS 331</option>
+            <option value="3">CIS 330</option>
+        </select>
+        <br />
+        <button class="btn btn-primary">Submit Selection</button>
+    </form>
+
+}
