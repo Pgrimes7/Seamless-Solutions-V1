@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices;
+using Lab1484.Pages.DataClasses;
+using Lab1484.Pages.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -5,21 +8,17 @@ namespace Lab1484.Pages
 {
     public class CreateUserModel : PageModel
     {
-        /*Needs:Radio button for int permission/usertype
-        Input for email
-        Name input first and last
-        float input for phone numbers?
-         
-         */ 
+        [BindProperty]
+        public User NewUser { get; set; } = new User();
 
-
-
-
-        public void OnGet()
+        public IActionResult OnPost()
         {
+            
 
+            DBClass.InsertUser(NewUser);
+            DBClass.OrgGrantDBConnection.Close();
 
-
+            return RedirectToPage("/CreateUser");
         }
     }
 }

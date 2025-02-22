@@ -2,33 +2,38 @@
 @model Lab1484.Pages.CreateUserModel
 @{
     <html>
-
     <head>
-        <title>
-            HTML Clearing the input field
-        </title>
+        <title>Create User</title>
     </head>
-
-    <body style="text-align:center">
-
-        <h2>
-            Clearing Input Field
-        </h2>
-        <p>
-            The below input field will be
-            cleared, as soon as the button
-            gets clicked
-        </p>
-        <button onclick="document.getElementById(
-                'myInput').value = ''">
+    <body>
+        <form id="addUserForm" method="post">
+            <label>User Type:</label>
+            <br />
+            <input asp-for="NewUser.UserType" type="radio" value="0" /> Admin
+            <br />
+            <input asp-for="NewUser.UserType" type="radio" value="1" /> Faculty
+            <br />
+            <input asp-for="NewUser.UserType" type="radio" value="2" /> Employee
+            <br />
+            <input asp-for="NewUser.UserType" type="radio" value="3" /> Representative
+            <br />
+            <span asp-validation-for="NewUser.UserType" class="text-danger"></span>
+            <br />
+            <input type="text" asp-for="NewUser.firstName" placeholder="First Name" />
+            <br />
+            <input type="text" asp-for="NewUser.lastName" placeholder="Last Name" width="100" />
+            <br />
+            <input type="text" asp-for="NewUser.email" placeholder="Email" />
+            <br />
+            <input type="text" asp-for="NewUser.phone" placeholder="Phone Number" />
+            <br />
+            <button type="submit" class="btn btn-secondary">Add User -> </button>
+            <br />
+            <a asp-page="/Dashboard">Cancel</a>
+        </form>
+        <button onclick="document.getElementById('addUserForm').reset();">
             Click here to clear
         </button>
-        <input type="text"
-               value="GeeksForGeeks"
-               id="myInput">
     </body>
-
     </html>
-
-
 }

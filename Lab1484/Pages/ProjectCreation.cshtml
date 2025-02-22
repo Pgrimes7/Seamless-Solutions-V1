@@ -1,19 +1,63 @@
 ﻿@page
 @model Lab1484.Pages.ProjectCreationModel
 @{
-	<h1>Create a Project</h1>
-	<p>Please complete all forms</p>
-	//Project Name (textbox)
-
-	//Project Admin (drop down)
-
-	//Project Cost (textbox)
-
-	//Due Date (textbox (include formatting guidelines))
-
-	//Assign Employees (radiobuttons or dropdown that allows multiple selections)
-
-	//Project Status (radiobuttons)
-
+	<form asp-page="LabA_Probc" method="post">
+		<h1>Create a Project</h1>
+		<p>Please complete all forms</p>
+		@*//Project Name (textbox)*@
+		Project Name
+		<br />
+		<input type="text" asp-for="ProjectName" placeholder="Project name" />
+		<span asp-validation-for="ProjectName" class="text-danger"></span>
+		<br />
+		<br />
+		@*Project Admin (drop down)*@
+		Project Admin
+		<select asp-for="AdminID" class="form-select">
+			@{
+				foreach (var admin in Model.AdminList) {
+					<option value="@admin.userID">@admin.firstName @admin.lastName</option>
+				}
+			}
+		</select>
+		<br />
+		@*//Project Cost (textbox)*@
+		Project Cost
+		<br />
+		<input type="number" step="0.01" asp-for="ProjectCost" min="0" placeholder="Cost of Project" />
+		<span asp-validation-for="ProjectCost" class="text-danger"></span>
+		<br />
+		<br />
+		@*//Due Date (textbox (include formatting guidelines))*@
+		Due Date
+		<br />
+		<input type="date" asp-for="DueDate"/>
+		<br />
+		@*//Assign Employees (radiobuttons or dropdown that allows multiple selections)*@
+		<br />
+		Assign Employees (hold ctrl to select multiple)
+		<select class="form-select" asp-for="EmployeeList" multiple>
+			@{
+				foreach (var employee in Model.EmployeeList)
+				{
+					<option value="@employee.userID">@employee.firstName @employee.lastName</option>
+				}
+			}
+		</select>
+		<br />
+		@*//Project Status (radiobuttons)*@
+		Project Status
+		<div>
+			<input type="radio" asp-for="ProjectStatus" value="Not Begun" /> Incomplete
+		</div>
+		<div>
+			<input type="radio" asp-for="ProjectStatus" value="Incomplete" /> In Progress
+		</div>
+		<div>
+			<input type="radio" asp-for="ProjectStatus" value="Complete" /> Complete
+		</div>
+		<br />
+		<input type="submit" value="Create Project" />
+	</form>
 
 }

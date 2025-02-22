@@ -56,6 +56,74 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
 
+       
+        public static void InsertUser(User p)
+        {
+
+            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            {
+                OrgGrantDBConnection.Close();
+            }
+            string sqlQuery = "INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES (";
+            sqlQuery += p.UserType + ", '" 
+                + p.firstName 
+                + "', '"
+                + p.lastName 
+                + "', '" 
+                + p.email + "', '"
+                + p.phone + "');";
+
+
+
+            SqlCommand cmdProjectRead = new SqlCommand();
+            cmdProjectRead.Connection = OrgGrantDBConnection;
+            cmdProjectRead.Connection.ConnectionString =
+            OrgGrantDBConnString;
+            cmdProjectRead.CommandText = sqlQuery;
+            cmdProjectRead.Connection.Open();
+            cmdProjectRead.ExecuteNonQuery();
+
+        }
+        public static SqlDataReader AdminReader()
+        {
+            SqlCommand cmdAdminRead = new SqlCommand();
+            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            {
+                OrgGrantDBConnection.Close();
+            }
+            cmdAdminRead.Connection = OrgGrantDBConnection;
+            cmdAdminRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdAdminRead.CommandText = "SELECT Users.userID, Users.firstName, Users.lastName " +
+                "FROM Users " +
+                "WHERE Users.userType=0;";
+            cmdAdminRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdAdminRead.ExecuteReader();
+
+            return tempReader;
+            //cmdAdminRead.Connection.Close();
+        }
+
+        public static SqlDataReader EmployeeReader()
+        {
+            SqlCommand cmdEmployeeRead = new SqlCommand();
+            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            {
+                OrgGrantDBConnection.Close();
+            }
+            cmdEmployeeRead.Connection = OrgGrantDBConnection;
+            cmdEmployeeRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdEmployeeRead.CommandText = "SELECT Users.userID, Users.firstName, Users.lastName " +
+                "FROM Users " +
+                "WHERE Users.userType=2;";
+            cmdEmployeeRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdEmployeeRead.ExecuteReader();
+
+            return tempReader;
+            //cmdAdminRead.Connection.Close();
+        }
+
         public static void InsertProject(Project p)
         {
             String sqlQuery = "INSERT INTO Project" +
@@ -76,3 +144,4 @@ namespace Lab1484.Pages.DB
         }
     }
 }
+
