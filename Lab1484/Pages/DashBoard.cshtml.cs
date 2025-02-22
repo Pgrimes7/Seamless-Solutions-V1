@@ -34,11 +34,9 @@ namespace Lab1484.Pages
                 {
                     ProjectID = Int32.Parse(productReader["ProjectID"].ToString()),
                     ProjectName = productReader["ProjectName"].ToString(),
-                    ProjectCost = Double.Parse(productReader["ProjectCost"].ToString()),
-                    AssignedEmployee = productReader["AssignedEmployee"].ToString(),
-                    DateDue = DateTime.Parse(productReader["DateDue"].ToString()),//subject to change
-                    DateCreated = DateTime.Parse(productReader["DateDue"].ToString()),
-                    DateUpdated = DateTime.Parse(productReader["DateDue"].ToString()),
+                    DateDue = productReader.GetDateTime(productReader.GetOrdinal("dueDate")), // Directly retrieve as DateTime
+                    DateCreated = productReader.GetDateTime(productReader.GetOrdinal("dateCreated")), // Directly retrieve as DateTime
+                    DateCompleted = productReader.GetDateTime(productReader.GetOrdinal("dateCompleted"))
                 });
             }
 

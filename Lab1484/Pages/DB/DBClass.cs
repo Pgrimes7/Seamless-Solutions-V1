@@ -20,6 +20,10 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader ProjectReader()
         {
             SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
+            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            {
+                OrgGrantDBConnection.Close();
+            }
             cmdProjectRead.Connection = OrgGrantDBConnection;
             cmdProjectRead.Connection.ConnectionString = OrgGrantDBConnString;
             cmdProjectRead.CommandText = "SELECT * FROM Project";
@@ -28,13 +32,18 @@ namespace Lab1484.Pages.DB
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
 
             return tempReader;
+            cmdProjectRead.Connection.Close();
         }
         public static SqlDataReader GrantReader()
         {
             SqlCommand cmdGrantRead = new SqlCommand();
+            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            {
+                OrgGrantDBConnection.Close();
+            }
             cmdGrantRead.Connection = OrgGrantDBConnection;
             cmdGrantRead.Connection.ConnectionString = OrgGrantDBConnString;
-            cmdGrantRead.CommandText = "SELECT * FROM Grant";
+            cmdGrantRead.CommandText = "SELECT * FROM [Grants]";
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
