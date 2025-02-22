@@ -1,4 +1,7 @@
 --User Table
+Create DATABASE OrgGrant;
+
+USE OrgGrant;
 CREATE TABLE Users (
 	UserID INT IDENTITY(1,1) PRIMARY KEY,
 	userType INT NOT NULL, --0=Admin, 1=Faculty, 2=Employee, 3=Representative
@@ -16,6 +19,7 @@ CREATE TABLE Project (
 	dateCreated DATE,
 	dateCompleted DATE,
 	dueDate DATE,
+	ProjectName VARCHAR(50),
 	FOREIGN KEY (ProjectAdminID) REFERENCES Users(UserID),
 );
 
@@ -87,3 +91,51 @@ CREATE TABLE FacultyGrant (
 	FOREIGN KEY (GrantID) REFERENCES Grants(GrantID),
 	FOREIGN KEY (FacultyID) REFERENCES Users(UserID)
 );
+
+
+
+
+INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) 
+VALUES (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
+       (1, 'Grant', 'Gorber', 'Grant.Gorber@example.com', '234-567-8901'),
+       (2, 'Charlie', 'Brown', 'charlie.brown@example.com', '345-678-9012'),
+       (3, 'Bowwow', 'Jordan', 'Bowow@example.com', '456-789-0123'),
+	   (0, 'Boss', 'Man', 'BossMan@example.com', '123-456-7890'),
+       (1, 'Johnson', 'Brant', 'Grahhh@example.com', '234-567-8901'),
+       (2, 'Bulh', 'Gomber', 'Gomber@example.com', '345-678-9012'),
+       (3, 'Magnus', 'Yang', 'Bowow@example.com', '456-789-0123');
+INSERT INTO Project (ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, ProjectName) 
+VALUES (1, 'In Progress', '2025-01-01', '2000-10-10', '2025-12-31', 'Cancer Research'),
+       (2, 'Completed', '2024-01-01', '2024-12-31', '2024-12-31', 'Project LeBron');
+	   
+INSERT INTO EmployeeProject (ProjectID, EmployeeID) 
+VALUES (1, 2),
+       (1, 3),
+       (2, 2);
+
+INSERT INTO Tasks (ProjectID, taskDescription) 
+VALUES (1, 'Task 1 '),
+       (1, 'Task 2 '),
+       (2, 'Task 1');
+
+INSERT INTO Notes (ProjectID, noteBody) 
+VALUES (1, 'Note 1'),
+       (1, 'Note 2 '),
+       (2, 'Note 1 ');
+
+INSERT INTO BusinessPartner (RepresentativeID, firstName, lastName, orgType, businessType, statusFlag) 
+VALUES (3, 'LeBron', 'James', 'Sports', 'Athletics', 'Active'),
+       (4, 'Bob', 'Jordan', 'For-Profit', 'Technology', 'Inactive');
+
+INSERT INTO MeetingMinutes (BusinessPartnerID, minutesBody) 
+VALUES (1, 'Meeting minutes ex'),
+       (2, 'Meeting minutes ex');
+
+INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName, category, submissionDate, awardDate, grantStatus, amount) 
+VALUES (1, 1, 'Business A', 'Research', '2025-01-15', '2025-02-15', 'Approved', 50000.00),
+       (2, 2, 'Business B', 'Development', '2025-03-01', '2025-04-01', 'Pending', 75000.00);
+
+INSERT INTO FacultyGrant (GrantID, FacultyID) 
+VALUES (1, 1),
+       (1, 2),
+       (2, 1);
