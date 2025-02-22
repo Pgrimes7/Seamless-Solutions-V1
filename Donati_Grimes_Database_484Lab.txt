@@ -1,0 +1,89 @@
+--User Table
+CREATE TABLE Users (
+	UserID INT IDENTITY(1,1) PRIMARY KEY,
+	userType INT NOT NULL, --0=Admin, 1=Faculty, 2=Employee, 3=Representative
+	firstName NVARCHAR(50),
+	lastName NVARCHAR(50),
+	email NVARCHAR(50),
+	phoneNumber NVARCHAR(20)
+);
+
+--Project Table
+CREATE TABLE Project (
+	ProjectID INT IDENTITY(1,1) PRIMARY KEY,
+	ProjectAdminID INT,
+	projectStatus NVARCHAR(50),
+	dateCreated DATE,
+	dateCompleted DATE,
+	dueDate DATE,
+	FOREIGN KEY (ProjectAdminID) REFERENCES Users(UserID),
+);
+
+--EmployeeProject Table (Made so that multiple employees can be linked to a project)
+CREATE TABLE  EmployeeProject(
+	ProjectID INT,
+	EmployeeID INT,
+	PRIMARY KEY (ProjectID, EmployeeID),
+	FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID),
+	FOREIGN KEY (EmployeeID) REFERENCES Users(UserID)
+);
+
+--Tasks Table (For Projects)
+CREATE TABLE Tasks (
+	TaskID INT IDENTITY(1,1) PRIMARY KEY,
+	ProjectID INT,
+	taskDescription NVARCHAR(200),
+	FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+);
+
+--Notes Table (For Projects)
+CREATE TABLE Notes (
+	NoteID INT IDENTITY(1,1) PRIMARY KEY,
+	ProjectID INT,
+	noteBody NVARCHAR(200),
+	FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+);
+
+--BusinessPartner Table (Separate from Users to minimize the amount of permissions they have)
+CREATE TABLE BusinessPartner (
+	BusinessPartnerID INT IDENTITY(1,1) PRIMARY KEY,
+	RepresentativeID INT,
+	firstName NVARCHAR(50),
+	lastName NVARCHAR(50),
+	orgType NVARCHAR(50),
+	businessType NVARCHAR(50),
+	statusFlag NVARCHAR(50),
+	FOREIGN KEY (RepresentativeID) REFERENCES Users(UserID)
+);
+
+--MeetingMinutes Table (For BusinessPartners)
+CREATE TABLE MeetingMinutes (
+	MinutesID INT IDENTITY(1,1) PRIMARY KEY,
+	BusinessPartnerID INT,
+	minutesBody NVARCHAR(200),
+	FOREIGN KEY (BusinessPartnerID) REFERENCES BusinessPartner(BusinessPartnerID)
+);
+
+--Grant Table
+CREATE TABLE Grants (
+	GrantID INT IDENTITY(1,1) PRIMARY KEY,
+	FacultyLeadID INT,
+	BusinessPartnerID INT,
+	businessName NVARCHAR(100),
+	category NVARCHAR(50),
+	submissionDate DATE,
+	awardDate DATE,
+	grantStatus NVARCHAR(50),
+	amount FLOAT,
+	FOREIGN KEY (FacultyLeadID) REFERENCES Users(UserID),
+	FOREIGN KEY (BusinessPartnerID) REFERENCES BusinessPartner(BusinessPartnerID)
+);
+
+--FacultyGrant Table (Made so that multiple faculty members can be linked to a grant)
+CREATE TABLE FacultyGrant (
+	GrantID INT,
+	FacultyID INT,
+	PRIMARY KEY (GrantID, FacultyID),
+	FOREIGN KEY (GrantID) REFERENCES Grants(GrantID),
+	FOREIGN KEY (FacultyID) REFERENCES Users(UserID)
+);
