@@ -19,7 +19,7 @@ namespace Lab1484.Pages
         GrantList = new List<Grant>();
 
         }
-        public void OnPostProjectSelect()
+        public void OnPostProjectSelect()//Produce output after clicking on drop down project list
         {
             SelectMessage = "Selection Project was: " + SelectedProject;
         }
@@ -41,15 +41,18 @@ namespace Lab1484.Pages
                 });
             }
 
-            SqlDataReader grantReader = DBClass.GrantReader();
+            SqlDataReader grantReader = DBClass.GrantReader();//instntiates class to read grant table and produce all available summary data
             while (grantReader.Read())
             {
                 GrantList.Add(new Grant
                 {
                     GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
-                    GrantName = grantReader["GrantName"].ToString(),
-                    GrantAmount = Double.Parse(grantReader["GrantAmount"].ToString()),
-                    ProjectName = grantReader["AssignedEmployee"].ToString()
+                    businessName = grantReader["businessName"].ToString(),
+                    amount = Double.Parse(grantReader["amount"].ToString()),
+                    category = grantReader["category"].ToString(),
+                    submissionDate = grantReader.GetDateTime(grantReader.GetOrdinal("submissionDate")),
+                    awardDate = grantReader.GetDateTime(grantReader.GetOrdinal("awardDate")),
+                    facultyName = grantReader["FacultyLead"].ToString()
                 });
             }
 

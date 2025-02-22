@@ -3,7 +3,19 @@
 @{
 	<h1>OrgGrant DashBoard and Display</h1>
 	<br />
-    <h2>Product View</h2>
+    <h2>List of Currently live Projects</h2><!-- Need to fix so when selected it doesn't go to busted page'-->
+    <form asp-page-handler="SingleSelect" method="post">
+        <select asp-for="ProjectList" class="form-select">
+            @foreach (var prod in Model.ProjectList)
+            {
+                <option value="@prod.ProjectID">@prod.ProjectName</option>
+            }
+        </select>
+        <br />
+        
+    </form>
+     <br />
+     <h2>Product View</h2>
     <table class="table table-bordered table-responsive table-hover">
         <thead>
             <tr>
@@ -26,6 +38,34 @@
                         <td>@prod.DateCreated</td>
                         <td>@prod.DateCompleted</td>
                         <td>@prod.AdminName</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <h2>Grant View</h2>
+    <table class="table table-bordered table-responsive table-hover">
+        <thead>
+            <tr>
+                <th>Grant ID:</th> <!-- Creates column headers-->
+                <th>Grant Name:</th>
+                <th>Grant Amount:</th>
+                <th>Submission Date:</th>
+                <th>Award Date</th>
+                <th>Faculty Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var prod in Model.GrantList)
+                {
+                    <tr>
+                        <td class="text-danger">@prod.GrantID</td><!-- invoke data from model-->
+                        <td>@prod.businessName</td>
+                        <td>@prod.amount</td>
+                        <td>@prod.submissionDate</td>
+                        <td>@prod.awardDate</td>
+                        <td>@prod.facultyName</td>
                     </tr>
                 }
             }

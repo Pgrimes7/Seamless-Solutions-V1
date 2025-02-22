@@ -46,7 +46,9 @@ namespace Lab1484.Pages.DB
             }
             cmdGrantRead.Connection = OrgGrantDBConnection;
             cmdGrantRead.Connection.ConnectionString = OrgGrantDBConnString;
-            cmdGrantRead.CommandText = "SELECT * FROM [Grants]";
+            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead " +
+                "from Grants " +
+                "join Users ON Users.UserID = Grants.FacultyLeadID; ";
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdGrantRead.ExecuteReader();

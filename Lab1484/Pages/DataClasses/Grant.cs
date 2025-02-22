@@ -3,11 +3,25 @@
     public class Grant//needs to be reworked for GrantID
     {
         public int GrantID { get; set; }
-        public String GrantName { get; set; }
-        public double GrantAmount { get; set; }
 
-        public String? ProjectName { get; set; }
-        public DateTime DateGranted { get; set; }
-      
+        public string FacultyLeadID {  get; set; }
+
+        public string BusinessPartnerID {  get; set; }
+
+        public String businessName { get; set; }
+
+        public String? category { get; set; }
+        public DateTime submissionDate { get; set; }
+        public DateTime awardDate { get; set; }
+        public String? grantStatus { get; set; }
+        public double amount { get; set; }
+
+        public String? facultyName {get; set; }
+
+        
+    
+
+
+
     }
 }
