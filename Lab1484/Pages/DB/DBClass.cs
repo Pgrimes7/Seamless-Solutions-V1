@@ -55,5 +55,24 @@ namespace Lab1484.Pages.DB
 
             return tempReader;
         }
+
+        public static void InsertProject(Project p)
+        {
+            String sqlQuery = "INSERT INTO Project" +
+            "(ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, projectName) VALUES('";
+            sqlQuery += p.ProjectAdminID + "',";
+            sqlQuery += p.ProjectStatus + ",'";
+            sqlQuery += p.DateCreated + "')";
+            sqlQuery += p.DateCompleted + "')";
+            sqlQuery += p.DateDue + "')";
+            sqlQuery += p.ProjectName + "')";
+            SqlCommand cmdProjectRead = new SqlCommand();
+            cmdProjectRead.Connection = OrgGrantDBConnection;
+            cmdProjectRead.Connection.ConnectionString =
+            OrgGrantDBConnString;
+            cmdProjectRead.CommandText = sqlQuery;
+            cmdProjectRead.Connection.Open();
+            cmdProjectRead.ExecuteNonQuery();
+        }
     }
 }

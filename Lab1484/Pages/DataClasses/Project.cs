@@ -14,5 +14,7 @@
         public DateTime DateDue { get; set; }
 
         public String AdminName { get; set; }
+
+        public String ProjectStatus { get; set; }
     }
 }
