@@ -19,7 +19,7 @@ namespace Lab1484.Pages
         GrantList = new List<Grant>();
 
         }
-        public void OnPostProjectSelect()//Produce output after clicking on drop down project list
+        public void OnPostProjectSelect()//Produce output after clicking on drop down project list might be able to just remove since doesn't produce msg
         {
             SelectMessage = "Selection Project was: " + SelectedProject;
         }
