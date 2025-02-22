@@ -7,11 +7,12 @@
     <table class="table table-bordered table-responsive table-hover">
         <thead>
             <tr>
-                <th>Project ID:</th>
+                <th>Project ID:</th> <!-- Creates column headers-->
                 <th>Project Name:</th>
                 <th>Date Due:</th>
                 <th>Date Created:</th>
                 <th>Date Completed</th>
+                <th>Admin Name</th>
             </tr>
         </thead>
         <tbody>
@@ -19,12 +20,12 @@
                 foreach (var prod in Model.ProjectList)
                 {
                     <tr>
-                        <td class="text-danger">@prod.ProjectID</td>
+                        <td class="text-danger">@prod.ProjectID</td><!-- invoke data from model-->
                         <td>@prod.ProjectName</td>
-                        <td>@prod.DateCreated</td>
                         <td>@prod.DateDue</td>
                         <td>@prod.DateCreated</td>
                         <td>@prod.DateCompleted</td>
+                        <td>@prod.AdminName</td>
                     </tr>
                 }
             }

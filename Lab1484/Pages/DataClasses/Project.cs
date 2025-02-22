@@ -12,5 +12,7 @@
         public DateTime DateCompleted { get; set; }
 
         public DateTime DateDue { get; set; }
+
+        public String AdminName { get; set; }
     }
 }

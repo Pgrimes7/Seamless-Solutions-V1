@@ -27,7 +27,7 @@ namespace Lab1484.Pages
         public void OnGet()
         {
 
-            SqlDataReader productReader = DBClass.ProjectReader();
+            SqlDataReader productReader = DBClass.ProjectReader();//invokes data from project table
             while (productReader.Read())
             {
                 ProjectList.Add(new Project
@@ -36,7 +36,8 @@ namespace Lab1484.Pages
                     ProjectName = productReader["ProjectName"].ToString(),
                     DateDue = productReader.GetDateTime(productReader.GetOrdinal("dueDate")), // Directly retrieve as DateTime
                     DateCreated = productReader.GetDateTime(productReader.GetOrdinal("dateCreated")), // Directly retrieve as DateTime
-                    DateCompleted = productReader.GetDateTime(productReader.GetOrdinal("dateCompleted"))
+                    DateCompleted = productReader.GetDateTime(productReader.GetOrdinal("dateCompleted")),
+                    AdminName = productReader["AdminName"].ToString()
                 });
             }
 

@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using Lab1484.Pages.DataClasses;
 
 namespace Lab1484.Pages.DB
 {
@@ -26,7 +27,9 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = OrgGrantDBConnection;
             cmdProjectRead.Connection.ConnectionString = OrgGrantDBConnString;
-            cmdProjectRead.CommandText = "SELECT * FROM Project";
+            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName " +
+                "from Project " +
+                "join Users ON Users.UserID = Project.ProjectAdminID; ";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
