@@ -41,7 +41,7 @@ namespace Lab1484.Pages
                 });
             }
 
-            SqlDataReader grantReader = DBClass.GrantReader();//instntiates class to read grant table and produce all available summary data
+            SqlDataReader grantReader = DBClass.GrantReader();//instantiates class to read grant table and produce all available summary data
             while (grantReader.Read())
             {
                 GrantList.Add(new Grant
@@ -50,7 +50,7 @@ namespace Lab1484.Pages
                     businessName = grantReader["businessName"].ToString(),
                     amount = Double.Parse(grantReader["amount"].ToString()),
                     category = grantReader["category"].ToString(),
-                    submissionDate = grantReader.GetDateTime(grantReader.GetOrdinal("submissionDate")),
+                    submissionDate = grantReader.GetDateTime(grantReader.GetOrdinal("submissionDate")),//getOrdinal finds the column index then GetDateTime pulls it from the list
                     awardDate = grantReader.GetDateTime(grantReader.GetOrdinal("awardDate")),
                     facultyName = grantReader["FacultyLead"].ToString()
                 });
