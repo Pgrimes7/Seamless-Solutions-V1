@@ -33,7 +33,6 @@ namespace Lab1484.Pages
 
         public void OnGet()
         {
-
         }
 
         //public IActionResult OnPost()
