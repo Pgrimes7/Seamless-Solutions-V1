@@ -37,7 +37,7 @@ namespace Lab1484.Pages.DB
             return tempReader;
             cmdProjectRead.Connection.Close();
         }
-        public static SqlDataReader GrantReader()
+        public static SqlDataReader GrantReader()//reads grant table in sql
         {
             SqlCommand cmdGrantRead = new SqlCommand();
             if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
@@ -57,7 +57,7 @@ namespace Lab1484.Pages.DB
         }
 
        
-        public static void InsertUser(User p)
+        public static void InsertUser(User p)//inserts user into sql
         {
 
             if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
@@ -141,6 +141,24 @@ namespace Lab1484.Pages.DB
             cmdProjectRead.CommandText = sqlQuery;
             cmdProjectRead.Connection.Open();
             cmdProjectRead.ExecuteNonQuery();
+        }
+        public static SqlDataReader EmployeeProjectReader()
+        {
+            SqlCommand cmdEmployeeProjectRead = new SqlCommand();
+            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            {
+                OrgGrantDBConnection.Close();
+            }
+            cmdEmployeeProjectRead.Connection = OrgGrantDBConnection;
+            cmdEmployeeProjectRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdEmployeeProjectRead.CommandText = "SELECT EmployeeProject.* " +
+                "FROM EmployeeProject;";
+            cmdEmployeeProjectRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdEmployeeProjectRead.ExecuteReader();
+
+            return tempReader;
+            //cmdAdminRead.Connection.Close();
         }
     }
 }
