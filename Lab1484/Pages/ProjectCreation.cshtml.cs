@@ -22,6 +22,11 @@ namespace Lab1484.Pages
         public int AdminID { get; set; }
 
         [BindProperty]
+        public int EmployeeID { get; set; }
+
+        public List<Project> ProjectList { get; set; } = new List<Project>();
+
+        [BindProperty]
         public float ProjectCost { get; set; }
 
         [BindProperty]
@@ -85,8 +90,33 @@ namespace Lab1484.Pages
                     cmd.ExecuteNonQuery();
                 }
             }
+            SqlDataReader projectReader = DBClass.ProjectReader();//instntiates class to read grant table and produce all available summary data
+            while (projectReader.Read())
+            {
+                ProjectList.Add(new Project
+                {
+                    ProjectID = Int32.Parse(projectReader["ProjectID"].ToString())
+                });
+            }
+            string query2 = "INSERT INTO EmployeeProject " +
+                "(ProjectID, EmployeeID) VALUES (@ProjectID, @EmployeeID)";
+
+            using (var connection = new SqlConnection("Server=LocalHost;Database=OrgGrant;Trusted_Connection=True"))
+            {
+                connection.Open();
+
+                using (var cmd = new SqlCommand(query2, connection))
+                {
+                    cmd.Parameters.AddWithValue("@ProjectID", ProjectList[ProjectList.Count - 1].ProjectID);
+                    cmd.Parameters.AddWithValue("@EmployeeID", EmployeeID);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
 
             return Page();
         }
+
+           
+        }
     }
-}
