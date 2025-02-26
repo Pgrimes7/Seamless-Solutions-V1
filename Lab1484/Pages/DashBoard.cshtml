@@ -19,8 +19,7 @@
     <table class="table table-bordered table-responsive table-hover">
         <thead>
             <tr>
-                <th>Project ID:</th> <!-- Creates column headers-->
-                <th>Project Name:</th>
+				<th>Project Name:</th>
                 <th>Date Due:</th>
                 <th>Date Created:</th>
                 <th>Date Completed</th>
@@ -32,7 +31,6 @@
                 foreach (var prod in Model.ProjectList)
                 {
                     <tr>
-                        <td class="text-danger">@prod.ProjectID</td><!-- invoke data from model-->
                         <td>@prod.ProjectName</td>
                         <td>@prod.DateDue</td>
                         <td>@prod.DateCreated</td>
@@ -47,7 +45,6 @@
     <table class="table table-bordered table-responsive table-hover">
         <thead>
             <tr>
-                <th>Grant ID:</th> <!-- Creates column headers-->
                 <th>Grant Name:</th>
                 <th>Grant Amount:</th>
                 <th>Submission Date:</th>
@@ -60,7 +57,6 @@
                 foreach (var prod in Model.GrantList)
                 {
                     <tr>
-                        <td class="text-danger">@prod.GrantID</td><!-- invoke data from model-->
                         <td>@prod.businessName</td>
                         <td>@prod.amount</td>
                         <td>@prod.submissionDate</td>
