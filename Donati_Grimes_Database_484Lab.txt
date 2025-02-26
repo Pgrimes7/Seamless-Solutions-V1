@@ -1,7 +1,8 @@
---User Table
-Create DATABASE OrgGrant;
+CREATE DATABASE Lab2;
 
-USE OrgGrant;
+USE Lab2;
+
+--User Table
 CREATE TABLE Users (
 	UserID INT IDENTITY(1,1) PRIMARY KEY,
 	userType INT NOT NULL, --0=Admin, 1=Faculty, 2=Employee, 3=Representative
