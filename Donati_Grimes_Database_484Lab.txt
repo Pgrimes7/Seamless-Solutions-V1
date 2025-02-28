@@ -2,6 +2,20 @@ CREATE DATABASE Lab2;
 
 USE Lab2;
 
+--Credentials Table
+CREATE TABLE Credentials (
+	CredentialsID int Identity(1,1) PRIMARY KEY,
+	Username nvarchar(200),
+	Password nvarchar(200)
+);
+
+--Hashed Credentials Table
+CREATE TABLE HashedCredentials (
+	HashedCredentialsID int Identity(1,1) PRIMARY KEY,
+	Username nvarchar(200),
+	Password nvarchar(200)
+);
+
 --User Table
 CREATE TABLE Users (
 	UserID INT IDENTITY(1,1) PRIMARY KEY,
@@ -95,6 +109,16 @@ CREATE TABLE FacultyGrant (
 
 
 
+
+INSERT INTO Credentials (Username, Password) 
+VALUES ('smithto','12345'),
+	('grobergr','67890'),
+	('brownch','24680'),
+	('jordanbow','13579'),
+	('manbos','54321'),
+	('brantjo','09876'),
+	('gomberbu','08642'),
+	('yangmag','97531');
 
 INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) 
 VALUES (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
