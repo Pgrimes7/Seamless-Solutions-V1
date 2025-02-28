@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using Lab1484.Pages.DataClasses;
+using Microsoft.AspNetCore.Identity;
 
 namespace Lab1484.Pages.DB
 {
@@ -9,11 +10,11 @@ namespace Lab1484.Pages.DB
         // and retrieving data from the DB easier.
 
         // Connection Object at Data Field Level
-        public static SqlConnection OrgGrantDBConnection = new SqlConnection();
+        public static SqlConnection Lab2DBConnection = new SqlConnection();
 
         // Connection String - How to find and connect to DB
-        private static readonly String? OrgGrantDBConnString =
-            "Server=LocalHost;Database=OrgGrant;Trusted_Connection=True";
+        private static readonly String? Lab2DBConnString =
+            "Server=LocalHost;Database=Lab2;Trusted_Connection=True";
 
         //Connection Methods:
 
@@ -21,12 +22,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader ProjectReader()
         {
             SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
-            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
             {
-                OrgGrantDBConnection.Close();
+                Lab2DBConnection.Close();
             }
-            cmdProjectRead.Connection = OrgGrantDBConnection;
-            cmdProjectRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdProjectRead.Connection = Lab2DBConnection;
+            cmdProjectRead.Connection.ConnectionString = Lab2DBConnString;
             cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName " +
                 "from Project " +
                 "join Users ON Users.UserID = Project.ProjectAdminID; ";
@@ -40,12 +41,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader GrantReader()//reads grant table in sql
         {
             SqlCommand cmdGrantRead = new SqlCommand();
-            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
             {
-                OrgGrantDBConnection.Close();
+                Lab2DBConnection.Close();
             }
-            cmdGrantRead.Connection = OrgGrantDBConnection;
-            cmdGrantRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdGrantRead.Connection = Lab2DBConnection;
+            cmdGrantRead.Connection.ConnectionString = Lab2DBConnString;
             cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead " +
                 "from Grants " +
                 "join Users ON Users.UserID = Grants.FacultyLeadID; ";
@@ -60,9 +61,9 @@ namespace Lab1484.Pages.DB
         public static void InsertUser(User p)//inserts user into sql
         {
 
-            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
             {
-                OrgGrantDBConnection.Close();
+                Lab2DBConnection.Close();
             }
             string sqlQuery = "INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES (";
             sqlQuery += p.UserType + ", '" 
@@ -76,9 +77,9 @@ namespace Lab1484.Pages.DB
 
 
             SqlCommand cmdProjectRead = new SqlCommand();
-            cmdProjectRead.Connection = OrgGrantDBConnection;
+            cmdProjectRead.Connection = Lab2DBConnection;
             cmdProjectRead.Connection.ConnectionString =
-            OrgGrantDBConnString;
+            Lab2DBConnString;
             cmdProjectRead.CommandText = sqlQuery;
             cmdProjectRead.Connection.Open();
             cmdProjectRead.ExecuteNonQuery();
@@ -87,12 +88,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader AdminReader()
         {
             SqlCommand cmdAdminRead = new SqlCommand();
-            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
             {
-                OrgGrantDBConnection.Close();
+                Lab2DBConnection.Close();
             }
-            cmdAdminRead.Connection = OrgGrantDBConnection;
-            cmdAdminRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdAdminRead.Connection = Lab2DBConnection;
+            cmdAdminRead.Connection.ConnectionString = Lab2DBConnString;
             cmdAdminRead.CommandText = "SELECT Users.userID, Users.firstName, Users.lastName " +
                 "FROM Users " +
                 "WHERE Users.userType=0;";
@@ -107,12 +108,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader EmployeeReader()
         {
             SqlCommand cmdEmployeeRead = new SqlCommand();
-            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
             {
-                OrgGrantDBConnection.Close();
+                Lab2DBConnection.Close();
             }
-            cmdEmployeeRead.Connection = OrgGrantDBConnection;
-            cmdEmployeeRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdEmployeeRead.Connection = Lab2DBConnection;
+            cmdEmployeeRead.Connection.ConnectionString = Lab2DBConnString;
             cmdEmployeeRead.CommandText = "SELECT Users.userID, Users.firstName, Users.lastName " +
                 "FROM Users " +
                 "WHERE Users.userType=2;";
@@ -135,9 +136,9 @@ namespace Lab1484.Pages.DB
             sqlQuery += p.DateDue + "')";
             sqlQuery += p.ProjectName + "')";
             SqlCommand cmdProjectRead = new SqlCommand();
-            cmdProjectRead.Connection = OrgGrantDBConnection;
+            cmdProjectRead.Connection = Lab2DBConnection;
             cmdProjectRead.Connection.ConnectionString =
-            OrgGrantDBConnString;
+            Lab2DBConnString;
             cmdProjectRead.CommandText = sqlQuery;
             cmdProjectRead.Connection.Open();
             cmdProjectRead.ExecuteNonQuery();
@@ -145,12 +146,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader EmployeeProjectReader()
         {
             SqlCommand cmdEmployeeProjectRead = new SqlCommand();
-            if (OrgGrantDBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
             {
-                OrgGrantDBConnection.Close();
+                Lab2DBConnection.Close();
             }
-            cmdEmployeeProjectRead.Connection = OrgGrantDBConnection;
-            cmdEmployeeProjectRead.Connection.ConnectionString = OrgGrantDBConnString;
+            cmdEmployeeProjectRead.Connection = Lab2DBConnection;
+            cmdEmployeeProjectRead.Connection.ConnectionString = Lab2DBConnString;
             cmdEmployeeProjectRead.CommandText = "SELECT EmployeeProject.* " +
                 "FROM EmployeeProject;";
             cmdEmployeeProjectRead.Connection.Open(); // Open connection here, close in Model!
@@ -160,6 +161,52 @@ namespace Lab1484.Pages.DB
             return tempReader;
             //cmdAdminRead.Connection.Close();
         }
+
+
+        public static int LoginQuery(string loginQuery)
+        {
+            // This method expects to receive an SQL SELECT
+            // query that uses the COUNT command.
+
+            SqlCommand cmdLogin = new SqlCommand();
+            cmdLogin.Connection = Lab2DBConnection;
+            cmdLogin.Connection.ConnectionString = Lab2DBConnString;
+            cmdLogin.CommandText = loginQuery;
+            cmdLogin.Connection.Open();
+
+            // ExecuteScalar() returns back data type Object
+            // Use a typecast to convert this to an int.
+            // Method returns first column of first row.
+            int rowCount = (int)cmdLogin.ExecuteScalar();
+
+            return rowCount;
+        }
+
+
+        public static int SecureLogin(string Username, string Password)
+        {
+            string loginQuery =
+                "SELECT COUNT(*) FROM Credentials where Username = @Username and Password = @Password";
+
+            SqlCommand cmdLogin = new SqlCommand();
+            cmdLogin.Connection = Lab2DBConnection;
+            cmdLogin.Connection.ConnectionString = Lab2DBConnString;
+
+            cmdLogin.CommandText = loginQuery;
+            cmdLogin.Parameters.AddWithValue("@Username", Username);
+            cmdLogin.Parameters.AddWithValue("@Password", Password);
+
+            cmdLogin.Connection.Open();
+
+            // ExecuteScalar() returns back data type Object
+            // Use a typecast to convert this to an int.
+            // Method returns first column of first row.
+            int rowCount = (int)cmdLogin.ExecuteScalar();
+
+            return rowCount;
+        }
+
+        
     }
 }
 

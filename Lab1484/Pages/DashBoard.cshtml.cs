@@ -57,7 +57,7 @@ namespace Lab1484.Pages
             }
 
             // Close your connection in DBClass
-            DBClass.OrgGrantDBConnection.Close();
+            DBClass.Lab2DBConnection.Close();
 
         }
 

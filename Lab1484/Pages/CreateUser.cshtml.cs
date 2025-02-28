@@ -16,7 +16,7 @@ namespace Lab1484.Pages
             
 
             DBClass.InsertUser(NewUser);
-            DBClass.OrgGrantDBConnection.Close();
+            DBClass.Lab2DBConnection.Close();
 
             return RedirectToPage("/CreateUser");
         }
