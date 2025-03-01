@@ -165,6 +165,10 @@ namespace Lab1484.Pages.DB
 
         public static int LoginQuery(string loginQuery)
         {
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
             // This method expects to receive an SQL SELECT
             // query that uses the COUNT command.
 
@@ -185,6 +189,10 @@ namespace Lab1484.Pages.DB
 
         public static int SecureLogin(string Username, string Password)
         {
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
             string loginQuery =
                 "SELECT COUNT(*) FROM Credentials where Username = @Username and Password = @Password";
 
