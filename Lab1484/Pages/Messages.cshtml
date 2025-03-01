@@ -2,3 +2,27 @@
 @model Lab1484.Pages.MessagesModel
 @{
 }
+
+<h2>Inbox</h2>
+<p>You have @Model.UnreadMessagesCount unread messages.</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sender</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model.Messages)
+        {
+            <tr>
+                <td>@message.Sender</td>
+                <td>@message.Content</td>
+                <td>@message.SentDate</td>
+                <td>@(message.IsRead ? "Read" : "Unread")</td>
+            </tr>
+        }
+    </tbody>
+</table>
