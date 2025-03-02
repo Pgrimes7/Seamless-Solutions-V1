@@ -227,7 +227,7 @@ namespace Lab1484.Pages.DB
             //cmdAdminRead.Connection.Close();
         }
 
-
+        //Login methods:
         public static int LoginQuery(string loginQuery)
         {
             if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
@@ -279,7 +279,65 @@ namespace Lab1484.Pages.DB
             return rowCount;
         }
 
-        
+        //Messages methods:
+        public static int GetUnreadMessagesCount(string receiver)
+        {
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
+
+            // Query to count unread messages for the given receiver
+            string query = "SELECT COUNT(*) FROM Messages WHERE Receiver = @Receiver AND IsRead = 0";
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = Lab2DBConnection;
+            cmd.Connection.ConnectionString = Lab2DBConnString;
+            cmd.CommandText = query;
+            cmd.Parameters.AddWithValue("@Receiver", receiver);
+
+            cmd.Connection.Open();
+
+            int unreadCount = (int)cmd.ExecuteScalar();
+
+            cmd.Connection.Close(); // Close connection after execution
+
+            return unreadCount;
+        }
+
+
+        // Method to get all messages for a specific user (Receiver)
+        public static List<MessagesModel> GetUserMessages(string receiver)
+        {
+            List<MessagesModel> messages = new List<MessagesModel>();
+            string query = "SELECT * FROM Messages WHERE Receiver = @Receiver";
+
+            using (SqlConnection conn = new SqlConnection(Lab2DBConnString))  
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Receiver", receiver);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    // Populate the messages list with instances of MessageData
+                    MessagesModel message = new MessagesModel
+                    {
+                        MessageId = (int)reader["MessageId"],
+                        Sender = reader["Sender"].ToString(),
+                        Receiver = reader["Receiver"].ToString(),
+                        Content = reader["Content"].ToString(),
+                        SentDate = (DateTime)reader["Timestamp"],
+                        IsRead = (bool)reader["IsRead"]
+                    };
+                    messages.Add(message); // Add the message instance to the list
+                }
+            }
+            return messages; // Return the list of messages
+        }
+
     }
 }
 
