@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -10,6 +11,22 @@ namespace Lab1484.Pages
     {
         [BindProperty]
         public User NewUser { get; set; } = new User();
+
+        public IActionResult OnGet()
+        {
+            //Check to see if the user is logged in
+            string currentUser = HttpContext.Session.GetString("username");
+            //Redirect them if they aren't
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                //If not logged in, store the current URL and redirect to the Login page
+                string currentPath = Request.GetEncodedUrl();
+                HttpContext.Session.SetString("RedirectTo", "/CreateUser");
+                return RedirectToPage("/SecureLoginLanding");
+            }
+
+            return Page();
+        }
 
         public IActionResult OnPost()
         {
