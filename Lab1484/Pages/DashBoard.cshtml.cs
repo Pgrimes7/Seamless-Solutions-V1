@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;//Links to DB class and Dataclasses folders
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Lab1484.Pages
 {
@@ -24,8 +25,18 @@ namespace Lab1484.Pages
             SelectMessage = "Selection Project was: " + SelectedProject;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            //Check to see if the user is logged in
+            string currentUser = HttpContext.Session.GetString("username");
+            //Redirect them if they aren't
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                //If not logged in, store the current URL and redirect to the Login page
+                string currentPath = Request.GetEncodedUrl();
+                HttpContext.Session.SetString("RedirectTo", "/Dashboard");
+                return RedirectToPage("/SecureLoginLanding");
+            }
 
             SqlDataReader projectReader = DBClass.ProjectReader();//invokes data from project table
             while (projectReader.Read())
@@ -59,6 +70,7 @@ namespace Lab1484.Pages
             // Close your connection in DBClass
             DBClass.Lab2DBConnection.Close();
 
+            return Page();
         }
 
 
