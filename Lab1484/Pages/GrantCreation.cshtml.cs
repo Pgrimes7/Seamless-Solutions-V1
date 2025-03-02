@@ -11,6 +11,7 @@ namespace Lab1484.Pages
 
 
         public List<User> FacultyList { get; set; } = new List<User>();
+        public List<User> PartnerList { get; set; } = new List<User>();
 
         public void OnGet()
         {
@@ -24,7 +25,16 @@ namespace Lab1484.Pages
                     lastName = (string)facultyReader["lastName"]
                 });
             }
-
+            SqlDataReader partnerReader = DBClass.BusinessPartnerReader();//instntiates class to read grant table and produce all available summary data
+            while (partnerReader.Read())
+            {
+                PartnerList.Add(new User
+                {
+                    userID = Int32.Parse(partnerReader["BusinessPartnerID"].ToString()),//needs to be changed to businessPartner Class
+                    firstName = (string)partnerReader["firstName"],
+                    lastName = (string)partnerReader["lastName"]
+                });
+            }
 
         }
 

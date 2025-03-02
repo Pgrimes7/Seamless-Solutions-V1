@@ -12,7 +12,7 @@
 
         public String? category { get; set; }
         public DateTime submissionDate { get; set; }
-        public DateTime awardDate { get; set; }
+        public DateTime? awardDate { get; set; }
         public String? grantStatus { get; set; }
         public double amount { get; set; }
 

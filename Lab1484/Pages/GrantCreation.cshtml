@@ -11,7 +11,7 @@
 		<span asp-validation-for="NewGrant.businessName" class="text-danger"></span>
 		<br />
 		<br />
-		@*Project Admin (drop down)*@
+		@*Faculty Lead drop down (drop down)*@
 		Project Admin
 		<select asp-for="NewGrant.FacultyLeadID" class="form-select">
 			@{
@@ -20,13 +20,74 @@
 				}
 			}
 		</select>
+		<br />
+		@*Shows list of business partners to select the ID for the grant for*@
+		Business Partner
+		<select asp-for="NewGrant.BusinessPartnerID" class="form-select">
+			@{
+				foreach (var businessPartner in Model.PartnerList)
+				{
+					<option value="@businessPartner.userID">@businessPartner.firstName @businessPartner.lastName</option>
+				}
+			}
+		</select>
+		<br />
+		@*Grant Cost Number input*@
+		Grant Cost
+		<br />
+		<input type="number" step="0.01" asp-for="NewGrant.amount" min="0" placeholder="Grant Amount" />
+		<span asp-validation-for="NewGrant.amount" class="text-danger"></span>
+		<br />
+		<br />
+		
+		@*Grant Category (Drop Down menu)*@
+		Grant Category
+		
+			<select asp-for="NewGrant.category" class="form-select">
+				<option value="Research">Research</option>
+				<option value="Athletic">Athletic</option>
+				<option value="Fundraising">Fundraising</option>
+				<option value="Scholarship">Scholarship</option>
+				<option value="Other">Other</option>
+			</select>
+			<br />
+
+		@*Grant status Radio Buttons *@
+			Grant Status
+			<div>
+				<input type="radio" asp-for="NewGrant.grantStatus" value="Not Begun" /> Incomplete
+			</div>
+			<div>
+				<input type="radio" asp-for="NewGrant.grantStatus" value="Incomplete" /> In Progress
+			</div>
+			<div>
+				<input type="radio" asp-for="NewGrant.grantStatus" value="Complete" /> Complete
+			</div>
+			<br />
+
+			@*//Due Date (textbox (include formatting guidelines))*@
+			Submission Date
+			<br />
+			<input type="date" asp-for="NewGrant.submissionDate" />
+			<br />
+			@*//Due Date (textbox (include formatting guidelines))*@
+			Award Date
+			<br />
+			<input type="date" asp-for="NewGrant.awardDate" />
+			<br />
+			
+
+			<br />
+		
+		
+
+
+
+		<input type="submit" value="Create Grant" />
 
 
 
 
+	</form>
+ }
 
-
-
-		</form>
-
-}

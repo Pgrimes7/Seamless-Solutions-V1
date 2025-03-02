@@ -118,7 +118,25 @@ namespace Lab1484.Pages.DB
             return tempReader;
             //cmdAdminRead.Connection.Close();
         }
+        public static SqlDataReader BusinessPartnerReader()//reads employee table
+        {
+            SqlCommand cmdPartnerRead = new SqlCommand();
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
+            cmdPartnerRead.Connection = Lab2DBConnection;
+            cmdPartnerRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdPartnerRead.CommandText = "SELECT BusinessPartner.BusinessPartnerID, BusinessPartner.firstName," +
+                " BusinessPartner.lastName " +
+                "FROM BusinessPartner;";
+            cmdPartnerRead.Connection.Open(); // Open connection here, close in Model!
 
+            SqlDataReader tempReader = cmdPartnerRead.ExecuteReader();
+
+            return tempReader;
+            //cmdAdminRead.Connection.Close();
+        }
 
         public static void InsertProject(Project p)//inserts new project into DB
         {
