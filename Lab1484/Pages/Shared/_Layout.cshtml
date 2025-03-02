@@ -36,13 +36,28 @@
                         </li>
                     </ul>
                 </div>
-                <a asp-page="/Messages" class="btn btn-info position-relative">
-                    Inbox
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        99+
-                        <span class="visually-hidden">unread messages</span>
-                    </span>
-                </a>
+
+                @{
+                    //Check to see if the user is logged in
+                    string currentUser = Context.Session.GetString("username");
+                    //Redirect them if they aren't
+                    if (string.IsNullOrEmpty(currentUser))
+                    {
+                         <a asp-page="/Login" class="btn btn-info position-relative">Login</a>
+                    }
+
+                    else
+                    {
+                        <a asp-page="/Messages" class="btn btn-info position-relative">
+                            @currentUser
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                12
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </a>
+                    }
+                }
+                
             </div>
         </nav>
     </header>
