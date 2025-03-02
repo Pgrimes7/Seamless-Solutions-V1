@@ -1,6 +1,6 @@
 ﻿namespace Lab1484.Pages.DataClasses
 {
-    public class Grant//needs to be reworked for GrantID
+    public class Grant
     {
         public int GrantID { get; set; }
 

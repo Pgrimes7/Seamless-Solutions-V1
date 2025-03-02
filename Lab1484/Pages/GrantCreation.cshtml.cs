@@ -1,0 +1,48 @@
+using System.Data.SqlClient;
+using Lab1484.Pages.DataClasses;
+using Lab1484.Pages.DB;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace Lab1484.Pages
+{
+    public class GrantCreationModel : PageModel
+    {
+
+
+        public List<User> FacultyList { get; set; } = new List<User>();
+
+        public void OnGet()
+        {
+            SqlDataReader facultyReader = DBClass.FacultyReader();//instntiates class to read grant table and produce all available summary data
+            while (facultyReader.Read())
+            {
+                FacultyList.Add(new User
+                {
+                    userID = Int32.Parse(facultyReader["userID"].ToString()),
+                    firstName = (string)facultyReader["firstName"],
+                    lastName = (string)facultyReader["lastName"]
+                });
+            }
+
+
+        }
+
+        [BindProperty]
+
+        public Grant NewGrant { get; set; } = new Grant();
+
+        public IActionResult OnPost() {
+
+            DBClass.InsertGrant(NewGrant);
+            DBClass.Lab2DBConnection.Close();
+
+            return RedirectToPage("/GrantCreation");
+
+        }
+
+
+
+
+}
+}

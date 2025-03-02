@@ -1,12 +1,9 @@
 ﻿@page
 @model Lab1484.Pages.CreateUserModel
 @{
-    <html>
-    <head>
-        <title>Create User</title>
-    </head>
-    <body>
         <form id="addUserForm" method="post">
+        <h1>Create a User</h1>
+
             <label>User Type:</label>
             <br />
             <input asp-for="NewUser.UserType" type="radio" value="0" /> Admin
@@ -34,6 +31,4 @@
         <button onclick="document.getElementById('addUserForm').reset();">
             Click here to clear
         </button>
-    </body>
-    </html>
 }

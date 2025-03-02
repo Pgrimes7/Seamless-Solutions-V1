@@ -58,34 +58,8 @@ namespace Lab1484.Pages.DB
         }
 
        
-        public static void InsertUser(User p)//inserts user into sql
-        {
-
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
-            {
-                Lab2DBConnection.Close();
-            }
-            string sqlQuery = "INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES (";
-            sqlQuery += p.UserType + ", '" 
-                + p.firstName 
-                + "', '"
-                + p.lastName 
-                + "', '" 
-                + p.email + "', '"
-                + p.phone + "');";
-
-
-
-            SqlCommand cmdProjectRead = new SqlCommand();
-            cmdProjectRead.Connection = Lab2DBConnection;
-            cmdProjectRead.Connection.ConnectionString =
-            Lab2DBConnString;
-            cmdProjectRead.CommandText = sqlQuery;
-            cmdProjectRead.Connection.Open();
-            cmdProjectRead.ExecuteNonQuery();
-
-        }
-        public static SqlDataReader AdminReader()
+       
+        public static SqlDataReader AdminReader()//reads admin table
         {
             SqlCommand cmdAdminRead = new SqlCommand();
             if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
@@ -105,7 +79,7 @@ namespace Lab1484.Pages.DB
             //cmdAdminRead.Connection.Close();
         }
 
-        public static SqlDataReader EmployeeReader()
+        public static SqlDataReader EmployeeReader()//reads employee table
         {
             SqlCommand cmdEmployeeRead = new SqlCommand();
             if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
@@ -125,7 +99,28 @@ namespace Lab1484.Pages.DB
             //cmdAdminRead.Connection.Close();
         }
 
-        public static void InsertProject(Project p)
+        public static SqlDataReader FacultyReader()//reads employee table
+        {
+            SqlCommand cmdEmployeeRead = new SqlCommand();
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
+            cmdEmployeeRead.Connection = Lab2DBConnection;
+            cmdEmployeeRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdEmployeeRead.CommandText = "SELECT Users.userID, Users.firstName, Users.lastName " +
+                "FROM Users " +
+                "WHERE Users.userType=1;";
+            cmdEmployeeRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdEmployeeRead.ExecuteReader();
+
+            return tempReader;
+            //cmdAdminRead.Connection.Close();
+        }
+
+
+        public static void InsertProject(Project p)//inserts new project into DB
         {
             String sqlQuery = "INSERT INTO Project" +
             "(ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, projectName) VALUES('";
@@ -143,6 +138,76 @@ namespace Lab1484.Pages.DB
             cmdProjectRead.Connection.Open();
             cmdProjectRead.ExecuteNonQuery();
         }
+
+        //Inserts User into DB
+        public static void InsertUser(User p)//inserts user into sql
+        {
+
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
+            string sqlQuery = "INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES (";
+            sqlQuery += p.UserType + ", '"
+                + p.firstName
+                + "', '"
+                + p.lastName
+                + "', '"
+                + p.email + "', '"
+                + p.phone + "');";
+
+
+
+            SqlCommand cmdProjectRead = new SqlCommand();
+            cmdProjectRead.Connection = Lab2DBConnection;
+            cmdProjectRead.Connection.ConnectionString =
+            Lab2DBConnString;
+            cmdProjectRead.CommandText = sqlQuery;
+            cmdProjectRead.Connection.Open();
+            cmdProjectRead.ExecuteNonQuery();
+
+        }
+
+
+
+
+
+
+        //Inserts new grant into DB
+        public static void InsertGrant(Grant g)
+        {
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
+            string sqlQuery = "INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName," +
+                " category, submissionDate, awardDate, grantStatus, amount)" +
+                " VALUES (";
+            sqlQuery += g.FacultyLeadID + ", '"
+                + g.BusinessPartnerID
+                + "', '"
+                + g.businessName + "', '"
+                + g.category + "', '"
+                + g.submissionDate + "', '"
+                + g.awardDate + "', '"
+                + g.grantStatus + "', '"
+                + g.amount + "');";
+
+            SqlCommand cmdGrantInsert = new SqlCommand();
+            cmdGrantInsert.Connection = Lab2DBConnection;
+            cmdGrantInsert.Connection.ConnectionString = Lab2DBConnString;
+            cmdGrantInsert.CommandText = sqlQuery;
+            cmdGrantInsert.Connection.Open();
+            cmdGrantInsert.ExecuteNonQuery();
+
+
+
+        }
+
+
+
+
+
         public static SqlDataReader EmployeeProjectReader()
         {
             SqlCommand cmdEmployeeProjectRead = new SqlCommand();

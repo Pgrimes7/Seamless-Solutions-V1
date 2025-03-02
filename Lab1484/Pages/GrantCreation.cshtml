@@ -1,0 +1,32 @@
+﻿@page
+@model Lab1484.Pages.GrantCreationModel
+@{
+	<form id="ProjectCreation" asp-page="LabA_Probc" method="post">
+		<h1>Create a Grant</h1>
+		<p>Please complete all forms</p>
+		@*//Project Name (textbox)*@
+		Business Name
+		<br />
+		<input type="text" asp-for="NewGrant.businessName" placeholder="Business name" />
+		<span asp-validation-for="NewGrant.businessName" class="text-danger"></span>
+		<br />
+		<br />
+		@*Project Admin (drop down)*@
+		Project Admin
+		<select asp-for="NewGrant.FacultyLeadID" class="form-select">
+			@{
+				foreach (var faculty in Model.FacultyList) {
+					<option value="@faculty.userID">@faculty.firstName @faculty.lastName</option>
+				}
+			}
+		</select>
+
+
+
+
+
+
+
+		</form>
+
+}
