@@ -2,20 +2,6 @@ CREATE DATABASE Lab2;
 
 USE Lab2;
 
---Credentials Table
-CREATE TABLE Credentials (
-	CredentialsID int Identity(1,1) PRIMARY KEY,
-	Username nvarchar(200),
-	Password nvarchar(200)
-);
-
---Hashed Credentials Table
-CREATE TABLE HashedCredentials (
-	HashedCredentialsID int Identity(1,1) PRIMARY KEY,
-	Username nvarchar(200),
-	Password nvarchar(200)
-);
-
 --User Table
 CREATE TABLE Users (
 	UserID INT IDENTITY(1,1) PRIMARY KEY,
@@ -24,6 +10,22 @@ CREATE TABLE Users (
 	lastName NVARCHAR(50),
 	email NVARCHAR(50),
 	phoneNumber NVARCHAR(20)
+);
+
+--Credentials Table
+CREATE TABLE Credentials (
+	CredentialsID INT IDENTITY(1,1) PRIMARY KEY,
+	Username nvarchar(200),
+	Password nvarchar(200),
+	UserID INT,
+	FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+--Hashed Credentials Table
+CREATE TABLE HashedCredentials (
+	HashedCredentialsID INT IDENTITY(1,1) PRIMARY KEY,
+	Username nvarchar(200),
+	Password nvarchar(200)
 );
 
 --Project Table
@@ -35,7 +37,7 @@ CREATE TABLE Project (
 	dateCompleted DATE,
 	dueDate DATE,
 	ProjectName VARCHAR(50),
-	FOREIGN KEY (ProjectAdminID) REFERENCES Users(UserID),
+	FOREIGN KEY (ProjectAdminID) REFERENCES Users(UserID)
 );
 
 --EmployeeProject Table (Made so that multiple employees can be linked to a project)
@@ -120,16 +122,6 @@ CREATE TABLE Messages (
 
 
 
-INSERT INTO Credentials (Username, Password) 
-VALUES ('smithto','12345'),
-	('grobergr','67890'),
-	('brownch','24680'),
-	('jordanbow','13579'),
-	('manbos','54321'),
-	('brantjo','09876'),
-	('gomberbu','08642'),
-	('yangmag','97531');
-
 INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) 
 VALUES (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
        (1, 'Grant', 'Gorber', 'Grant.Gorber@example.com', '234-567-8901'),
@@ -139,6 +131,17 @@ VALUES (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
        (1, 'Johnson', 'Brant', 'Grahhh@example.com', '234-567-8901'),
        (2, 'Bulh', 'Gomber', 'Gomber@example.com', '345-678-9012'),
        (3, 'Magnus', 'Yang', 'Bowow@example.com', '456-789-0123');
+
+INSERT INTO Credentials (Username, Password, UserID) 
+VALUES ('smithto','12345',1),
+	('gorbergr','67890',2),
+	('brownch','24680',3),
+	('jordanbow','13579',4),
+	('manbos','54321',5),
+	('brantjo','09876',6),
+	('gomberbu','08642',7),
+	('yangmag','97531',8);
+
 INSERT INTO Project (ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, ProjectName) 
 VALUES (1, 'In Progress', '2025-01-01', '2000-10-10', '2025-12-31', 'Cancer Research'),
        (2, 'Completed', '2024-01-01', '2024-12-31', '2024-12-31', 'Project LeBron');
@@ -184,40 +187,3 @@ VALUES ('smithto', 'brownch', 'Just wanted to send a reminder about the project"
        ('jordanbow', 'brantjo', 'I have a question I would like to talk with you about.', 1),
 	   ('brantjo', 'jordanbow', 'When would you be available to discuss?', 0),
        ('yangmag', 'grobergr', 'Are we still able to meet about this tomorrow?', 0);
-
-
-
-UPDATE Credentials
-SET Username = 'gorbergr'
-WHERE Username = 'grobergr';
-
-ALTER TABLE Credentials
-ADD UserID INT;
-
-ALTER TABLE Credentials
-ADD CONSTRAINT FK_Credentials_Users FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE;
-
-UPDATE Credentials
-SET UserID = 1
-WHERE Username = 'smithto';
-UPDATE Credentials
-SET UserID = 2
-WHERE Username = 'gorbergr';
-UPDATE Credentials
-SET UserID = 3
-WHERE Username = 'brownch';
-UPDATE Credentials
-SET UserID = 4
-WHERE Username = 'jordanbow';
-UPDATE Credentials
-SET UserID = 5
-WHERE Username = 'manbos';
-UPDATE Credentials
-SET UserID = 6
-WHERE Username = 'brantjo';
-UPDATE Credentials
-SET UserID = 7
-WHERE Username = 'gomberbu';
-UPDATE Credentials
-SET UserID = 8
-WHERE Username = 'yangmag';
