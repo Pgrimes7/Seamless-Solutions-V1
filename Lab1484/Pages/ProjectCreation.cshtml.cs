@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -45,8 +46,19 @@ namespace Lab1484.Pages
 
         public List<User> AdminList { get; set; } = new List<User>();
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            //Check to see if the user is logged in
+            string currentUser = HttpContext.Session.GetString("username");
+            //Redirect them if they aren't
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                //If not logged in, store the current URL and redirect to the Login page
+                string currentPath = Request.GetEncodedUrl();
+                HttpContext.Session.SetString("RedirectTo", "/ProjectCreation");
+                return RedirectToPage("/SecureLoginLanding");
+            }
+
             SqlDataReader adminReader = DBClass.AdminReader();//instntiates class to read grant table and produce all available summary data
             while (adminReader.Read())
             {
@@ -67,6 +79,7 @@ namespace Lab1484.Pages
                     lastName = (string)employeeReader["lastName"]
                 });
             }
+            return Page();
         }
 
         public IActionResult OnPost()
