@@ -35,5 +35,17 @@ namespace Lab1484.Pages
 
             return RedirectToPage("/CreateUser");
         }
+
+        public IActionResult OnPostPopulateHandler()
+        {
+            ModelState.Clear();
+            NewUser.UserType = 3;
+            NewUser.firstName = "Rob";
+            NewUser.lastName = "Johnson";
+            NewUser.email = "robjohnson@example.com";
+            NewUser.phone = "123-246-2864";
+
+            return Page();
+        }
     }
 }
