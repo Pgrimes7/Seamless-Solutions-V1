@@ -18,7 +18,8 @@ namespace Lab1484.Pages
             else
             {
                 HttpContext.Session.SetString("LoginError", "You must login to access that page!");
-                return RedirectToPage("/Login");
+
+                return Page();
             }
         }
     }

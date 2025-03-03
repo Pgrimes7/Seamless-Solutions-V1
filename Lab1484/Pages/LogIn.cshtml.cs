@@ -22,18 +22,18 @@ namespace Lab1484.Pages
                 HttpContext.Session.SetString("username", Username);
                 ViewData["LoginMessage"] = "Login Successful!";
 
-                // Get the stored redirect URL
-                string redirectTo = HttpContext.Session.GetString("RedirectTo");
+                // Redirect user to dashboard
+                //string redirectTo = HttpContext.Session.GetString("RedirectTo");
 
                 // If the user directly visited the login page (no URL was stored), redirect to the homepage
-                if (string.IsNullOrEmpty(redirectTo))
-                {
-                    return RedirectToPage("/Index");
-                }
+                //if (string.IsNullOrEmpty(redirectTo))
+                //{
+                    return RedirectToPage("/Dashboard");
+                //}
 
 
                 // Otherwise, redirect to the originally intended page
-                return RedirectToPage(redirectTo);
+                //return RedirectToPage(redirectTo);
             }
             else
             {

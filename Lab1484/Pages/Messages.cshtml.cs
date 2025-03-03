@@ -24,10 +24,7 @@ namespace Lab1484.Pages
             //Redirect them if they aren't
             if (string.IsNullOrEmpty(currentUser))
             {
-                //If not logged in, store the current URL and redirect to the Login page
-                string currentPath = Request.GetEncodedUrl();
-                HttpContext.Session.SetString("RedirectTo", "/Messages");
-                return RedirectToPage("/SecureLoginLanding");
+                return RedirectToPage("/Login");
             }
 
             //Get and display unread messages
