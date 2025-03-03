@@ -1,0 +1,12 @@
+﻿@page
+@model Lab1484.Pages.LogoutModel
+@{
+}
+
+@{
+    if (HttpContext.Session.GetString("username") == null)
+    {
+        <p class="text-success">@ViewData["LogoutMessage"]</p>
+    }
+   
+}
