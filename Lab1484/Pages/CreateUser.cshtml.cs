@@ -28,7 +28,10 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
-            
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
             DBClass.InsertUser(NewUser);
             DBClass.Lab2DBConnection.Close();
@@ -49,6 +52,13 @@ namespace Lab1484.Pages
             NewUser.password = "67478";
 
             return Page();
+        }
+        public IActionResult OnPostClear()
+        {
+            // Clears the form 
+            ModelState.Clear();
+            NewUser = new User();
+            return RedirectToPage();
         }
     }
 }
