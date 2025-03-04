@@ -28,9 +28,9 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = Lab2DBConnection;
             cmdProjectRead.Connection.ConnectionString = Lab2DBConnString;
-            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName " +
+            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Notes.noteBody " +
                 "from Project " +
-                "join Users ON Users.UserID = Project.ProjectAdminID; ";
+                "join Users ON Users.UserID = Project.ProjectAdminID join Notes ON Notes.ProjectID = Project.ProjectID; ";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();

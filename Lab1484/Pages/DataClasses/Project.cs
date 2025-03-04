@@ -16,5 +16,7 @@
         public String AdminName { get; set; }
 
         public String ProjectStatus { get; set; }
+
+        public String noteBody { get; set; }
     }
 }

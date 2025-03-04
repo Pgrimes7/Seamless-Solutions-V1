@@ -85,7 +85,7 @@ namespace Lab1484.Pages
                 "(ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, projectName)" +
                 " VALUES (@ProjectAdminID, @ProjectStatus, @DateCreated, @CompletionDate, @DueDate, @ProjectName);";
 
-            using (var connection = new SqlConnection("Server=LocalHost;Database=OrgGrant;Trusted_Connection=True"))
+            using (var connection = new SqlConnection("Server=LocalHost;Database=Lab2;Trusted_Connection=True"))
             {
                 connection.Open();
 
@@ -112,7 +112,7 @@ namespace Lab1484.Pages
             string query2 = "INSERT INTO EmployeeProject " +
                 "(ProjectID, EmployeeID) VALUES (@ProjectID, @EmployeeID)";
 
-            using (var connection = new SqlConnection("Server=LocalHost;Database=OrgGrant;Trusted_Connection=True"))
+            using (var connection = new SqlConnection("Server=LocalHost;Database=Lab2;Trusted_Connection=True"))
             {
                 connection.Open();
 
