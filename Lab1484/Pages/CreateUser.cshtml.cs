@@ -36,6 +36,7 @@ namespace Lab1484.Pages
             return RedirectToPage("/CreateUser");
         }
 
+        //Method with sample data for the populate button
         public IActionResult OnPostPopulateHandler()
         {
             ModelState.Clear();
