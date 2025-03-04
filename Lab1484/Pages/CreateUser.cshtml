@@ -27,11 +27,13 @@
 		    <input type="text" asp-for="NewUser.username" placeholder="Username" />
             <br />
 		    <input type="text" asp-for="NewUser.password" placeholder="Password" />
+            <br />
             <button type="submit" class="btn btn-secondary">Add User -> </button>
             <br />
             <button asp-page="CreateUser" asp-page-handler="PopulateHandler" class="btn btn-danger" formnovalidate>Populate</button>
             <br />
             <a asp-page="/Dashboard">Cancel</a>
+            <br />
         <button type="submit" asp-page-handler="Clear" class="btn btn-secondary">Click here to clear</button>
         </form>
 }

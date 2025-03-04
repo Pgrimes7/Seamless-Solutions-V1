@@ -1,31 +1,28 @@
 ﻿@page
-@model Lab1484.Pages.MessagesModel
+@model Lab1484.Pages.SentMessageModel
 @{
 }
 
-<h1>Inbox</h1>
+<h1>Sent Messages</h1>
 <h2>
-    <a asp-page="SentMessage" class="btn btn-secondary">Sent Items</a>
+    <a asp-page="Message" class="btn btn-secondary">Received Items</a>
     <a asp-page="NewMessage" class="btn btn-secondary">New Message</a>
 </h2>
-<p>You have @Model.UnreadMessagesCount unread messages.</p>
 <table class="table">
     <thead>
         <tr>
-            <th>Sender</th>
+            <th>Receiver</th>
             <th>Message</th>
             <th>Date</th>
-            <th>Status</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var message in Model.Messages)
         {
             <tr>
-                <td>@message.Sender</td>
+                <td>@message.Receiver</td>
                 <td>@message.Content</td>
                 <td>@message.SentDate</td>
-                <td>@(message.IsRead ? "Read" : "Unread")</td>
             </tr>
         }
     </tbody>
