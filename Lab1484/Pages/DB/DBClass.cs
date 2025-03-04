@@ -165,22 +165,29 @@ namespace Lab1484.Pages.DB
             {
                 Lab2DBConnection.Close();
             }
-            string sqlQuery = "INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES (";
-            sqlQuery += p.UserType + ", '"
-                + p.firstName
-                + "', '"
-                + p.lastName
-                + "', '"
-                + p.email + "', '"
-                + p.phone + "');";
+            string sqlQuery = @"
+             INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
+             VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
 
+             DECLARE @UserIDLogin INT;
+             SET @UserIDLogin = SCOPE_IDENTITY();
 
+            INSERT INTO Credentials (UserID, Username, Password)
+            VALUES (@UserIDLogin, @Username, @Password);";
 
             SqlCommand cmdProjectRead = new SqlCommand();
             cmdProjectRead.Connection = Lab2DBConnection;
             cmdProjectRead.Connection.ConnectionString =
             Lab2DBConnString;
             cmdProjectRead.CommandText = sqlQuery;
+
+            cmdProjectRead.Parameters.AddWithValue("@UserType", p.UserType);
+            cmdProjectRead.Parameters.AddWithValue("@firstName", p.firstName);
+            cmdProjectRead.Parameters.AddWithValue("@lastName", p.lastName);
+            cmdProjectRead.Parameters.AddWithValue("@email", p.email);
+            cmdProjectRead.Parameters.AddWithValue("@phoneNumber", p.phone);
+            cmdProjectRead.Parameters.AddWithValue("@Username", p.username);
+            cmdProjectRead.Parameters.AddWithValue("@Password", p.password);
             cmdProjectRead.Connection.Open();
             cmdProjectRead.ExecuteNonQuery();
 
