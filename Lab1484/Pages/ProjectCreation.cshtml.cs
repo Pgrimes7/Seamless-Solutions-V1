@@ -127,7 +127,64 @@ namespace Lab1484.Pages
 
             return Page();
         }
+        
 
-           
+        //Method with sample data for the populate button
+        public IActionResult OnPostPopulateHandler()
+        {
+            ModelState.Clear();
+            ProjectName = "Sample Project";
+
+            //Admin to use as sample data
+            SqlDataReader adminReader = DBClass.AdminReader();//instntiates class to read grant table and produce all available summary data
+            while (adminReader.Read())
+            {
+                AdminList.Add(new User
+                {
+                    userID = Int32.Parse(adminReader["userID"].ToString()),
+                    firstName = (string)adminReader["firstName"],
+                    lastName = (string)adminReader["lastName"]
+                });
+                if (AdminList != null && AdminList.Count > 0)
+                {
+                    // Select the first Admin as a sample
+                    var selectedPartner = AdminList.FirstOrDefault();
+                    if (selectedPartner != null)
+                    {
+                        AdminID = selectedPartner.userID;
+                    }
+                }
+            }
+
+            ProjectCost = 50000;
+            DueDate = DateTime.Now.AddMonths(6);
+
+            //Employee to use as sample data
+            SqlDataReader employeeReader = DBClass.EmployeeReader();//instntiates class to read grant table and produce all available summary data
+            while (employeeReader.Read())
+            {
+                EmployeeList.Add(new User
+                {
+                    userID = Int32.Parse(employeeReader["userID"].ToString()),
+                    firstName = (string)employeeReader["firstName"],
+                    lastName = (string)employeeReader["lastName"]
+                });
+                if (EmployeeList != null && EmployeeList.Count > 0)
+                {
+                    // Select the first Admin as a sample
+                    var selectedPartner = EmployeeList.FirstOrDefault();
+                    if (selectedPartner != null)
+                    {
+                        EmployeeID = selectedPartner.userID;
+                    }
+                }
+            }
+
+            ProjectStatus = "Incomplete";
+
+            return Page();
         }
+
+
+    }
     }
