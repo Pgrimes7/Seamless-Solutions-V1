@@ -328,7 +328,7 @@ namespace Lab1484.Pages.DB
         public static List<MessagesModel> GetUserMessages(string receiver)
         {
             List<MessagesModel> messages = new List<MessagesModel>();
-            string query = "SELECT * FROM Messages WHERE Receiver = @Receiver";
+            string query = "SELECT * FROM Messages WHERE Receiver = @Receiver ORDER BY TimeStamp DESC";
 
             using (SqlConnection conn = new SqlConnection(Lab2DBConnString))  
             {
@@ -356,6 +356,93 @@ namespace Lab1484.Pages.DB
             return messages; // Return the list of messages
         }
 
+        public static List<MessagesModel> GetUserSentMessages(string sender)
+        {
+            List<MessagesModel> messages = new List<MessagesModel>();
+            string query = "SELECT * FROM Messages WHERE Sender = @Sender ORDER BY TimeStamp DESC";
+
+            using (SqlConnection conn = new SqlConnection(Lab2DBConnString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Sender", sender);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    // Populate the messages list with instances of MessageData
+                    MessagesModel message = new MessagesModel
+                    {
+                        MessageId = (int)reader["MessageId"],
+                        Sender = reader["Sender"].ToString(),
+                        Receiver = reader["Receiver"].ToString(),
+                        Content = reader["Content"].ToString(),
+                        SentDate = (DateTime)reader["Timestamp"],
+                        IsRead = (bool)reader["IsRead"]
+                    };
+                    messages.Add(message); // Add the message instance to the list
+                }
+            }
+            return messages; // Return the list of messages
+        }
+
+        public static SqlDataReader MessageReader()
+        {
+            SqlCommand cmdMessageRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
+            cmdMessageRead.Connection = Lab2DBConnection;
+            cmdMessageRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdMessageRead.CommandText = "Select Messages.* FROM Messages;";
+            cmdMessageRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdMessageRead.ExecuteReader();
+
+            return tempReader;
+            cmdMessageRead.Connection.Close();
+        }
+
+        public static SqlDataReader CredentialsReader()
+        {
+            SqlCommand cmdCredentialsRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
+            cmdCredentialsRead.Connection = Lab2DBConnection;
+            cmdCredentialsRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdCredentialsRead.CommandText = "Select Credentials.Username FROM Credentials;";
+            cmdCredentialsRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdCredentialsRead.ExecuteReader();
+
+            return tempReader;
+            cmdCredentialsRead.Connection.Close();
+        }
+
+        //Inserts new message into DB
+        public static void InsertMessage(Message m)
+        {
+            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab2DBConnection.Close();
+            }
+            string sqlQuery = "INSERT INTO Messages (Sender, Receiver, Content)" +
+                " VALUES (@Sender, @Receiver, @Content)";
+            
+            using (SqlCommand cmdMessageInsert = new SqlCommand(sqlQuery, Lab2DBConnection))
+            {
+                cmdMessageInsert.Parameters.AddWithValue("@Sender", m.Sender);
+                cmdMessageInsert.Parameters.AddWithValue("@Receiver", m.Receiver);
+                cmdMessageInsert.Parameters.AddWithValue("@Content", m.Content);
+
+                cmdMessageInsert.Connection.Open();
+                cmdMessageInsert.ExecuteNonQuery();
+            }
+        }
     }
 }
 

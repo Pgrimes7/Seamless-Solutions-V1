@@ -1,0 +1,24 @@
+﻿@page
+@model Lab1484.Pages.NewMessageModel
+@{
+}
+
+
+<form id="NewMessage" asp-page="NewMessage" method="post">
+	<h1>New Message</h1>
+	Receiver
+	<select asp-for="NewMessage.Receiver" class="form-select">
+		@{
+			foreach (var username in Model.CredentialsList)
+			{
+				<option value="@username.Username">@username.Username</option>
+			}
+		}
+	</select>
+	<br />
+	Message Content
+	<textarea asp-for="NewMessage.Content" class="form-control" rows="5" cols="50" placeholder="Enter Message Content"></textarea>
+	<span asp-validation-for="NewMessage.Content" class="text-danger"></span>
+	<br />
+	<input type="submit" value="Send Message" />
+</form>

@@ -28,7 +28,7 @@ namespace Lab1484.Pages
                 // If the user directly visited the login page (no URL was stored), redirect to the homepage
                 if (string.IsNullOrEmpty(redirectTo))
                 {
-                    return RedirectToPage("/Index");
+                    return RedirectToPage("/DashBoard");
                 }
 
 
