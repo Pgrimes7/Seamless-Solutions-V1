@@ -19,13 +19,11 @@ namespace Lab1484.Pages
             //Redirect them if they aren't
             if (string.IsNullOrEmpty(currentUser))
             {
-                //If not logged in, store the current URL and redirect to the Login page
-                string currentPath = Request.GetEncodedUrl();
-                HttpContext.Session.SetString("RedirectTo", "/CreateUser");
-                return RedirectToPage("/SecureLoginLanding");
+                return RedirectToPage("/Login");
             }
 
             return Page();
+            
         }
 
         public IActionResult OnPost()
@@ -36,6 +34,18 @@ namespace Lab1484.Pages
             DBClass.Lab2DBConnection.Close();
 
             return RedirectToPage("/CreateUser");
+        }
+
+        public IActionResult OnPostPopulateHandler()
+        {
+            ModelState.Clear();
+            NewUser.UserType = 3;
+            NewUser.firstName = "Rob";
+            NewUser.lastName = "Johnson";
+            NewUser.email = "robjohnson@example.com";
+            NewUser.phone = "123-246-2864";
+
+            return Page();
         }
     }
 }

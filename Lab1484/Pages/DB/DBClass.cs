@@ -305,6 +305,7 @@ namespace Lab1484.Pages.DB
         }
 
         //Messages methods:
+        // Method to get the count of unread messages for the current user
         public static int GetUnreadMessagesCount(string receiver)
         {
             if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
@@ -337,7 +338,7 @@ namespace Lab1484.Pages.DB
             List<MessagesModel> messages = new List<MessagesModel>();
             string query = "SELECT * FROM Messages WHERE Receiver = @Receiver";
 
-            using (SqlConnection conn = new SqlConnection(Lab2DBConnString))  
+            using (SqlConnection conn = new SqlConnection(Lab2DBConnString))
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Receiver", receiver);
@@ -363,6 +364,9 @@ namespace Lab1484.Pages.DB
             return messages; // Return the list of messages
         }
 
+
     }
+
 }
+
 

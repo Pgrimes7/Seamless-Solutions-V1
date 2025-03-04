@@ -11,4 +11,10 @@
         <a asp-page="DBLogin" asp-route-logout="true">Logout of application -></a>
     }
 
+    else
+    {
+        <p>@ViewData["LoginError"]</p>
+        //<a asp-page="/Logout" class="btn btn-primary position-relative">CLick here to log in.</a>
+    }
+
 }

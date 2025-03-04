@@ -26,9 +26,12 @@
             <br />
             <button type="submit" class="btn btn-secondary">Add User -> </button>
             <br />
+            <button asp-page="CreateUser" asp-page-handler="PopulateHandler" class="btn btn-danger" formnovalidate>Populate</button>
+            <br />
             <a asp-page="/Dashboard">Cancel</a>
         </form>
         <button onclick="document.getElementById('addUserForm').reset();">
             Click here to clear
         </button>
 }
+<button class="btn btn-primary" type="submit">Button</button>
