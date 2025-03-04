@@ -32,8 +32,6 @@
             <button asp-page="CreateUser" asp-page-handler="PopulateHandler" class="btn btn-danger" formnovalidate>Populate</button>
             <br />
             <a asp-page="/Dashboard">Cancel</a>
+        <button type="submit" asp-page-handler="Clear" class="btn btn-secondary">Click here to clear</button>
         </form>
-        <button onclick="document.getElementById('addUserForm').reset();">
-            Click here to clear
-        </button>
 }

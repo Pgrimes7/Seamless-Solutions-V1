@@ -1,3 +1,4 @@
+using System.Data;
 using System.Runtime.InteropServices;
 using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
@@ -45,7 +46,16 @@ namespace Lab1484.Pages
             NewUser.lastName = "Johnson";
             NewUser.email = "robjohnson@example.com";
             NewUser.phone = "123-246-2864";
+            NewUser.username = "username";
+            NewUser.password = "password12345";
 
+            return Page();
+        }
+        public IActionResult OnPostClear()
+        {
+            // Clears the form 
+            ModelState.Clear();
+            NewUser = new User();
             return Page();
         }
     }

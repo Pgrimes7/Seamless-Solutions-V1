@@ -64,7 +64,7 @@ namespace Lab1484.Pages
         }
         
 
-        //Method with sample data for the populate button
+        //Method with sample data for the populate button, curretnly sets page to population data and is stuck, will be patched lab3
         public IActionResult OnPostPopulateHandler()
         {
             ModelState.Clear();
@@ -120,7 +120,7 @@ namespace Lab1484.Pages
 
             return Page();
         }
-
+       
 
 
 
