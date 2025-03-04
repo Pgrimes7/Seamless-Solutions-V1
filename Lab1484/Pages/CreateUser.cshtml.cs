@@ -46,7 +46,7 @@ namespace Lab1484.Pages
             NewUser.email = "robjohnson@example.com";
             NewUser.phone = "123-246-2864";
             NewUser.username = "johnsron";
-            NewUser.password = 67478;
+            NewUser.password = "67478";
 
             return Page();
         }
