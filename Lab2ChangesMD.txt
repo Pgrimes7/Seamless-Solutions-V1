@@ -1,0 +1,347 @@
+In LogIn.cshtml.cs, in OnPost change "return RedirectToPage("/Index");" to "return RedirectToPage("/DashBoard");"
+
+
+If you didn't make any changes to _Layout.cshtml paste this over what's already in there:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Lab1484</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Lab1484.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">D.G.S. Lab 2</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/DashBoard">DashBoard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ProjectCreation">Create Project</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/GrantCreation">Create Grant</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/CreateUser">Create User</a>
+                        </li>
+                    </ul>
+                </div>
+
+                @{
+                    //Check to see if the user is logged in
+                    string currentUser = Context.Session.GetString("username");
+                    //Redirect them if they aren't
+                    if (string.IsNullOrEmpty(currentUser))
+                    {
+                         <a asp-page="/Login" class="btn btn-info position-relative">Login</a>
+                    }
+
+                    else
+                    {
+                        <a asp-page="/Messages" class="btn btn-info position-relative">
+                            @currentUser
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                !
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </a>
+                    }
+                }
+                
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Lab1484 - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+Right Click DataClasses, Add New Class called "Credentials.cs", paste following:
+namespace Lab1484.Pages.DataClasses
+{
+    public class Credentials
+    {
+        public int CredentialsID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public int UserID { get; set; }
+    }
+}
+
+
+Right Click DataClasses, Add New Class called "Message.cs", paste following:
+namespace Lab1484.Pages.DataClasses
+{
+    public class Message
+    {
+        public string Sender { get; set; }
+        public string Receiver { get; set; }
+        public string Content { get; set; }
+
+    }
+}
+
+
+Right Click Pages, Add New Razor Page called "NewMessage", paste following into NewMessage.cshtml:
+@page
+@model Lab1484.Pages.NewMessageModel
+@{
+}
+
+
+<form id="NewMessage" asp-page="NewMessage" method="post">
+	<h1>New Message</h1>
+	Receiver
+	<select asp-for="NewMessage.Receiver" class="form-select">
+		@{
+			foreach (var username in Model.CredentialsList)
+			{
+				<option value="@username.Username">@username.Username</option>
+			}
+		}
+	</select>
+	<br />
+	Message Content
+	<textarea asp-for="NewMessage.Content" class="form-control" rows="5" cols="50" placeholder="Enter Message Content"></textarea>
+	<span asp-validation-for="NewMessage.Content" class="text-danger"></span>
+	<br />
+	<input type="submit" value="Send Message" />
+</form>
+
+
+Paste Following into NewMessage.cshtml.cs:
+using System.Data.SqlClient;
+using Lab1484.Pages.DataClasses;
+using Lab1484.Pages.DB;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace Lab1484.Pages
+{
+    public class NewMessageModel : PageModel
+    {
+        public List<Credentials> CredentialsList { get; set; } = new List<Credentials>();
+
+        [BindProperty]
+        public Message NewMessage { get; set; } = new Message();
+
+        public void OnGet()
+        {
+            string currentUser = HttpContext.Session.GetString("username");
+            SqlDataReader credentialsReader = DBClass.CredentialsReader();//instntiates class to read grant table and produce all available summary data
+            while (credentialsReader.Read())
+            {
+                CredentialsList.Add(new Credentials
+                {
+                    Username = (string)credentialsReader["Username"],
+                });
+            }
+        }
+
+        public IActionResult OnPost()
+        {
+            string currentUser = HttpContext.Session.GetString("username");
+            NewMessage.Sender = (string)currentUser;
+            DBClass.InsertMessage(NewMessage);
+            DBClass.Lab2DBConnection.Close();
+
+            return RedirectToPage("/SentMessage");
+        }
+    }
+}
+
+
+Right Click Pages, Add New Razor Page called "SentMessage", paste following into SentMessage.cshtml:
+@page
+@model Lab1484.Pages.SentMessageModel
+@{
+}
+
+<h1>Sent Messages</h1>
+<h2>
+    <a asp-page="Message" class="btn btn-secondary">Received Items</a>
+    <a asp-page="NewMessage" class="btn btn-secondary">New Message</a>
+</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Receiver</th>
+            <th>Message</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model.Messages)
+        {
+            <tr>
+                <td>@message.Receiver</td>
+                <td>@message.Content</td>
+                <td>@message.SentDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+Paste following into SentMessage.cshtml.cs:
+using Lab1484.Pages.DB;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace Lab1484.Pages
+{
+    public class SentMessageModel : PageModel
+    {
+        public int MessageId { get; set; }
+        public string Sender { get; set; }
+        public string Receiver { get; set; }
+        public string Content { get; set; }
+        public DateTime SentDate { get; set; }
+        public bool IsRead { get; set; }
+        public int UnreadMessagesCount { get; set; }
+        public List<MessagesModel> Messages { get; set; } = new List<MessagesModel>();
+
+        public IActionResult OnGet()
+        {
+            //Check to see if the user is logged in
+            string currentUser = HttpContext.Session.GetString("username");
+            //Redirect them if they aren't
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                //If not logged in, store the current URL and redirect to the Login page
+                string currentPath = Request.GetEncodedUrl();
+                HttpContext.Session.SetString("RedirectTo", "/Messages");
+                return RedirectToPage("/SecureLoginLanding");
+            }
+
+            // Load messages for the user
+            Messages = DBClass.GetUserSentMessages(currentUser);
+
+            return Page();
+        }
+    }
+}
+
+
+In DBClass, paste following into the bottom:
+public static List<MessagesModel> GetUserSentMessages(string sender)
+{
+    List<MessagesModel> messages = new List<MessagesModel>();
+    string query = "SELECT * FROM Messages WHERE Sender = @Sender ORDER BY TimeStamp DESC";
+
+    using (SqlConnection conn = new SqlConnection(Lab2DBConnString))
+    {
+        SqlCommand cmd = new SqlCommand(query, conn);
+        cmd.Parameters.AddWithValue("@Sender", sender);
+
+        conn.Open();
+        SqlDataReader reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            // Populate the messages list with instances of MessageData
+            MessagesModel message = new MessagesModel
+            {
+                MessageId = (int)reader["MessageId"],
+                Sender = reader["Sender"].ToString(),
+                Receiver = reader["Receiver"].ToString(),
+                Content = reader["Content"].ToString(),
+                SentDate = (DateTime)reader["Timestamp"],
+                IsRead = (bool)reader["IsRead"]
+            };
+            messages.Add(message); // Add the message instance to the list
+        }
+    }
+    return messages; // Return the list of messages
+}
+
+public static SqlDataReader MessageReader()
+{
+    SqlCommand cmdMessageRead = new SqlCommand();//Make new sqlCommand object
+    if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+    {
+        Lab2DBConnection.Close();
+    }
+    cmdMessageRead.Connection = Lab2DBConnection;
+    cmdMessageRead.Connection.ConnectionString = Lab2DBConnString;
+    cmdMessageRead.CommandText = "Select Messages.* FROM Messages;";
+    cmdMessageRead.Connection.Open(); // Open connection here, close in Model!
+
+    SqlDataReader tempReader = cmdMessageRead.ExecuteReader();
+
+    return tempReader;
+    cmdMessageRead.Connection.Close();
+}
+
+public static SqlDataReader CredentialsReader()
+{
+    SqlCommand cmdCredentialsRead = new SqlCommand();//Make new sqlCommand object
+    if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+    {
+        Lab2DBConnection.Close();
+    }
+    cmdCredentialsRead.Connection = Lab2DBConnection;
+    cmdCredentialsRead.Connection.ConnectionString = Lab2DBConnString;
+    cmdCredentialsRead.CommandText = "Select Credentials.Username FROM Credentials;";
+    cmdCredentialsRead.Connection.Open(); // Open connection here, close in Model!
+
+    SqlDataReader tempReader = cmdCredentialsRead.ExecuteReader();
+
+    return tempReader;
+    cmdCredentialsRead.Connection.Close();
+}
+
+//Inserts new message into DB
+public static void InsertMessage(Message m)
+{
+    if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+    {
+        Lab2DBConnection.Close();
+    }
+    string sqlQuery = "INSERT INTO Messages (Sender, Receiver, Content)" +
+        " VALUES (@Sender, @Receiver, @Content)";
+    
+    using (SqlCommand cmdMessageInsert = new SqlCommand(sqlQuery, Lab2DBConnection))
+    {
+        cmdMessageInsert.Parameters.AddWithValue("@Sender", m.Sender);
+        cmdMessageInsert.Parameters.AddWithValue("@Receiver", m.Receiver);
+        cmdMessageInsert.Parameters.AddWithValue("@Content", m.Content);
+
+        cmdMessageInsert.Connection.Open();
+        cmdMessageInsert.ExecuteNonQuery();
+    }
+}
+
+
+In DBClass, change GetUserMessages "string query" to string query = "SELECT * FROM Messages WHERE Receiver = @Receiver ORDER BY TimeStamp DESC";
