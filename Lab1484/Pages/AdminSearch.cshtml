@@ -1,0 +1,65 @@
+@page
+@model AdminSearchModel
+@{
+    ViewData["Title"] = "Admin Search";
+}
+
+<h2>Admin Search</h2>
+
+<form method="get">
+    <label>Search:</label>
+    <input type="text" name="SearchQuery" value="@Model.SearchQuery" />
+
+    <label>Type:</label>
+    <select name="TypeFilter">
+        <option value="">All</option>
+        <option value="Project">Project</option>
+        <option value="Grant">Grant</option>
+        <option value="Faculty">Faculty</option>
+        <option value="BusinessPartner">Business Partner</option>
+    </select>
+
+    <label>Status:</label>
+    <select name="StatusFilter">
+        <option value="">All</option>
+        <option value="Active">Active</option>
+        <option value="Completed">Completed</option>
+        <option value="Pending">Pending</option>
+    </select>
+
+    <label>Start Date:</label>
+    <input type="date" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+
+    <label>End Date:</label>
+    <input type="date" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+
+    <button type="submit">Search</button>
+</form>
+
+@if (Model.SearchResults.Count > 0)
+{
+    <h3>Search Results</h3>
+    <table>
+        <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+        </tr>
+        @foreach (var result in Model.SearchResults)
+        {
+            <tr>
+                <td>@result.Type</td>
+                <td>@result.Name</td>
+                <td>@result.Status</td>
+                <td>@(result.StartDate.HasValue ? result.StartDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
+                <td>@(result.EndDate.HasValue ? result.EndDate.Value.ToString("yyyy-MM-dd") : "N/A")</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No results found.</p>
+}
