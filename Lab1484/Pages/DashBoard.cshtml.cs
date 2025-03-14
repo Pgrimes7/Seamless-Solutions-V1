@@ -66,7 +66,7 @@ namespace Lab1484.Pages
             }
 
             // Close your connection in DBClass
-            DBClass.Lab2DBConnection.Close();
+            DBClass.Lab3DBConnection.Close();
 
             return Page();
         }

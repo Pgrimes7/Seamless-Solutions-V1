@@ -12,11 +12,15 @@ namespace Lab1484.Pages.DB
         // Connection Object at Data Field Level
         public static SqlConnection Lab3DBConnection = new SqlConnection();
 
+        //A second Connection Object at Data Field Level
+        public static SqlConnection AUTHDBConnection = new SqlConnection();
+
+
         // Connection String - How to find and connect to DB
         private static readonly String? Lab3DBConnString =
             "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-        // A secon connection String
+        // A second connection String
         // For Hashed Passwords
         private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
@@ -454,6 +458,64 @@ namespace Lab1484.Pages.DB
                 cmdMessageInsert.Connection.Open();
                 cmdMessageInsert.ExecuteNonQuery();
             }
+        }
+
+
+
+        //Methods for Creating a User and Login with Password Hashing
+
+        public static bool HashedParameterLogin(string Username, string Password)
+        {
+            string loginQuery =
+                "SELECT Password FROM HashedCredentials WHERE Username = @Username";
+
+            SqlCommand cmdLogin = new SqlCommand();
+            cmdLogin.Connection = Lab3DBConnection;
+            cmdLogin.Connection.ConnectionString = AuthConnString;
+
+            cmdLogin.CommandText = loginQuery;
+            cmdLogin.Parameters.AddWithValue("@Username", Username);
+
+            cmdLogin.Connection.Open();
+
+            // ExecuteScalar() returns back data type Object
+            // Use a typecast to convert this to an int.
+            // Method returns first column of first row.
+            SqlDataReader hashReader = cmdLogin.ExecuteReader();
+            if (hashReader.Read())
+            {
+                string correctHash = hashReader["Password"].ToString();
+
+                if (PasswordHash.ValidatePassword(Password, correctHash))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        public static void CreateHashedUser(string Username, string Password)
+        {
+            string loginQuery =
+                "INSERT INTO HashedCredentials (Username,Password) values (@Username, @Password)";
+
+            SqlCommand cmdLogin = new SqlCommand();
+            cmdLogin.Connection = Lab3DBConnection;
+            cmdLogin.Connection.ConnectionString = AuthConnString;
+
+            cmdLogin.CommandText = loginQuery;
+            cmdLogin.Parameters.AddWithValue("@Username", Username);
+            cmdLogin.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(Password));
+
+            cmdLogin.Connection.Open();
+
+            // ExecuteScalar() returns back data type Object
+            // Use a typecast to convert this to an int.
+            // Method returns first column of first row.
+            cmdLogin.ExecuteNonQuery();
+
         }
 
     }
