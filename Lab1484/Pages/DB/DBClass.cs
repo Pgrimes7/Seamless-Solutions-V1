@@ -503,8 +503,7 @@ namespace Lab1484.Pages.DB
              INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
              VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
 
-             DECLARE @UserID INT;
-             SELECT @UserID = SCOPE_IDENTITY();";
+             SELECT SCOPE_IDENTITY();";
 
             SqlCommand cmdUserInsert = new SqlCommand();
             cmdUserInsert.Connection = Lab3DBConnection;
@@ -518,7 +517,6 @@ namespace Lab1484.Pages.DB
 
             cmdUserInsert.Connection.Open();
             
-
 
             int userID = Convert.ToInt32(cmdUserInsert.ExecuteScalar());
 
