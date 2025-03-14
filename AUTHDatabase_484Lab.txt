@@ -4,7 +4,8 @@ USE AUTH;
 
 --Hashed Credentials Table
 CREATE TABLE HashedCredentials (
-	UserID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	HashedID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	UserID INT,
 	Username nvarchar(50),
 	Password nvarchar(MAX)
 );
