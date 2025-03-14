@@ -10,11 +10,19 @@ namespace Lab1484.Pages.DB
         // and retrieving data from the DB easier.
 
         // Connection Object at Data Field Level
-        public static SqlConnection Lab2DBConnection = new SqlConnection();
+        public static SqlConnection Lab3DBConnection = new SqlConnection();
+
+        //A second Connection Object at Data Field Level
+        public static SqlConnection AUTHDBConnection = new SqlConnection();
+
 
         // Connection String - How to find and connect to DB
-        private static readonly String? Lab2DBConnString =
-            "Server=LocalHost;Database=Lab2;Trusted_Connection=True";
+        private static readonly String? Lab3DBConnString =
+            "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+
+        // A second connection String
+        // For Hashed Passwords
+        private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
         //Connection Methods:
 
@@ -22,12 +30,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader ProjectReader()
         {
             SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdProjectRead.Connection = Lab2DBConnection;
-            cmdProjectRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdProjectRead.Connection = Lab3DBConnection;
+            cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
             cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Notes.noteBody " +
                 "from Project " +
                 "join Users ON Users.UserID = Project.ProjectAdminID join Notes ON Notes.ProjectID = Project.ProjectID; ";
@@ -41,12 +49,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader GrantReader()//reads grant table in sql
         {
             SqlCommand cmdGrantRead = new SqlCommand();
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdGrantRead.Connection = Lab2DBConnection;
-            cmdGrantRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdGrantRead.Connection = Lab3DBConnection;
+            cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
             cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead " +
                 "from Grants " +
                 "join Users ON Users.UserID = Grants.FacultyLeadID; ";
@@ -62,12 +70,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader AdminReader()//reads admin table
         {
             SqlCommand cmdAdminRead = new SqlCommand();
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdAdminRead.Connection = Lab2DBConnection;
-            cmdAdminRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdAdminRead.Connection = Lab3DBConnection;
+            cmdAdminRead.Connection.ConnectionString = Lab3DBConnString;
             cmdAdminRead.CommandText = "SELECT Users.userID, Users.firstName, Users.lastName " +
                 "FROM Users " +
                 "WHERE Users.userType=0;";
@@ -82,12 +90,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader EmployeeReader()//reads employee table
         {
             SqlCommand cmdEmployeeRead = new SqlCommand();
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdEmployeeRead.Connection = Lab2DBConnection;
-            cmdEmployeeRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdEmployeeRead.Connection = Lab3DBConnection;
+            cmdEmployeeRead.Connection.ConnectionString = Lab3DBConnString;
             cmdEmployeeRead.CommandText = "SELECT Users.userID, Users.firstName, Users.lastName " +
                 "FROM Users " +
                 "WHERE Users.userType=2;";
@@ -102,12 +110,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader FacultyReader()//reads employee table
         {
             SqlCommand cmdEmployeeRead = new SqlCommand();
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdEmployeeRead.Connection = Lab2DBConnection;
-            cmdEmployeeRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdEmployeeRead.Connection = Lab3DBConnection;
+            cmdEmployeeRead.Connection.ConnectionString = Lab3DBConnString;
             cmdEmployeeRead.CommandText = "SELECT Users.userID, Users.firstName, Users.lastName " +
                 "FROM Users " +
                 "WHERE Users.userType=1;";
@@ -121,12 +129,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader BusinessPartnerReader()//reads employee table
         {
             SqlCommand cmdPartnerRead = new SqlCommand();
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdPartnerRead.Connection = Lab2DBConnection;
-            cmdPartnerRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdPartnerRead.Connection = Lab3DBConnection;
+            cmdPartnerRead.Connection.ConnectionString = Lab3DBConnString;
             cmdPartnerRead.CommandText = "SELECT BusinessPartner.BusinessPartnerID, BusinessPartner.firstName," +
                 " BusinessPartner.lastName " +
                 "FROM BusinessPartner;";
@@ -149,9 +157,9 @@ namespace Lab1484.Pages.DB
             sqlQuery += p.DateDue + "')";
             sqlQuery += p.ProjectName + "')";
             SqlCommand cmdProjectRead = new SqlCommand();
-            cmdProjectRead.Connection = Lab2DBConnection;
+            cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString =
-            Lab2DBConnString;
+            Lab3DBConnString;
             cmdProjectRead.CommandText = sqlQuery;
             cmdProjectRead.Connection.Open();
             cmdProjectRead.ExecuteNonQuery();
@@ -161,9 +169,9 @@ namespace Lab1484.Pages.DB
         public static void InsertUser(User p)//inserts user into sql
         {
 
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
             string sqlQuery = @"
              INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
@@ -176,9 +184,9 @@ namespace Lab1484.Pages.DB
             VALUES (@UserIDLogin, @Username, @Password);";
 
             SqlCommand cmdProjectRead = new SqlCommand();
-            cmdProjectRead.Connection = Lab2DBConnection;
+            cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString =
-            Lab2DBConnString;
+            Lab3DBConnString;
             cmdProjectRead.CommandText = sqlQuery;
 
             cmdProjectRead.Parameters.AddWithValue("@UserType", p.UserType);
@@ -201,9 +209,9 @@ namespace Lab1484.Pages.DB
         //Inserts new grant into DB
         public static void InsertGrant(Grant g)
         {
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
             string sqlQuery = "INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName," +
                 " category, submissionDate, awardDate, grantStatus, amount)" +
@@ -211,8 +219,8 @@ namespace Lab1484.Pages.DB
            
 
             SqlCommand cmdGrantInsert = new SqlCommand();
-            cmdGrantInsert.Connection = Lab2DBConnection;
-            cmdGrantInsert.Connection.ConnectionString = Lab2DBConnString;
+            cmdGrantInsert.Connection = Lab3DBConnection;
+            cmdGrantInsert.Connection.ConnectionString = Lab3DBConnString;
             cmdGrantInsert.CommandText = sqlQuery;
             cmdGrantInsert.Parameters.AddWithValue("@FacultyLeadID", g.FacultyLeadID);
             cmdGrantInsert.Parameters.AddWithValue("@businessPartnerID", g.BusinessPartnerID);
@@ -237,12 +245,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader EmployeeProjectReader()
         {
             SqlCommand cmdEmployeeProjectRead = new SqlCommand();
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdEmployeeProjectRead.Connection = Lab2DBConnection;
-            cmdEmployeeProjectRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdEmployeeProjectRead.Connection = Lab3DBConnection;
+            cmdEmployeeProjectRead.Connection.ConnectionString = Lab3DBConnString;
             cmdEmployeeProjectRead.CommandText = "SELECT EmployeeProject.* " +
                 "FROM EmployeeProject;";
             cmdEmployeeProjectRead.Connection.Open(); // Open connection here, close in Model!
@@ -256,16 +264,16 @@ namespace Lab1484.Pages.DB
         //Login methods:
         public static int LoginQuery(string loginQuery)
         {
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
             // This method expects to receive an SQL SELECT
             // query that uses the COUNT command.
 
             SqlCommand cmdLogin = new SqlCommand();
-            cmdLogin.Connection = Lab2DBConnection;
-            cmdLogin.Connection.ConnectionString = Lab2DBConnString;
+            cmdLogin.Connection = Lab3DBConnection;
+            cmdLogin.Connection.ConnectionString = Lab3DBConnString;
             cmdLogin.CommandText = loginQuery;
             cmdLogin.Connection.Open();
 
@@ -280,16 +288,16 @@ namespace Lab1484.Pages.DB
 
         public static int SecureLogin(string Username, string Password)
         {
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
             string loginQuery =
                 "SELECT COUNT(*) FROM Credentials where Username = @Username and Password = @Password";
 
             SqlCommand cmdLogin = new SqlCommand();
-            cmdLogin.Connection = Lab2DBConnection;
-            cmdLogin.Connection.ConnectionString = Lab2DBConnString;
+            cmdLogin.Connection = Lab3DBConnection;
+            cmdLogin.Connection.ConnectionString = Lab3DBConnString;
 
             cmdLogin.CommandText = loginQuery;
             cmdLogin.Parameters.AddWithValue("@Username", Username);
@@ -309,17 +317,17 @@ namespace Lab1484.Pages.DB
         // Method to get the count of unread messages for the current user
         public static int GetUnreadMessagesCount(string receiver)
         {
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
 
             // Query to count unread messages for the given receiver
             string query = "SELECT COUNT(*) FROM Messages WHERE Receiver = @Receiver AND IsRead = 0";
 
             SqlCommand cmd = new SqlCommand();
-            cmd.Connection = Lab2DBConnection;
-            cmd.Connection.ConnectionString = Lab2DBConnString;
+            cmd.Connection = Lab3DBConnection;
+            cmd.Connection.ConnectionString = Lab3DBConnString;
             cmd.CommandText = query;
             cmd.Parameters.AddWithValue("@Receiver", receiver);
 
@@ -339,7 +347,7 @@ namespace Lab1484.Pages.DB
             List<MessagesModel> messages = new List<MessagesModel>();
             string query = "SELECT * FROM Messages WHERE Receiver = @Receiver ORDER BY TimeStamp DESC";
 
-            using (SqlConnection conn = new SqlConnection(Lab2DBConnString))
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Receiver", receiver);
@@ -370,7 +378,7 @@ namespace Lab1484.Pages.DB
             List<MessagesModel> messages = new List<MessagesModel>();
             string query = "SELECT * FROM Messages WHERE Sender = @Sender ORDER BY TimeStamp DESC";
 
-            using (SqlConnection conn = new SqlConnection(Lab2DBConnString))
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Sender", sender);
@@ -399,12 +407,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader MessageReader()
         {
             SqlCommand cmdMessageRead = new SqlCommand();//Make new sqlCommand object
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdMessageRead.Connection = Lab2DBConnection;
-            cmdMessageRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdMessageRead.Connection = Lab3DBConnection;
+            cmdMessageRead.Connection.ConnectionString = Lab3DBConnString;
             cmdMessageRead.CommandText = "Select Messages.* FROM Messages;";
             cmdMessageRead.Connection.Open(); // Open connection here, close in Model!
 
@@ -417,12 +425,12 @@ namespace Lab1484.Pages.DB
         public static SqlDataReader CredentialsReader()
         {
             SqlCommand cmdCredentialsRead = new SqlCommand();//Make new sqlCommand object
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
-            cmdCredentialsRead.Connection = Lab2DBConnection;
-            cmdCredentialsRead.Connection.ConnectionString = Lab2DBConnString;
+            cmdCredentialsRead.Connection = Lab3DBConnection;
+            cmdCredentialsRead.Connection.ConnectionString = Lab3DBConnString;
             cmdCredentialsRead.CommandText = "Select Credentials.Username FROM Credentials;";
             cmdCredentialsRead.Connection.Open(); // Open connection here, close in Model!
 
@@ -435,14 +443,14 @@ namespace Lab1484.Pages.DB
         //Inserts new message into DB
         public static void InsertMessage(Message m)
         {
-            if (Lab2DBConnection.State == System.Data.ConnectionState.Open)
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
-                Lab2DBConnection.Close();
+                Lab3DBConnection.Close();
             }
             string sqlQuery = "INSERT INTO Messages (Sender, Receiver, Content)" +
                 " VALUES (@Sender, @Receiver, @Content)";
 
-            using (SqlCommand cmdMessageInsert = new SqlCommand(sqlQuery, Lab2DBConnection))
+            using (SqlCommand cmdMessageInsert = new SqlCommand(sqlQuery, Lab3DBConnection))
             {
                 cmdMessageInsert.Parameters.AddWithValue("@Sender", m.Sender);
                 cmdMessageInsert.Parameters.AddWithValue("@Receiver", m.Receiver);
@@ -451,6 +459,64 @@ namespace Lab1484.Pages.DB
                 cmdMessageInsert.Connection.Open();
                 cmdMessageInsert.ExecuteNonQuery();
             }
+        }
+
+
+
+        //Methods for Creating a User and Login with Password Hashing
+
+        public static bool HashedParameterLogin(string Username, string Password)
+        {
+            string loginQuery =
+                "SELECT Password FROM HashedCredentials WHERE Username = @Username";
+
+            SqlCommand cmdLogin = new SqlCommand();
+            cmdLogin.Connection = Lab3DBConnection;
+            cmdLogin.Connection.ConnectionString = AuthConnString;
+
+            cmdLogin.CommandText = loginQuery;
+            cmdLogin.Parameters.AddWithValue("@Username", Username);
+
+            cmdLogin.Connection.Open();
+
+            // ExecuteScalar() returns back data type Object
+            // Use a typecast to convert this to an int.
+            // Method returns first column of first row.
+            SqlDataReader hashReader = cmdLogin.ExecuteReader();
+            if (hashReader.Read())
+            {
+                string correctHash = hashReader["Password"].ToString();
+
+                if (PasswordHash.ValidatePassword(Password, correctHash))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        public static void CreateHashedUser(string Username, string Password)
+        {
+            string loginQuery =
+                "INSERT INTO HashedCredentials (Username,Password) values (@Username, @Password)";
+
+            SqlCommand cmdLogin = new SqlCommand();
+            cmdLogin.Connection = Lab3DBConnection;
+            cmdLogin.Connection.ConnectionString = AuthConnString;
+
+            cmdLogin.CommandText = loginQuery;
+            cmdLogin.Parameters.AddWithValue("@Username", Username);
+            cmdLogin.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(Password));
+
+            cmdLogin.Connection.Open();
+
+            // ExecuteScalar() returns back data type Object
+            // Use a typecast to convert this to an int.
+            // Method returns first column of first row.
+            cmdLogin.ExecuteNonQuery();
+
         }
 
     }

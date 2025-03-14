@@ -1,10 +1,10 @@
-using Lab1484.Pages.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Lab1484.Pages.DB;
 
 namespace Lab1484.Pages
 {
-    public class LogInModel : PageModel
+    public class HashedLoginModel : PageModel
     {
         [BindProperty]
         public string Username { get; set; }
@@ -17,24 +17,19 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
-            if (DBClass.SecureLogin(Username, Password) > 0)
+            if (DBClass.HashedParameterLogin(Username, Password))
             {
                 HttpContext.Session.SetString("username", Username);
                 ViewData["LoginMessage"] = "Login Successful!";
-
-                // Redirect user to dashboard
-                return RedirectToPage("/Dashboard");
-              
+                DBClass.Lab3DBConnection.Close();
+                return Page();
             }
             else
             {
                 ViewData["LoginMessage"] = "Username and/or Password Incorrect";
-
+                DBClass.Lab3DBConnection.Close();
+                return Page();
             }
-
-            DBClass.Lab3DBConnection.Close();
-
-            return Page();
 
         }
     }

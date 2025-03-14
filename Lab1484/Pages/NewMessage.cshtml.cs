@@ -31,7 +31,7 @@ namespace Lab1484.Pages
             string currentUser = HttpContext.Session.GetString("username");
             NewMessage.Sender = (string)currentUser;
             DBClass.InsertMessage(NewMessage);
-            DBClass.Lab2DBConnection.Close();
+            DBClass.Lab3DBConnection.Close();
 
             return RedirectToPage("/SentMessage");
         }

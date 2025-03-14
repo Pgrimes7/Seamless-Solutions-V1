@@ -57,7 +57,7 @@ namespace Lab1484.Pages
         public IActionResult OnPost() {
 
             DBClass.InsertGrant(NewGrant);
-            DBClass.Lab2DBConnection.Close();
+            DBClass.Lab3DBConnection.Close();
 
             return RedirectToPage("/GrantCreation");
 
