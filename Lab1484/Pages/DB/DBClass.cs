@@ -16,6 +16,10 @@ namespace Lab1484.Pages.DB
         private static readonly String? Lab3DBConnString =
             "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
+        // A secon connection String
+        // For Hashed Passwords
+        private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+
         //Connection Methods:
 
         //Basic Product Reader
