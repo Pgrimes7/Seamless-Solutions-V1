@@ -1,0 +1,10 @@
+CREATE DATABASE AUTH;
+
+USE AUTH;
+
+--Hashed Credentials Table
+CREATE TABLE HashedCredentials (
+	UserID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	Username nvarchar(50),
+	Password nvarchar(MAX)
+);

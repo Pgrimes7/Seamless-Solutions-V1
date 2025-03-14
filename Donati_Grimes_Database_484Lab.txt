@@ -1,6 +1,6 @@
-CREATE DATABASE Lab2;
+CREATE DATABASE Lab3;
 
-USE Lab2;
+USE Lab3;
 
 --User Table
 CREATE TABLE Users (
@@ -19,13 +19,6 @@ CREATE TABLE Credentials (
 	Password nvarchar(200),
 	UserID INT,
 	FOREIGN KEY (UserID) REFERENCES Users(UserID)
-);
-
---Hashed Credentials Table
-CREATE TABLE HashedCredentials (
-	HashedCredentialsID INT IDENTITY(1,1) PRIMARY KEY,
-	Username nvarchar(200),
-	Password nvarchar(200)
 );
 
 --Project Table
