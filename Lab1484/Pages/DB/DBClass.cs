@@ -213,7 +213,7 @@ namespace Lab1484.Pages.DB
             {
                 Lab3DBConnection.Close();
             }
-            string sqlQuery = "INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName," +
+            string sqlQuery = @"INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName," +
                 " category, submissionDate, awardDate, grantStatus, amount)" +
                 " VALUES (@FacultyLeadID, @businessPartnerID, @businessName, @category, @submissionDate, @awardDate, @grantStatus, @amount);";
            
