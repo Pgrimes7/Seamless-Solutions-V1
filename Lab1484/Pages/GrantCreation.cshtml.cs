@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using System.Reflection;
 using Lab1484.Pages.DataClasses;
@@ -10,7 +11,6 @@ namespace Lab1484.Pages
 {
     public class GrantCreationModel : PageModel
     {
-
 
         public List<User> FacultyList { get; set; } = new List<User>();
         public List<User> PartnerList { get; set; } = new List<User>();
@@ -51,6 +51,7 @@ namespace Lab1484.Pages
         }
 
         [BindProperty]
+        [Required]
 
         public Grant NewGrant { get; set; } = new Grant();
 

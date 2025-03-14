@@ -209,23 +209,24 @@ namespace Lab1484.Pages.DB
             {
                 Lab3DBConnection.Close();
             }
-            string sqlQuery = "INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName," +
+            string sqlQuery = @"INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName," +
                 " category, submissionDate, awardDate, grantStatus, amount)" +
-                " VALUES (";
-            sqlQuery += g.FacultyLeadID + ", '"
-                + g.BusinessPartnerID
-                + "', '"
-                + g.businessName + "', '"
-                + g.category + "', '"
-                + g.submissionDate + "', '"
-                + g.awardDate + "', '"
-                + g.grantStatus + "', '"
-                + g.amount + "');";
+                " VALUES (@FacultyLeadID, @businessPartnerID, @businessName, @category, @submissionDate, @awardDate, @grantStatus, @amount);";
+           
 
             SqlCommand cmdGrantInsert = new SqlCommand();
             cmdGrantInsert.Connection = Lab3DBConnection;
             cmdGrantInsert.Connection.ConnectionString = Lab3DBConnString;
             cmdGrantInsert.CommandText = sqlQuery;
+            cmdGrantInsert.Parameters.AddWithValue("@FacultyLeadID", g.FacultyLeadID);
+            cmdGrantInsert.Parameters.AddWithValue("@businessPartnerID", g.BusinessPartnerID);
+            cmdGrantInsert.Parameters.AddWithValue("@businessName", g.businessName);
+            cmdGrantInsert.Parameters.AddWithValue("@category", g.category);
+            cmdGrantInsert.Parameters.AddWithValue("@submissionDate", g.submissionDate);
+            cmdGrantInsert.Parameters.AddWithValue("@awardDate", g.awardDate);
+            cmdGrantInsert.Parameters.AddWithValue("@grantStatus", g.grantStatus);
+            cmdGrantInsert.Parameters.AddWithValue("@amount", g.amount);
+        
             cmdGrantInsert.Connection.Open();
             cmdGrantInsert.ExecuteNonQuery();
 
