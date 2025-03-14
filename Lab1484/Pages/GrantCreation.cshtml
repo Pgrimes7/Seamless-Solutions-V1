@@ -63,17 +63,21 @@
 			<div>
 				<input type="radio" asp-for="NewGrant.grantStatus" value="Complete" /> Complete
 			</div>
+			<span asp-validation-for="NewGrant.grantStatus" class="text-danger"></span>
 			<br />
 
 			@*//Due Date (textbox (include formatting guidelines))*@
 			Submission Date
 			<br />
 			<input type="date" asp-for="NewGrant.submissionDate" />
+			<span asp-validation-for="NewGrant.submissionDate" class="text-danger"></span>
+
 			<br />
 			@*//Due Date (textbox (include formatting guidelines))*@
 			Award Date
 			<br />
-			<input type="date" asp-for="NewGrant.awardDate" />
+			<input type="date" asp-for="NewGrant.awardDate"/>
+			<span asp-validation-for="NewGrant.awardDate" class="text-danger"></span>
 			<br />
 			
 
