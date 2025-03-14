@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using Lab1484.Pages.DataClasses;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace Lab1484.Pages.DB
 {
@@ -178,10 +179,7 @@ namespace Lab1484.Pages.DB
              VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
 
              DECLARE @UserIDLogin INT;
-             SET @UserIDLogin = SCOPE_IDENTITY();
-
-            INSERT INTO Credentials (UserID, Username, Password)
-            VALUES (@UserIDLogin, @Username, @Password);";
+             SET @UserIDLogin = SCOPE_IDENTITY();";
 
             SqlCommand cmdProjectRead = new SqlCommand();
             cmdProjectRead.Connection = Lab3DBConnection;
@@ -194,8 +192,6 @@ namespace Lab1484.Pages.DB
             cmdProjectRead.Parameters.AddWithValue("@lastName", p.lastName);
             cmdProjectRead.Parameters.AddWithValue("@email", p.email);
             cmdProjectRead.Parameters.AddWithValue("@phoneNumber", p.phone);
-            cmdProjectRead.Parameters.AddWithValue("@Username", p.username);
-            cmdProjectRead.Parameters.AddWithValue("@Password", p.password);
             cmdProjectRead.Connection.Open();
             cmdProjectRead.ExecuteNonQuery();
 
@@ -496,25 +492,47 @@ namespace Lab1484.Pages.DB
         }
 
 
-        public static void CreateHashedUser(string Username, string Password)
+        public static void CreateHashedUser(User p)
         {
-            string loginQuery =
-                "INSERT INTO HashedCredentials (Username,Password) values (@Username, @Password)";
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string userInsertQuery = @"
+             INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
+             VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
 
-            SqlCommand cmdLogin = new SqlCommand();
-            cmdLogin.Connection = Lab3DBConnection;
-            cmdLogin.Connection.ConnectionString = AuthConnString;
+             DECLARE @UserIDLogin INT;
+             SET @UserIDLogin = SCOPE_IDENTITY();";
 
-            cmdLogin.CommandText = loginQuery;
-            cmdLogin.Parameters.AddWithValue("@Username", Username);
-            cmdLogin.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(Password));
+            SqlCommand cmdUserInsert = new SqlCommand();
+            cmdUserInsert.Connection = Lab3DBConnection;
 
-            cmdLogin.Connection.Open();
+            cmdUserInsert.Parameters.AddWithValue("@UserType", p.UserType);
+            cmdUserInsert.Parameters.AddWithValue("@firstName", p.firstName);
+            cmdUserInsert.Parameters.AddWithValue("@lastName", p.lastName);
+            cmdUserInsert.Parameters.AddWithValue("@email", p.email);
+            cmdUserInsert.Parameters.AddWithValue("@phoneNumber", p.phone);
 
-            // ExecuteScalar() returns back data type Object
-            // Use a typecast to convert this to an int.
-            // Method returns first column of first row.
-            cmdLogin.ExecuteNonQuery();
+            cmdUserInsert.Connection.Open();
+            cmdUserInsert.ExecuteNonQuery();
+
+
+            SqlCommand cmdUserID = new SqlCommand("SELECT SCOPE_IDENTITY();", cmdUserInsert.Connection);
+            int userID = Convert.ToInt32(cmdUserID.ExecuteScalar());
+
+            string newHashedCredsQuery = @"
+            INSERT INTO HashedCredentials (UserID,Username,Password) 
+            VALUES (@UserIDLogin, @Username, @Password);";
+
+            SqlCommand cmdNewHashed = new SqlCommand();
+            cmdNewHashed.Connection = new SqlConnection(AuthConnString);
+            cmdNewHashed.CommandText = newHashedCredsQuery;
+            cmdNewHashed.Parameters.AddWithValue("@Username", p.username);
+            cmdNewHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.password));
+            cmdNewHashed.Connection.Open();
+
+            cmdNewHashed.ExecuteNonQuery();
 
         }
 

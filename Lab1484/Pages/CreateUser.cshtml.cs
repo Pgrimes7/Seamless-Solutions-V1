@@ -36,7 +36,7 @@ namespace Lab1484.Pages
             // Perform Validation First on Form
             // then...
 
-            DBClass.CreateHashedUser(NewUser.username, NewUser.password);
+            DBClass.CreateHashedUser(NewUser);
             DBClass.Lab3DBConnection.Close();
 
 
