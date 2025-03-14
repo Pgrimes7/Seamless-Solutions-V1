@@ -503,11 +503,12 @@ namespace Lab1484.Pages.DB
              INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
              VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
 
-             DECLARE @UserIDLogin INT;
-             SET @UserIDLogin = SCOPE_IDENTITY();";
+             
+             Select SCOPE_IDENTITY();";
 
             SqlCommand cmdUserInsert = new SqlCommand();
             cmdUserInsert.Connection = Lab3DBConnection;
+            cmdUserInsert.CommandText = userInsertQuery;
 
             cmdUserInsert.Parameters.AddWithValue("@UserType", p.UserType);
             cmdUserInsert.Parameters.AddWithValue("@firstName", p.firstName);
@@ -516,20 +517,20 @@ namespace Lab1484.Pages.DB
             cmdUserInsert.Parameters.AddWithValue("@phoneNumber", p.phone);
 
             cmdUserInsert.Connection.Open();
-            cmdUserInsert.ExecuteNonQuery();
+            
 
 
-            SqlCommand cmdUserID = new SqlCommand("SELECT SCOPE_IDENTITY();", cmdUserInsert.Connection);
-            int userID = Convert.ToInt32(cmdUserID.ExecuteScalar());
+            int userID = Convert.ToInt32(cmdUserInsert.ExecuteScalar());
 
             string newHashedCredsQuery = @"
-            INSERT INTO HashedCredentials (UserID,Username,Password) 
-            VALUES (@UserIDLogin, @Username, @Password);";
+            INSERT INTO HashedCredentials (UserID2,Username,Password) 
+            VALUES (@UserID, @Username, @Password);";
 
             SqlCommand cmdNewHashed = new SqlCommand();
             cmdNewHashed.Connection = new SqlConnection(AuthConnString);
             cmdNewHashed.CommandText = newHashedCredsQuery;
             cmdNewHashed.Parameters.AddWithValue("@Username", p.username);
+            cmdNewHashed.Parameters.AddWithValue("@UserID", userID);
             cmdNewHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.password));
             cmdNewHashed.Connection.Open();
 
