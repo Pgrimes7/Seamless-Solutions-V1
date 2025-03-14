@@ -20,7 +20,7 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
-            if (DBClass.SecureLogin(Username, Password) > 0)
+            if (DBClass.HashedParameterLogin(Username, Password))
             {
                 HttpContext.Session.SetString("username", Username);
                 ViewData["LoginMessage"] = "Login Successful!";
