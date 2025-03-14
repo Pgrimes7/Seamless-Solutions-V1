@@ -503,8 +503,8 @@ namespace Lab1484.Pages.DB
              INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
              VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
 
-             
-             Select SCOPE_IDENTITY();";
+             DECLARE @UserID INT;
+             SELECT @UserID = SCOPE_IDENTITY();";
 
             SqlCommand cmdUserInsert = new SqlCommand();
             cmdUserInsert.Connection = Lab3DBConnection;
@@ -523,7 +523,7 @@ namespace Lab1484.Pages.DB
             int userID = Convert.ToInt32(cmdUserInsert.ExecuteScalar());
 
             string newHashedCredsQuery = @"
-            INSERT INTO HashedCredentials (UserID2,Username,Password) 
+            INSERT INTO HashedCredentials (UserID,Username,Password) 
             VALUES (@UserID, @Username, @Password);";
 
             SqlCommand cmdNewHashed = new SqlCommand();
