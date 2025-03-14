@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Lab1484.Pages.DataClasses
 {
@@ -13,9 +14,11 @@ namespace Lab1484.Pages.DataClasses
         public String businessName { get; set; }
 
         public String? category { get; set; }
-        [DataType(DataType.Date)]
-        [Range(typeof(DateTime), "1/1/1753", "12/31/9999", ErrorMessage = "Date must be between 01/01/1753 and 12/31/9999")]
+        [BindProperty]
+        [Required]
         public DateTime? submissionDate { get; set; }
+        [BindProperty]
+        [Required]
         public DateTime? awardDate { get; set; }
         public String? grantStatus { get; set; }
         public double amount { get; set; }
