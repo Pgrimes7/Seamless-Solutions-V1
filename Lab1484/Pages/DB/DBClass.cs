@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 using Lab1484.Pages.DataClasses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration.UserSecrets;
@@ -463,16 +464,17 @@ namespace Lab1484.Pages.DB
 
         public static bool HashedParameterLogin(string Username, string Password)
         {
-            string loginQuery =
-                "SELECT Password FROM HashedCredentials WHERE Username = @Username";
+            string loginQuery = "GetPasswordByUserName";
+            //"SELECT Password FROM HashedCredentials WHERE Username = @Username";
 
             SqlCommand cmdLogin = new SqlCommand();
             cmdLogin.Connection = Lab3DBConnection;
             cmdLogin.Connection.ConnectionString = AuthConnString;
-
             cmdLogin.CommandText = loginQuery;
-            cmdLogin.Parameters.AddWithValue("@Username", Username);
 
+            cmdLogin.CommandType = CommandType.StoredProcedure;
+            cmdLogin.Parameters.AddWithValue("@Username", Username);
+           
             cmdLogin.Connection.Open();
 
             // ExecuteScalar() returns back data type Object
