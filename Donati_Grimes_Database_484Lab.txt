@@ -112,6 +112,13 @@ CREATE TABLE Messages (
     IsRead BIT DEFAULT 0,
 );
 
+--Migration Settings Table
+CREATE TABLE MigrationSettings
+(
+    SettingKey NVARCHAR(255) PRIMARY KEY,
+    SettingValue NVARCHAR(255)
+);
+
 
 
 
@@ -180,3 +187,6 @@ VALUES ('smithto', 'brownch', 'Just wanted to send a reminder about the project"
        ('jordanbow', 'brantjo', 'I have a question I would like to talk with you about.', 1),
 	   ('brantjo', 'jordanbow', 'When would you be available to discuss?', 0),
        ('yangmag', 'gorbergr', 'Are we still able to meet about this tomorrow?', 0);
+
+INSERT INTO MigrationSettings (SettingKey, SettingValue) 
+VALUES ('migration_completed', 'false');
