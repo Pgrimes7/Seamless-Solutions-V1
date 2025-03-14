@@ -33,8 +33,12 @@ namespace Lab1484.Pages
                 return Page();
             }
 
-            DBClass.InsertUser(NewUser);
+            // Perform Validation First on Form
+            // then...
+
+            DBClass.CreateHashedUser(NewUser);
             DBClass.Lab3DBConnection.Close();
+
 
             return RedirectToPage("/CreateUser");
         }
@@ -43,7 +47,7 @@ namespace Lab1484.Pages
         public IActionResult OnPostPopulateHandler()
         {
             ModelState.Clear();
-            NewUser.UserType = 2;
+            NewUser.UserType = 3;
             NewUser.firstName = "Rob";
             NewUser.lastName = "Johnson";
             NewUser.email = "robjohnson@example.com";

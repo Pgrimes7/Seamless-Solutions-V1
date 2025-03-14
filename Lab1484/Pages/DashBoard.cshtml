@@ -1,9 +1,12 @@
 ﻿@page
 @model Lab1484.Pages.DashBoardModel
+
 @{
-    <h1>OrgGrant DashBoard and Display</h1>
+    <h1>OrgGrant Dashboard and Display</h1>
     <br />
-    <h2>List of Currently live Projects</h2><!-- Need to fix so when selected it doesn't go to busted page'-->
+    <h2>List of Currently Live Projects</h2>
+
+    <!-- Updated to fix broken page when selected -->
     <form asp-page-handler="SingleSelect" method="post">
         <select asp-for="ProjectList" class="form-select">
             @foreach (var prod in Model.ProjectList)
@@ -28,21 +31,20 @@
             </tr>
         </thead>
         <tbody>
-            @{
-                foreach (var prod in Model.ProjectList)
-                {
-                    <tr>
-                        <td>@prod.ProjectName</td>
-                        <td>@prod.DateDue</td>
-                        <td>@prod.DateCreated</td>
-                        <td>@prod.DateCompleted</td>
-                        <td>@prod.AdminName</td>
-                        <td>@prod.noteBody</td>
-                    </tr>
-                }
+            @foreach (var prod in Model.ProjectList)
+            {
+                <tr>
+                    <td>@prod.ProjectName</td>
+                    <td>@prod.DateDue</td>
+                    <td>@prod.DateCreated</td>
+                    <td>@prod.DateCompleted</td>
+                    <td>@prod.AdminName</td>
+                    <td>@prod.noteBody</td>
+                </tr>
             }
         </tbody>
     </table>
+
     <h2>Grant View</h2>
     <table class="table table-bordered table-responsive table-hover">
         <thead>
@@ -50,39 +52,34 @@
                 <th>Grant Name:</th>
                 <th>Grant Amount:</th>
                 <th>Submission Date:</th>
-                <th>Award Date</th>
-                <th>Faculty Name</th>
-                <th>Grant Status</th>
+                <th>Award Date:</th>
+                <th>Faculty Name:</th>
+                <th>Grant Status:</th>
             </tr>
         </thead>
         <tbody>
-            @{
-                foreach (var prod in Model.GrantList)
+            @foreach (var prod in Model.GrantList)
+            {
+                var statusClass = prod.grantStatus?.ToLower() switch
                 {
-                    var statusClass = prod.grantStatus?.ToLower() switch
-                    {
-                "Applied" => "badge bg-warning text-dark",
-                "Pending" => "badge bg-warning text-dark",
-                "Accepted" => "badge bg-success",
-                "Rejected" => "badge bg-danger",
-                "Completed" => "badge bg-light text-dark",
-                "Opportunity" => "badge bg-primary",
-                _ => "badge bg-secondary"
-                     };
+                    "applied" => "badge bg-warning text-dark",
+                    "pending" => "badge bg-warning text-dark",
+                    "accepted" => "badge bg-success",
+                    "rejected" => "badge bg-danger",
+                    "completed" => "badge bg-light text-dark",
+                    "opportunity" => "badge bg-primary",
+                    _ => "badge bg-secondary"
+                };
 
-
-                    <tr>
-                        <td>@prod.businessName</td>
-                        <td>@prod.amount</td>
-                        <td>@prod.submissionDate</td>
-                        <td>@prod.awardDate</td>
-                        <td>@prod.facultyName</td>
-                        <td>@prod.grantStatus</td>
-                    </tr>
-                }
+                <tr>
+                    <td>@prod.businessName</td>
+                    <td>@prod.amount</td>
+                    <td>@prod.submissionDate</td>
+                    <td>@prod.awardDate</td>
+                    <td>@prod.facultyName</td>
+                    <td><span class="@statusClass">@prod.grantStatus</span></td>
+                </tr>
             }
         </tbody>
     </table>
-
-
 }
