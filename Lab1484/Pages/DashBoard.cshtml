@@ -1,8 +1,8 @@
 ﻿@page
 @model Lab1484.Pages.DashBoardModel
 @{
-	<h1>OrgGrant DashBoard and Display</h1>
-	<br />
+    <h1>OrgGrant DashBoard and Display</h1>
+    <br />
     <h2>List of Currently live Projects</h2><!-- Need to fix so when selected it doesn't go to busted page'-->
     <form asp-page-handler="SingleSelect" method="post">
         <select asp-for="ProjectList" class="form-select">
@@ -12,14 +12,14 @@
             }
         </select>
         <br />
-        
+
     </form>
-     <br />
-     <h2>Project View</h2>
+    <br />
+    <h2>Project View</h2>
     <table class="table table-bordered table-responsive table-hover">
         <thead>
             <tr>
-				<th>Project Name:</th>
+                <th>Project Name:</th>
                 <th>Date Due:</th>
                 <th>Date Created:</th>
                 <th>Date Completed</th>
@@ -52,22 +52,37 @@
                 <th>Submission Date:</th>
                 <th>Award Date</th>
                 <th>Faculty Name</th>
+                <th>Grant Status</th>
             </tr>
         </thead>
         <tbody>
             @{
                 foreach (var prod in Model.GrantList)
                 {
+                    var statusClass = prod.grantStatus?.ToLower() switch
+                    {
+                "Applied" => "badge bg-warning text-dark",
+                "Pending" => "badge bg-warning text-dark",
+                "Accepted" => "badge bg-success",
+                "Rejected" => "badge bg-danger",
+                "Completed" => "badge bg-light text-dark",
+                "Opportunity" => "badge bg-primary",
+                _ => "badge bg-secondary"
+                     };
+
+
                     <tr>
                         <td>@prod.businessName</td>
                         <td>@prod.amount</td>
                         <td>@prod.submissionDate</td>
                         <td>@prod.awardDate</td>
                         <td>@prod.facultyName</td>
+                        <td>@prod.grantStatus</td>
                     </tr>
                 }
             }
         </tbody>
     </table>
+
 
 }

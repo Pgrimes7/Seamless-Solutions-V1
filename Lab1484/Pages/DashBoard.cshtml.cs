@@ -61,7 +61,8 @@ namespace Lab1484.Pages
                     category = grantReader["category"].ToString(),
                     submissionDate = grantReader.GetDateTime(grantReader.GetOrdinal("submissionDate")),//getOrdinal finds the column index then GetDateTime pulls it from the list
                     awardDate = grantReader.GetDateTime(grantReader.GetOrdinal("awardDate")),
-                    facultyName = grantReader["FacultyLead"].ToString()
+                    facultyName = grantReader["FacultyLead"].ToString(),
+                    grantStatus = grantReader["grantStatus"].ToString()
                 });
             }
 
