@@ -1,0 +1,7 @@
+--Query into AUTH Database
+CREATE PROCEDURE GetPasswordByUsername
+    @Username NVARCHAR(50)
+AS
+BEGIN
+    SELECT Password FROM HashedCredentials WHERE Username = @Username
+END
