@@ -11,8 +11,11 @@ namespace Lab1484.Pages
         [BindProperty]
         public string Password { get; set; }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            DBClass.MigrateUserPasswords();
+
+            return Page();
         }
 
         public IActionResult OnPost()
