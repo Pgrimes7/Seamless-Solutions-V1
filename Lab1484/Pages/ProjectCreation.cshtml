@@ -36,7 +36,7 @@
 		@*//Assign Employees (radiobuttons or dropdown that allows multiple selections)*@
 		<br />
 		Assign Employees (hold ctrl to select multiple)
-		<select class="form-select" asp-for="EmployeeID" multiple>
+		<select class="form-select" asp-for="EmployeeIDs" multiple>
 			@{
 				foreach (var employee in Model.EmployeeList)
 				{

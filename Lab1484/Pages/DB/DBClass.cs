@@ -148,16 +148,16 @@ namespace Lab1484.Pages.DB
             //cmdAdminRead.Connection.Close();
         }
 
-        public static void InsertProject(Project p)//inserts new project into DB
+        public static int InsertProject(Project p)//inserts new project into DB
         {
-            
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
             string sqlQuery = "INSERT INTO Project " +
                 "(ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, projectName)" +
-                " VALUES (@ProjectAdminID, @ProjectStatus, @DateCreated, @CompletionDate, @DueDate, @ProjectName);";
+                " VALUES (@ProjectAdminID, @ProjectStatus, @DateCreated, @CompletionDate, @DueDate, @ProjectName);" +
+                "SELECT Scope_Identity();";
 
 
             SqlCommand cmdProjectInsert = new SqlCommand();
@@ -172,7 +172,31 @@ namespace Lab1484.Pages.DB
             cmdProjectInsert.Parameters.AddWithValue("@ProjectName", p.ProjectName);
 
             cmdProjectInsert.Connection.Open();
-            cmdProjectInsert.ExecuteNonQuery();
+
+            //Get ProjectID so that EmployeeProject can be updated
+            object result = cmdProjectInsert.ExecuteScalar();
+            int newProjectID = Convert.ToInt32(result);
+
+            return newProjectID;
+        }
+
+        public static void InsertEmployeeProject(int ProjectID, int EmployeeID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            string sqlQuery = "INSERT INTO EmployeeProject (ProjectID, EmployeeID) VALUES (@ProjectID, @EmployeeID);";
+
+            SqlCommand cmdEmployeeProjectInsert = new SqlCommand();
+            cmdEmployeeProjectInsert.Connection = Lab3DBConnection;
+            cmdEmployeeProjectInsert.Connection.ConnectionString = Lab3DBConnString;
+            cmdEmployeeProjectInsert.CommandText = sqlQuery;
+            cmdEmployeeProjectInsert.Parameters.AddWithValue("@ProjectID", ProjectID);
+            cmdEmployeeProjectInsert.Parameters.AddWithValue("@EmployeeID", EmployeeID);
+            cmdEmployeeProjectInsert.Connection.Open();
+            cmdEmployeeProjectInsert.ExecuteNonQuery();
         }
 
         //Inserts User into DB

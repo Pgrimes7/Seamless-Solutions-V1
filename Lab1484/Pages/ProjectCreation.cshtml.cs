@@ -24,7 +24,7 @@ namespace Lab1484.Pages
         public int AdminID { get; set; }
 
         [BindProperty]
-        public int EmployeeID { get; set; }
+        public List<int> EmployeeIDs { get; set; } = new List<int>();
 
         public List<Project> ProjectList { get; set; } = new List<Project>();
 
@@ -40,6 +40,9 @@ namespace Lab1484.Pages
 
         [BindProperty]
         public String ProjectStatus { get; set; }
+
+        [BindProperty]
+        public int EmployeeID { get; set; }
 
         [BindProperty]
         public List<User> EmployeeList { get; set; } = new List<User>();
@@ -85,8 +88,13 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
-            DBClass.InsertProject(NewProject);
+            int newProjectID = DBClass.InsertProject(NewProject);
             DBClass.Lab3DBConnection.Close();
+
+            foreach (int employeeID in EmployeeIDs)
+            {
+                DBClass.InsertEmployeeProject(newProjectID, employeeID);
+            }
 
             return RedirectToPage("/ProjectCreation");
         }
