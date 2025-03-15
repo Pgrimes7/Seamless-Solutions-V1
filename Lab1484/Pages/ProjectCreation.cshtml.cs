@@ -11,12 +11,6 @@ namespace Lab1484.Pages
 {
     public class ProjectCreationModel : PageModel
     {
-
-        /*Date time button to select dates associated with project? Or it auto does it when created idk
-         * String input for project name
-         * String input for project status? Or, radio buttons to do options liek approved, unapproved etc..
-         * Need AdminID selection, access by select statement where userType = admin
-         */
         [BindProperty]
         public String ProjectName { get; set; }
 
@@ -88,9 +82,11 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
+            //Inserts new project into DB and returns its ProjectID
             int newProjectID = DBClass.InsertProject(NewProject);
             DBClass.Lab3DBConnection.Close();
 
+            //Uses the returned ProjectID to insert entries for each employee in EmployeeProject
             foreach (int employeeID in EmployeeIDs)
             {
                 DBClass.InsertEmployeeProject(newProjectID, employeeID);
