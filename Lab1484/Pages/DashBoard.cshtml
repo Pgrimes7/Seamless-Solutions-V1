@@ -39,7 +39,12 @@
                     <td>@prod.DateCreated</td>
                     <td>@prod.DateCompleted</td>
                     <td>@prod.AdminName</td>
-                    <td>@prod.noteBody</td>
+                    <td>
+                        <form asp-page="/ProjectNotes" method="post" style="display:inline;">
+                            <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
+                            <button type="submit" class="btn btn-link">Notes</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
