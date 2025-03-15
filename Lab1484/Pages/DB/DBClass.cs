@@ -504,7 +504,7 @@ namespace Lab1484.Pages.DB
                 Lab3DBConnection.Close();
             }
 
-            string loginQuery = "getPassword";
+            string loginQuery = "sp_Lab3Login";
             //"SELECT Password FROM HashedCredentials WHERE Username = @Username";
 
             SqlCommand cmdLogin = new SqlCommand();
