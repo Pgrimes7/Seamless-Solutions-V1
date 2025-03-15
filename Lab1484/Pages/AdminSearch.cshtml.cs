@@ -23,8 +23,16 @@ public class AdminSearchModel : PageModel
 
     public List<SearchResult> SearchResults { get; set; } = new List<SearchResult>();
 
-    public void OnGet()
+    public IActionResult OnGet()
     {
+        //Check to see if the user is logged in
+        string currentUser = HttpContext.Session.GetString("username");
+        //Redirect them if they aren't
+        if (string.IsNullOrEmpty(currentUser))
+        {
+            return RedirectToPage("/Login");
+        }
+
         if (string.IsNullOrEmpty(TypeFilter) || TypeFilter == "Project")
         {
             SqlDataReader reader = DBClass.ProjectReader();
@@ -88,6 +96,8 @@ public class AdminSearchModel : PageModel
             }
             reader.Close();
         }
+
+        return Page();
     }
 
     public class SearchResult
