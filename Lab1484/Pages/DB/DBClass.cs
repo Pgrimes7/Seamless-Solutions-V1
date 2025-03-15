@@ -152,7 +152,7 @@ namespace Lab1484.Pages.DB
 
         public static int InsertProject(Project p)//inserts new project into DB
         {
-            
+
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
@@ -503,7 +503,7 @@ namespace Lab1484.Pages.DB
             {
                 Lab3DBConnection.Close();
             }
-       
+
             string loginQuery = "getPassword";
             //"SELECT Password FROM HashedCredentials WHERE Username = @Username";
 
@@ -712,8 +712,41 @@ namespace Lab1484.Pages.DB
             cmdNoteInsert.Connection.Open();
             cmdNoteInsert.ExecuteNonQuery();
         }
+        public static int checkUserType(HttpContext httpContext)//used copilot to call httpContext here
+        {
+            string findUserType = "getUserType"; // Stored procedure to find userType given userID from login method
+
+            using (SqlCommand cmdCheckUser = new SqlCommand())
+            {
+                cmdCheckUser.Connection = Lab3DBConnection;
+
+                cmdCheckUser.CommandText = findUserType;
+                cmdCheckUser.CommandType = CommandType.StoredProcedure;
+
+                string userID = httpContext.Session.GetString("userID");//Used AI to learn how to set the userID in the session 
+
+
+                cmdCheckUser.Parameters.AddWithValue("@UserID", Convert.ToInt32(userID));
+
+                cmdCheckUser.Connection.Open();
+
+                using (SqlDataReader userTypeReader = cmdCheckUser.ExecuteReader())
+                {
+                    if (userTypeReader.Read())
+                    {
+                        return Convert.ToInt32(userTypeReader["UserType"]);
+                    }
+                    else
+                    {
+                        throw new Exception("UserType not found for the given userID.");
+                    }
+                }
+            }
+        }
     }
 }
+            
+
 
 
 
