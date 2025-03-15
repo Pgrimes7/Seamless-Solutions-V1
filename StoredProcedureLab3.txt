@@ -1,5 +1,13 @@
---Query into AUTH Database
-CREATE PROCEDURE GetPasswordByUsername
+USE Lab3
+CREATE PROCEDURE getUserType
+    @UserID NVARCHAR(50)
+AS
+BEGIN
+    SELECT userType FROM Users WHERE userID = @UserID
+END
+
+USE AUTH
+CREATE PROCEDURE getPassword
     @Username NVARCHAR(50)
 AS
 BEGIN
