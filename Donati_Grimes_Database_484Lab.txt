@@ -131,7 +131,7 @@ VALUES (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
        (1, 'Johnson', 'Brant', 'Grahhh@example.com', '234-567-8901'),
        (2, 'Bulh', 'Gomber', 'Gomber@example.com', '345-678-9012'),
        (3, 'Magnus', 'Yang', 'Bowow@example.com', '456-789-0123'),
-       (0, 'admin', 'test', 'admintest@example.com', '777-888-000');
+       (0, 'admin', 'test', 'admintest@example.com', '777-888-0000');
 
 INSERT INTO Credentials (Username, Password, UserID) 
 VALUES ('smithto','12345',1),
