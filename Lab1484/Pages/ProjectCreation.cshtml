@@ -1,19 +1,19 @@
 ﻿@page
 @model Lab1484.Pages.ProjectCreationModel
 @{
-	<form id="ProjectCreation" asp-page="LabA_Probc" method="post">
+	<form id="ProjectCreation" asp-page="ProjectCreation" method="post">
 		<h1>Create a Project</h1>
 		<p>Please complete all forms</p>
 		@*//Project Name (textbox)*@
 		Project Name
 		<br />
-		<input type="text" asp-for="ProjectName" placeholder="Project name" />
-		<span asp-validation-for="ProjectName" class="text-danger"></span>
+		<input type="text" asp-for="NewProject.ProjectName" placeholder="Project name" />
+		<span asp-validation-for="NewProject.ProjectName" class="text-danger"></span>
 		<br />
 		<br />
 		@*Project Admin (drop down)*@
 		Project Admin
-		<select asp-for="AdminID" class="form-select">
+		<select asp-for="NewProject.ProjectAdminID" class="form-select">
 			@{
 				foreach (var admin in Model.AdminList) {
 					<option value="@admin.userID">@admin.firstName @admin.lastName</option>
@@ -24,14 +24,14 @@
 		@*//Project Cost (textbox)*@
 		Project Cost
 		<br />
-		<input type="number" step="0.01" asp-for="ProjectCost" min="0" placeholder="Cost of Project" />
-		<span asp-validation-for="ProjectCost" class="text-danger"></span>
+		<input type="number" step="0.01" asp-for="NewProject.ProjectCost" min="0" placeholder="Cost of Project" />
+		<span asp-validation-for="NewProject.ProjectCost" class="text-danger"></span>
 		<br />
 		<br />
 		@*//Due Date (textbox (include formatting guidelines))*@
 		Due Date
 		<br />
-		<input type="date" asp-for="DueDate"/>
+		<input type="date" asp-for="NewProject.DateDue" />
 		<br />
 		@*//Assign Employees (radiobuttons or dropdown that allows multiple selections)*@
 		<br />
@@ -48,13 +48,13 @@
 		@*//Project Status (radiobuttons)*@
 		Project Status
 		<div>
-			<input type="radio" asp-for="ProjectStatus" value="Not Begun" /> Incomplete
+			<input type="radio" asp-for="NewProject.ProjectStatus" value="Not Begun" checked /> Incomplete
 		</div>
 		<div>
-			<input type="radio" asp-for="ProjectStatus" value="Incomplete" /> In Progress
+			<input type="radio" asp-for="NewProject.ProjectStatus" value="Incomplete" /> In Progress
 		</div>
 		<div>
-			<input type="radio" asp-for="ProjectStatus" value="Complete" /> Complete
+			<input type="radio" asp-for="NewProject.ProjectStatus" value="Complete" /> Complete
 		</div>
 		<br />
 		<input type="submit" value="Create Project" />

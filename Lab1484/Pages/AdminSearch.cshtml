@@ -7,39 +7,51 @@
 <h2>Admin Search</h2>
 
 <form method="get">
-    <label>Search:</label>
-    <input type="text" name="SearchQuery" value="@Model.SearchQuery" />
+    <p>
+        <label>Search:</label>
+        <input type="text" name="SearchQuery" value="@Model.SearchQuery" />
+    </p>
 
-    <label>Type:</label>
-    <select name="TypeFilter">
-        <option value="">All</option>
-        <option value="Project">Project</option>
-        <option value="Grant">Grant</option>
-        <option value="Faculty">Faculty</option>
-        <option value="BusinessPartner">Business Partner</option>
-    </select>
+    <p>
+        <label>Type:</label>
+        <select name="TypeFilter">
+            <option value="">All</option>
+            <option value="Project" selected="@(Model.TypeFilter == "Project" ? "selected" : null)">Project</option>
+            <option value="Grant" selected="@(Model.TypeFilter == "Grant" ? "selected" : null)">Grant</option>
+            <option value="Faculty" selected="@(Model.TypeFilter == "Faculty" ? "selected" : null)">Faculty</option>
+            <option value="BusinessPartner" selected="@(Model.TypeFilter == "BusinessPartner" ? "selected" : null)">Business Partner</option>
+        </select>
+    </p>
 
-    <label>Status:</label>
-    <select name="StatusFilter">
-        <option value="">All</option>
-        <option value="In Progress">In Progress</option>
-        <option value="Completed">Completed</option>
-        <option value="Pending">Pending</option>
-    </select>
+    <p>
+        <label>Status:</label>
+        <select name="StatusFilter">
+            <option value="">All</option>
+            <option value="In Progress" selected="@(Model.StatusFilter == "In Progress" ? "selected" : null)">In Progress</option>
+            <option value="Completed" selected="@(Model.StatusFilter == "Completed" ? "selected" : null)">Completed</option>
+            <option value="Pending" selected="@(Model.StatusFilter == "Pending" ? "selected" : null)">Pending</option>
+        </select>
+    </p>
 
-    <label>Start Date:</label>
-    <input type="date" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+    <p>
+        <label>Start Date:</label>
+        <input type="date" name="StartDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+    </p>
 
-    <label>End Date:</label>
-    <input type="date" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+    <p>
+        <label>End Date:</label>
+        <input type="date" name="EndDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+    </p>
 
-    <button type="submit">Search</button>
+    <p>
+        <button type="submit">Search</button>
+    </p>
 </form>
 
 @if (Model.SearchResults.Count > 0)
 {
     <h3>Search Results</h3>
-    <table>
+    <table border="1">
         <tr>
             <th>Type</th>
             <th>Name</th>

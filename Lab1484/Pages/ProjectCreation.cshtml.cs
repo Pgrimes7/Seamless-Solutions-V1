@@ -44,7 +44,11 @@ namespace Lab1484.Pages
         [BindProperty]
         public List<User> EmployeeList { get; set; } = new List<User>();
 
+        [BindProperty]
         public List<User> AdminList { get; set; } = new List<User>();
+
+        [BindProperty]
+        public Project NewProject { get; set; } = new Project();
 
         public IActionResult OnGet()
         {
@@ -81,51 +85,10 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
-            string query = "INSERT INTO Project " +
-                "(ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, projectName)" +
-                " VALUES (@ProjectAdminID, @ProjectStatus, @DateCreated, @CompletionDate, @DueDate, @ProjectName);";
+            DBClass.InsertProject(NewProject);
+            DBClass.Lab3DBConnection.Close();
 
-            using (var connection = new SqlConnection("Server=LocalHost;Database=Lab2;Trusted_Connection=True"))
-            {
-                connection.Open();
-
-                using (var cmd = new SqlCommand(query, connection))
-                {
-                    cmd.Parameters.AddWithValue("@ProjectAdminID", AdminID);
-                    cmd.Parameters.AddWithValue("@ProjectStatus", ProjectStatus);
-                    cmd.Parameters.AddWithValue("@DateCreated", DateCreated);
-                    cmd.Parameters.AddWithValue("@CompletionDate", CompletionDate);
-                    cmd.Parameters.AddWithValue("@DueDate", DueDate.ToString("yyyy-MM-dd"));
-                    cmd.Parameters.AddWithValue("@ProjectName", ProjectName);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            SqlDataReader projectReader = DBClass.ProjectReader();//instntiates class to read grant table and produce all available summary data
-            while (projectReader.Read())
-            {
-                ProjectList.Add(new Project
-                {
-                    ProjectID = Int32.Parse(projectReader["ProjectID"].ToString())
-                });
-            }
-            string query2 = "INSERT INTO EmployeeProject " +
-                "(ProjectID, EmployeeID) VALUES (@ProjectID, @EmployeeID)";
-
-            using (var connection = new SqlConnection("Server=LocalHost;Database=Lab2;Trusted_Connection=True"))
-            {
-                connection.Open();
-
-                using (var cmd = new SqlCommand(query2, connection))
-                {
-                    cmd.Parameters.AddWithValue("@ProjectID", ProjectList[ProjectList.Count - 1].ProjectID);
-                    cmd.Parameters.AddWithValue("@EmployeeID", EmployeeID);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-
-            return Page();
+            return RedirectToPage("/ProjectCreation");
         }
         
 

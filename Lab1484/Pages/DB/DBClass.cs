@@ -40,7 +40,7 @@ namespace Lab1484.Pages.DB
             cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
             cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Notes.noteBody " +
                 "from Project " +
-                "join Users ON Users.UserID = Project.ProjectAdminID join Notes ON Notes.ProjectID = Project.ProjectID; ";
+                "join Users ON Users.UserID = Project.ProjectAdminID left outer join Notes ON Notes.ProjectID = Project.ProjectID; ";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
@@ -150,21 +150,29 @@ namespace Lab1484.Pages.DB
 
         public static void InsertProject(Project p)//inserts new project into DB
         {
-            String sqlQuery = "INSERT INTO Project" +
-            "(ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, projectName) VALUES('";
-            sqlQuery += p.ProjectAdminID + "',";
-            sqlQuery += p.ProjectStatus + ",'";
-            sqlQuery += p.DateCreated + "')";
-            sqlQuery += p.DateCompleted + "')";
-            sqlQuery += p.DateDue + "')";
-            sqlQuery += p.ProjectName + "')";
-            SqlCommand cmdProjectRead = new SqlCommand();
-            cmdProjectRead.Connection = Lab3DBConnection;
-            cmdProjectRead.Connection.ConnectionString =
-            Lab3DBConnString;
-            cmdProjectRead.CommandText = sqlQuery;
-            cmdProjectRead.Connection.Open();
-            cmdProjectRead.ExecuteNonQuery();
+            
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "INSERT INTO Project " +
+                "(ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, projectName)" +
+                " VALUES (@ProjectAdminID, @ProjectStatus, @DateCreated, @CompletionDate, @DueDate, @ProjectName);";
+
+
+            SqlCommand cmdProjectInsert = new SqlCommand();
+            cmdProjectInsert.Connection = Lab3DBConnection;
+            cmdProjectInsert.Connection.ConnectionString = Lab3DBConnString;
+            cmdProjectInsert.CommandText = sqlQuery;
+            cmdProjectInsert.Parameters.AddWithValue("@ProjectAdminID", p.ProjectAdminID);
+            cmdProjectInsert.Parameters.AddWithValue("@ProjectStatus", p.ProjectStatus);
+            cmdProjectInsert.Parameters.AddWithValue("@DateCreated", p.DateCreated);
+            cmdProjectInsert.Parameters.AddWithValue("@CompletionDate", p.DateCompleted);
+            cmdProjectInsert.Parameters.AddWithValue("@DueDate", p.DateDue);
+            cmdProjectInsert.Parameters.AddWithValue("@ProjectName", p.ProjectName);
+
+            cmdProjectInsert.Connection.Open();
+            cmdProjectInsert.ExecuteNonQuery();
         }
 
         //Inserts User into DB
