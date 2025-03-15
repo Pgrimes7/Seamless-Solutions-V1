@@ -9,3 +9,7 @@ CREATE TABLE HashedCredentials (
 	Username nvarchar(50),
 	Password nvarchar(MAX)
 );
+
+
+INSERT INTO HashedCredentials (UserID, Username, Password) 
+VALUES (9,'admin','1000:nRilPtmLO7SkFDZ/3Myj8tYBVFfMRQ9X:L7YujlYh4EXAvYmzTaSdHM9wTiU=');
