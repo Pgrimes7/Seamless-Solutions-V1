@@ -15,7 +15,7 @@ namespace Lab1484.Pages
         public IActionResult OnGet()
         {
             //Check to see if the user is logged in
-            string currentUser = HttpContext.Session.GetString("username");
+           
             //Redirect them if they aren't
      
 

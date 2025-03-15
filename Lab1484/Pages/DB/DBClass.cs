@@ -1,6 +1,8 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using System.Net.Http;
 using Lab1484.Pages.DataClasses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration.UserSecrets;
 
@@ -67,8 +69,8 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
 
-       
-       
+
+
         public static SqlDataReader AdminReader()//reads admin table
         {
             SqlCommand cmdAdminRead = new SqlCommand();
@@ -150,7 +152,7 @@ namespace Lab1484.Pages.DB
 
         public static void InsertProject(Project p)//inserts new project into DB
         {
-            
+
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
@@ -221,7 +223,7 @@ namespace Lab1484.Pages.DB
             string sqlQuery = @"INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName," +
                 " category, submissionDate, awardDate, grantStatus, amount)" +
                 " VALUES (@FacultyLeadID, @businessPartnerID, @businessName, @category, @submissionDate, @awardDate, @grantStatus, @amount);";
-           
+
 
             SqlCommand cmdGrantInsert = new SqlCommand();
             cmdGrantInsert.Connection = Lab3DBConnection;
@@ -235,7 +237,7 @@ namespace Lab1484.Pages.DB
             cmdGrantInsert.Parameters.AddWithValue("@awardDate", g.awardDate);
             cmdGrantInsert.Parameters.AddWithValue("@grantStatus", g.grantStatus);
             cmdGrantInsert.Parameters.AddWithValue("@amount", g.amount);
-        
+
             cmdGrantInsert.Connection.Open();
             cmdGrantInsert.ExecuteNonQuery();
 
@@ -470,9 +472,14 @@ namespace Lab1484.Pages.DB
 
         //Methods for Creating a User and Login with Password Hashing
 
-        public static bool HashedParameterLogin(string Username, string Password)
+        public static bool HashedParameterLogin(string Username, string Password, HttpContext httpcontext)
         {
-            string loginQuery = "GetPasswordByUserName";
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+       
+            string loginQuery = "getPassword";
             //"SELECT Password FROM HashedCredentials WHERE Username = @Username";
 
             SqlCommand cmdLogin = new SqlCommand();
@@ -482,19 +489,23 @@ namespace Lab1484.Pages.DB
 
             cmdLogin.CommandType = CommandType.StoredProcedure;
             cmdLogin.Parameters.AddWithValue("@Username", Username);
-           
+
             cmdLogin.Connection.Open();
 
             // ExecuteScalar() returns back data type Object
             // Use a typecast to convert this to an int.
             // Method returns first column of first row.
             SqlDataReader hashReader = cmdLogin.ExecuteReader();
+
+
             if (hashReader.Read())
             {
                 string correctHash = hashReader["Password"].ToString();
+                int userID = Convert.ToInt32(hashReader["UserID"]);
 
                 if (PasswordHash.ValidatePassword(Password, correctHash))
                 {
+                    httpcontext.Session.SetString("userID", userID.ToString());//used co pilot for calling httpcontext in this seting
                     return true;
                 }
             }
@@ -526,7 +537,7 @@ namespace Lab1484.Pages.DB
             cmdUserInsert.Parameters.AddWithValue("@phoneNumber", p.phone);
 
             cmdUserInsert.Connection.Open();
-            
+
 
             int userID = Convert.ToInt32(cmdUserInsert.ExecuteScalar());
 
@@ -625,8 +636,38 @@ namespace Lab1484.Pages.DB
                 cmd.ExecuteNonQuery();
             }
         }
-    }
+        public static int checkUserType(HttpContext httpContext)//used copilot to call httpContext here
+        {
+            string findUserType = "getUserType"; // Stored procedure to find userType given userID from login method
 
+            using (SqlCommand cmdCheckUser = new SqlCommand())
+            {
+                cmdCheckUser.Connection = Lab3DBConnection;
+                
+                cmdCheckUser.CommandText = findUserType;
+                cmdCheckUser.CommandType = CommandType.StoredProcedure;
+
+                string userID = httpContext.Session.GetString("userID");//Used AI to learn how to set the userID in the session 
+              
+
+                cmdCheckUser.Parameters.AddWithValue("@UserID", Convert.ToInt32(userID));
+
+                cmdCheckUser.Connection.Open();
+
+                using (SqlDataReader userTypeReader = cmdCheckUser.ExecuteReader())
+                {
+                    if (userTypeReader.Read())
+                    {
+                        return Convert.ToInt32(userTypeReader["UserType"]);
+                    }
+                    else
+                    {
+                        throw new Exception("UserType not found for the given userID.");
+                    }
+                }
+            }
+        }
+    }
 }
 
 

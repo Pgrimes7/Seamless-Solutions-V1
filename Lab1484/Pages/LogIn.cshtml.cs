@@ -20,11 +20,11 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
-            if (DBClass.HashedParameterLogin(Username, Password))
+            if (DBClass.HashedParameterLogin(Username, Password, HttpContext))
             {
                 HttpContext.Session.SetString("username", Username);
                 ViewData["LoginMessage"] = "Login Successful!";
-
+                
                 // Redirect user to dashboard
                 return RedirectToPage("/Dashboard");
               

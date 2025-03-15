@@ -28,9 +28,15 @@ public class AdminSearchModel : PageModel
         //Check to see if the user is logged in
         string currentUser = HttpContext.Session.GetString("username");
         //Redirect them if they aren't
+        int userType = DBClass.checkUserType(HttpContext);
         if (string.IsNullOrEmpty(currentUser))
         {
             return RedirectToPage("/Login");
+        }
+
+        if (userType != 0)
+        {
+            return RedirectToPage("/DashBoard");
         }
 
         if (string.IsNullOrEmpty(TypeFilter) || TypeFilter == "Project")
