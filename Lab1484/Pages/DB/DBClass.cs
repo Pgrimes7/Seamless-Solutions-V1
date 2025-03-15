@@ -40,9 +40,9 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Notes.noteBody " +
+            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName " +
                 "from Project " +
-                "join Users ON Users.UserID = Project.ProjectAdminID left outer join Notes ON Notes.ProjectID = Project.ProjectID; ";
+                "join Users ON Users.UserID = Project.ProjectAdminID; ";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
@@ -150,16 +150,17 @@ namespace Lab1484.Pages.DB
             //cmdAdminRead.Connection.Close();
         }
 
-        public static void InsertProject(Project p)//inserts new project into DB
+        public static int InsertProject(Project p)//inserts new project into DB
         {
-
+            
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
             string sqlQuery = "INSERT INTO Project " +
                 "(ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, projectName)" +
-                " VALUES (@ProjectAdminID, @ProjectStatus, @DateCreated, @CompletionDate, @DueDate, @ProjectName);";
+                " VALUES (@ProjectAdminID, @ProjectStatus, @DateCreated, @CompletionDate, @DueDate, @ProjectName);" +
+                "SELECT Scope_Identity();";
 
 
             SqlCommand cmdProjectInsert = new SqlCommand();
@@ -174,7 +175,31 @@ namespace Lab1484.Pages.DB
             cmdProjectInsert.Parameters.AddWithValue("@ProjectName", p.ProjectName);
 
             cmdProjectInsert.Connection.Open();
-            cmdProjectInsert.ExecuteNonQuery();
+
+            //Get ProjectID so that EmployeeProject can be updated
+            object result = cmdProjectInsert.ExecuteScalar();
+            int newProjectID = Convert.ToInt32(result);
+
+            return newProjectID;
+        }
+
+        public static void InsertEmployeeProject(int ProjectID, int EmployeeID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            string sqlQuery = "INSERT INTO EmployeeProject (ProjectID, EmployeeID) VALUES (@ProjectID, @EmployeeID);";
+
+            SqlCommand cmdEmployeeProjectInsert = new SqlCommand();
+            cmdEmployeeProjectInsert.Connection = Lab3DBConnection;
+            cmdEmployeeProjectInsert.Connection.ConnectionString = Lab3DBConnString;
+            cmdEmployeeProjectInsert.CommandText = sqlQuery;
+            cmdEmployeeProjectInsert.Parameters.AddWithValue("@ProjectID", ProjectID);
+            cmdEmployeeProjectInsert.Parameters.AddWithValue("@EmployeeID", EmployeeID);
+            cmdEmployeeProjectInsert.Connection.Open();
+            cmdEmployeeProjectInsert.ExecuteNonQuery();
         }
 
         //Inserts User into DB
@@ -636,36 +661,56 @@ namespace Lab1484.Pages.DB
                 cmd.ExecuteNonQuery();
             }
         }
-        public static int checkUserType(HttpContext httpContext)//used copilot to call httpContext here
+
+        //Get Notes for Proj
+        public static List<Note> GetProjNotes(int ProjectID)
         {
-            string findUserType = "getUserType"; // Stored procedure to find userType given userID from login method
+            List<Note> Notes = new List<Note>();
 
-            using (SqlCommand cmdCheckUser = new SqlCommand())
+            string sqlQuery = "SELECT * FROM Notes WHERE Notes.ProjectID = @ProjectID;";
+
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
-                cmdCheckUser.Connection = Lab3DBConnection;
-                
-                cmdCheckUser.CommandText = findUserType;
-                cmdCheckUser.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+                cmd.Parameters.AddWithValue("@ProjectID", ProjectID);
 
-                string userID = httpContext.Session.GetString("userID");//Used AI to learn how to set the userID in the session 
-              
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
 
-                cmdCheckUser.Parameters.AddWithValue("@UserID", Convert.ToInt32(userID));
-
-                cmdCheckUser.Connection.Open();
-
-                using (SqlDataReader userTypeReader = cmdCheckUser.ExecuteReader())
+                while (reader.Read())
                 {
-                    if (userTypeReader.Read())
+                    // Populate Notes list
+                    Note newNote = new Note
                     {
-                        return Convert.ToInt32(userTypeReader["UserType"]);
-                    }
-                    else
-                    {
-                        throw new Exception("UserType not found for the given userID.");
-                    }
+                        NoteID = (int)reader["NoteID"],
+                        NoteBody = (string)reader["noteBody"],
+                        ProjectID = (int)reader["ProjectID"]
+                    };
+                    Notes.Add(newNote); // Add the message instance to the list
                 }
             }
+
+            return Notes;
+        }
+
+        public static void InsertNote(Note n)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "INSERT INTO Notes (ProjectID, noteBody) VALUES (@ProjectID, @noteBody);";
+
+
+            SqlCommand cmdNoteInsert = new SqlCommand();
+            cmdNoteInsert.Connection = Lab3DBConnection;
+            cmdNoteInsert.Connection.ConnectionString = Lab3DBConnString;
+            cmdNoteInsert.CommandText = sqlQuery;
+            cmdNoteInsert.Parameters.AddWithValue("@ProjectID", n.ProjectID);
+            cmdNoteInsert.Parameters.AddWithValue("@noteBody", n.NoteBody);
+
+            cmdNoteInsert.Connection.Open();
+            cmdNoteInsert.ExecuteNonQuery();
         }
     }
 }

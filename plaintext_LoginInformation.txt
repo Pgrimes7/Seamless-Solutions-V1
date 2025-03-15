@@ -1,0 +1,38 @@
+PLAIN TEXT LOGIN INFORMATION
+
+
+Admin-
+username: admin
+password: password
+
+Todd Smith-
+username: smithto
+password: 12345
+
+Grant Gorber-
+username: gorbergr
+password: 67890
+
+Charlie Brown- 
+username: brownch
+password: 24680
+
+Bowwow Jordan-
+username: jordanbow
+password: 13579
+
+Boss Man-
+username: manbos
+password: 54321
+
+Johnson Brant-
+username: brantjo
+password: 09876
+
+Bulh Gomber-
+username: gomberbu
+password: 08642
+
+Magnus Yang-
+username: yangmag
+password: 97531

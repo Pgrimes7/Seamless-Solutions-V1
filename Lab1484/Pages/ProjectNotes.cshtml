@@ -1,0 +1,32 @@
+﻿@page
+@model Lab1484.Pages.ProjectNotesModel
+@{
+	<h1>Project Notes</h1>
+	<br />
+	<br />
+    @*Display Notes*@
+    <table class="table table-bordered table-responsive table-hover">
+        <thead>
+            <tr>
+                <th>Notes:</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var note in Model.Notes)
+            {
+                <tr>
+                    <td>@note.NoteBody</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @*Add new note*@
+    <form method="post" asp-page-handler="AddNote">
+        <input type="hidden" name="ProjectID" value="@Model.ProjectID" />
+        <div class="form-group">
+            <label for="NewNoteBody">New Note:</label>
+            <textarea class="form-control" id="NewNoteBody" name="NewNoteBody" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Add Note</button>
+    </form>
+}
