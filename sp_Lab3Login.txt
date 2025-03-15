@@ -7,9 +7,10 @@ BEGIN
 END
 
 USE AUTH
-CREATE PROCEDURE getPassword
+
+CREATE PROCEDURE sp_Lab3Login
     @Username NVARCHAR(50)
 AS
 BEGIN
-    SELECT Password FROM HashedCredentials WHERE Username = @Username
+    SELECT Password, USERID FROM HashedCredentials WHERE Username = @Username
 END
