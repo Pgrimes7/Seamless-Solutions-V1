@@ -13,7 +13,7 @@ namespace Lab1484.Pages
 
         public IActionResult OnGet()
         {
-            DBClass.MigrateUserPasswords();
+            
 
             return Page();
         }
