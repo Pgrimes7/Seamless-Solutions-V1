@@ -636,6 +636,10 @@ namespace Lab1484.Pages.DB
         }
         public static int checkUserType(HttpContext httpContext)//used copilot to call httpContext here
         {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
             string findUserType = "getUserType"; // Stored procedure to find userType given userID from login method
 
             using (SqlCommand cmdCheckUser = new SqlCommand())
@@ -664,6 +668,7 @@ namespace Lab1484.Pages.DB
                     }
                 }
             }
+
         }
     }
 }
