@@ -12,15 +12,6 @@ CREATE TABLE Users (
 	phoneNumber NVARCHAR(20)
 );
 
---Credentials Table
-CREATE TABLE Credentials (
-	CredentialsID INT IDENTITY(1,1) PRIMARY KEY,
-	Username nvarchar(200),
-	Password nvarchar(200),
-	UserID INT,
-	FOREIGN KEY (UserID) REFERENCES Users(UserID)
-);
-
 --Project Table
 CREATE TABLE Project (
 	ProjectID INT IDENTITY(1,1) PRIMARY KEY,
@@ -132,16 +123,6 @@ VALUES (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
        (2, 'Bulh', 'Gomber', 'Gomber@example.com', '345-678-9012'),
        (3, 'Magnus', 'Yang', 'Bowow@example.com', '456-789-0123'),
        (0, 'admin', 'test', 'admintest@example.com', '777-888-0000');
-
-INSERT INTO Credentials (Username, Password, UserID) 
-VALUES ('smithto','12345',1),
-	('gorbergr','67890',2),
-	('brownch','24680',3),
-	('jordanbow','13579',4),
-	('manbos','54321',5),
-	('brantjo','09876',6),
-	('gomberbu','08642',7),
-	('yangmag','97531',8);
 
 INSERT INTO Project (ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, ProjectName) 
 VALUES (1, 'In Progress', '2025-01-01', '2000-10-10', '2025-12-31', 'Cancer Research'),
