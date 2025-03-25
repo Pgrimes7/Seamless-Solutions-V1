@@ -54,6 +54,7 @@ public class AdminSearchModel : PageModel
                 });
             }
             reader.Close();
+            DBClass.Lab3DBConnection.Close();
         }
 
         if (string.IsNullOrEmpty(TypeFilter) || TypeFilter == "Grant")
@@ -71,6 +72,7 @@ public class AdminSearchModel : PageModel
                 });
             }
             reader.Close();
+            DBClass.Lab3DBConnection.Close();
         }
 
         if (string.IsNullOrEmpty(TypeFilter) || TypeFilter == "Faculty")
@@ -86,6 +88,7 @@ public class AdminSearchModel : PageModel
                 });
             }
             reader.Close();
+            DBClass.Lab3DBConnection.Close();
         }
 
         if (string.IsNullOrEmpty(TypeFilter) || TypeFilter == "BusinessPartner")
@@ -101,6 +104,7 @@ public class AdminSearchModel : PageModel
                 });
             }
             reader.Close();
+            DBClass.Lab3DBConnection.Close();
         }
 
         return Page();
