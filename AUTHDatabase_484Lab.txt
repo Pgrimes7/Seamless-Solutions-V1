@@ -12,4 +12,12 @@ CREATE TABLE HashedCredentials (
 
 
 INSERT INTO HashedCredentials (UserID, Username, Password) 
-VALUES (9,'admin','1000:nRilPtmLO7SkFDZ/3Myj8tYBVFfMRQ9X:L7YujlYh4EXAvYmzTaSdHM9wTiU=');
+VALUES (1,'smithto','1000:uBKPadqvKLm2/7cZea0R95hMiyg81Kzb:SST8Ojd9rm7FMechzPvtzotCNfg='),
+       (2,'gorbergr','1000:B1/tQda27988D2S71/Kf8jyoW9BYp3aZ:PhbSDeE9lx6MS9LpJzyMTsn66to='),
+       (3,'brownch','1000:xtGVnFsbt64o8y0r4Iyrsq/IwdbbZaXo:5Vw5ethGn8XbXcHpWs5IxQGx1gQ='),
+       (4,'jordanbow','1000:C5V/YYPKwvwZFAbcxL1QKLJcUMxeq4ox:rPF3+VpFSXKiNJWrhZ7XvSG2t7c='),
+       (5,'manbos','1000:lFTK3aHi2nkfLhDsv4Uva65r8k9d/y2G:cBTp02f3YHXItRv6r/aJj5uuqNY='),
+       (6,'brantjo','1000:JUXBVgPxj2QvpN07/7Opvpj5eFyGj4Tu:bpUyhRddv89/lbR16Q45wrsKLL0='),
+       (7,'gomberbu','1000:HnxiVKu0ZUyhUwcRxH4TtZk8uzl1BAvJ:oSARiJr0QRjH2CDUcsH92f1aFsw='),
+       (8,'yangmag','1000:KkY4Hv3Yca9zGMohwbq7fhtNmdm+L4Sk:vHHd2c4NOFqWQOCsRaoKgsODrVw='),
+       (9,'admin','1000:nRilPtmLO7SkFDZ/3Myj8tYBVFfMRQ9X:L7YujlYh4EXAvYmzTaSdHM9wTiU=');
