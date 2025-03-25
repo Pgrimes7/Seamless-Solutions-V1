@@ -456,14 +456,15 @@ namespace Lab1484.Pages.DB
 
         public static SqlDataReader CredentialsReader()
         {
+
             SqlCommand cmdCredentialsRead = new SqlCommand();//Make new sqlCommand object
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
             cmdCredentialsRead.Connection = Lab3DBConnection;
-            cmdCredentialsRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdCredentialsRead.CommandText = "Select Credentials.Username FROM Credentials;";
+            cmdCredentialsRead.Connection.ConnectionString = AuthConnString;
+            cmdCredentialsRead.CommandText = "Select HashedCredentials.Username FROM HashedCredentials;";
             cmdCredentialsRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdCredentialsRead.ExecuteReader();
