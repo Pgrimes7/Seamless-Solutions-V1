@@ -165,3 +165,9 @@ VALUES ('smithto', 'brownch', 'Just wanted to send a reminder about the project"
 	   ('brantjo', 'jordanbow', 'When would you be available to discuss?', 0),
        ('yangmag', 'gorbergr', 'Are we still able to meet about this tomorrow?', 0);
 
+ALTER TABLE Grants
+ADD dueDate DATE;
+
+UPDATE Grants
+SET dueDate = '2025-12-31';
+
