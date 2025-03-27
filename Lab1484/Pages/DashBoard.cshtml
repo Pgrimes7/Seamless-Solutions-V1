@@ -50,17 +50,17 @@
         </tbody>
     </table>
 
-    <div style="display: flex; align-items: flex-start;">
+    <div style="display: flex; align-items: center; gap: 10px;">
         <h2 style="margin-right: 10px;">Grant View</h2>
         <a class="btn btn-secondary" asp-area="" asp-page="/UpdateGrant">Update Grant</a>
+        <a class="btn btn-primary" asp-area="" asp-page="/GrantCreation">Create Grant</a>
     </div>
     <table class="table table-bordered table-responsive table-hover">
         <thead>
             <tr>
                 <th>Grant Name:</th>
                 <th>Grant Amount:</th>
-                <th>Submission Date:</th>
-                <th>Award Date:</th>
+                <th>Due Date:</th>
                 <th>Faculty Name:</th>
                 <th>Grant Status:</th>
             </tr>
@@ -70,20 +70,18 @@
             {
                 var statusClass = prod.grantStatus?.ToLower() switch
                 {
-                    "applied" => "badge bg-warning text-dark",
-                    "pending" => "badge bg-warning text-dark",
-                    "accepted" => "badge bg-success",
-                    "rejected" => "badge bg-danger",
-                    "completed" => "badge bg-light text-dark",
+                    "in progress" => "badge bg-info text-dark",
                     "opportunity" => "badge bg-primary",
+                    "pending" => "badge bg-warning text-dark",
+                    "approved" => "badge bg-success",
+                    "rejected" => "badge bg-danger",
                     _ => "badge bg-secondary"
                 };
 
                 <tr>
                     <td>@prod.businessName</td>
                     <td>@prod.amount</td>
-                    <td>@prod.submissionDate</td>
-                    <td>@prod.awardDate</td>
+                    <td>@prod.dueDate.ToShortDateString()</td>
                     <td>@prod.facultyName</td>
                     <td><span class="@statusClass">@prod.grantStatus</span></td>
                 </tr>

@@ -238,17 +238,17 @@ namespace Lab1484.Pages.DB
 
 
 
-        //Inserts new grant into DB
         public static void InsertGrant(Grant g)
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
-            string sqlQuery = @"INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName," +
-                " category, submissionDate, awardDate, grantStatus, amount)" +
-                " VALUES (@FacultyLeadID, @businessPartnerID, @businessName, @category, @submissionDate, @awardDate, @grantStatus, @amount);";
 
+            string sqlQuery = @"INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName,
+                        category, dueDate, grantStatus, amount)
+                        VALUES (@FacultyLeadID, @businessPartnerID, @businessName,
+                        @category, @dueDate, @grantStatus, @amount);";
 
             SqlCommand cmdGrantInsert = new SqlCommand();
             cmdGrantInsert.Connection = Lab3DBConnection;
@@ -258,17 +258,14 @@ namespace Lab1484.Pages.DB
             cmdGrantInsert.Parameters.AddWithValue("@businessPartnerID", g.BusinessPartnerID);
             cmdGrantInsert.Parameters.AddWithValue("@businessName", g.businessName);
             cmdGrantInsert.Parameters.AddWithValue("@category", g.category);
-            cmdGrantInsert.Parameters.AddWithValue("@submissionDate", g.submissionDate);
-            cmdGrantInsert.Parameters.AddWithValue("@awardDate", g.awardDate);
+            cmdGrantInsert.Parameters.AddWithValue("@dueDate", g.dueDate);
             cmdGrantInsert.Parameters.AddWithValue("@grantStatus", g.grantStatus);
             cmdGrantInsert.Parameters.AddWithValue("@amount", g.amount);
 
             cmdGrantInsert.Connection.Open();
             cmdGrantInsert.ExecuteNonQuery();
-
-
-
         }
+
 
 
 
@@ -568,7 +565,7 @@ namespace Lab1484.Pages.DB
             int userID = Convert.ToInt32(cmdUserInsert.ExecuteScalar());
 
             string newHashedCredsQuery = @"
-            INSERT INTO HashedCredentials (UserID,Username,Password) 
+            INSERT INTO HashedCredentials (UserID,Username,Password)
             VALUES (@UserID, @Username, @Password);";
 
             SqlCommand cmdNewHashed = new SqlCommand();
@@ -649,7 +646,7 @@ namespace Lab1484.Pages.DB
                 cmdCheckUser.CommandText = findUserType;
                 cmdCheckUser.CommandType = CommandType.StoredProcedure;
 
-                string userID = httpContext.Session.GetString("userID");//Used AI to learn how to set the userID in the session 
+                string userID = httpContext.Session.GetString("userID");//Used AI to learn how to set the userID in the session
 
 
                 cmdCheckUser.Parameters.AddWithValue("@UserID", Convert.ToInt32(userID));
@@ -672,9 +669,3 @@ namespace Lab1484.Pages.DB
         }
     }
 }
-            
-
-
-
-
-

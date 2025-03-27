@@ -2,142 +2,91 @@
 @model Lab1484.Pages.UpdateGrantModel
 @{
     <h1>Update A Grant</h1>
-
-<br />
-
-
-<h2>Grant View</h2>
-
-
-<table class="table table-bordered table-responsive table-hover">
-
-<thead>
-
-<tr>
-
-<th>Select</th>
-
-<th>Grant Name</th>
-
-<th>Category</th>
-
-<th>Amount</th>
-
-<th>Submission Date</th>
-
-<th>Award Date</th>
-
-<th>Faculty Name</th>
-
-<th>Grant Status</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-@foreach (var grant in Model.GrantList)
-
-{
-
-var statusClass = grant.grantStatus?.ToLower() switch
-{
-
-"Applied" => "badge bg-warning text-dark",
-
-"Pending" => "badge bg-warning text-dark",
-
-"Accepted" => "badge bg-success",
-
-"Rejected" => "badge bg-danger",
-
-"Completed" => "badge bg-light text-dark",
-
-"Opportunity" => "badge bg-primary",
-
-_ => "badge bg-secondary"
-
-};
-
-
-<tr>
-
-<td>
-
-<input type="radio" name="selectedGrant" value="@grant.GrantID" onchange="selectGrant('@grant.GrantID', '@grant.grantStatus')" />
-
-</td>
-
-<td>@grant.businessName</td>
-
-<td>@grant.category</td>
-
-<td>@grant.amount</td>
-
-<td>@(grant.submissionDate?.ToShortDateString() ?? "N/A")</td>
-
-<td>@(grant.awardDate?.ToShortDateString() ?? "N/A")</td>
-
-<td>@grant.facultyName</td>
-
-<td><span class="@statusClass">@grant.grantStatus</span></td>
-
-</tr>
-
-}
-
-</tbody>
-
-</table>
-
-
-<br />
-
-
-<h2>Update Grant Status</h2>
-
-<form method="post">
-
-<input type="hidden" asp-for="SelectedGrantId" id="selectedGrantId" />
-
-
-<label for="newStatus">Select New Status:</label>
-
-<select asp-for="NewGrantStatus" class="form-select" id="newStatus">
-
-<option value="Applied">Applied</option>
-
-<option value="Pending">Pending</option>
-
-<option value="Accepted">Accepted</option>
-
-<option value="Rejected">Rejected</option>
-
-<option value="Completed">Completed</option>
-
-<option value="Opportunity">Opportunity</option>
-
-</select>
-
-
-<br />
-
-
-<button type="submit" class="btn btn-primary">Update Status</button>
-
-</form>
-
-
-<script>
-
-function selectGrant(grantId, currentStatus) {
-
-document.getElementById('selectedGrantId').value = grantId;
-
-document.getElementById('newStatus').value = currentStatus;
-
-}
-
-</script>
+    <br />
+
+    <h2>Grant View</h2>
+
+    <table class="table table-bordered table-responsive table-hover">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Grant Name</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+                <th>Faculty Name</th>
+                <th>Grant Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var grant in Model.GrantList)
+            {
+                var statusClass = grant.grantStatus?.ToLower() switch
+                {
+                    "pending" => "badge bg-warning text-dark",
+                    "approved" => "badge bg-success",
+                    "rejected" => "badge bg-danger",
+                    "in progress" => "badge bg-info text-dark",
+                    "opportunity" => "badge bg-primary",
+                    _ => "badge bg-secondary"
+                };
+
+                <tr>
+                    <td>
+                        <input type="radio" name="selectedGrant" value="@grant.GrantID" onchange="selectGrant('@grant.GrantID', '@grant.grantStatus')" />
+                    </td>
+                    <td>@grant.businessName</td>
+                    <td>@grant.category</td>
+                    <td>@grant.amount</td>
+                    <td>@grant.dueDate.ToShortDateString()</td>
+                    <td>@grant.facultyName</td>
+                    <td><span class="@statusClass">@grant.grantStatus</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <br />
+
+    <h2>Update Grant Status</h2>
+
+    <div id="error-message" class="text-danger mb-2" style="display: none;"></div>
+
+    <form method="post" onsubmit="return validateGrantSelection();">
+        <input type="hidden" asp-for="SelectedGrantId" id="selectedGrantId" />
+
+        <label for="newStatus">Select New Status:</label>
+        <select asp-for="NewGrantStatus" class="form-select" id="newStatus">
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Opportunity">Opportunity</option>
+        </select>
+
+        <br />
+
+        <button type="submit" class="btn btn-primary">Update Status</button>
+    </form>
+
+    <script>
+        function selectGrant(grantId, currentStatus) {
+            document.getElementById('selectedGrantId').value = grantId;
+            document.getElementById('newStatus').value = currentStatus;
+        }
+
+        function validateGrantSelection() {
+            const selectedId = document.getElementById('selectedGrantId').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (!selectedId || selectedId === "0") {
+                errorMessage.textContent = "Please select a grant before updating its status.";
+                errorMessage.style.display = "block";
+                return false;
+            }
+
+            errorMessage.style.display = "none";
+            return true;
+        }
+    </script>
 }

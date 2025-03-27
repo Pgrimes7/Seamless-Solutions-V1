@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Lab1484.Pages.DataClasses;
-using Lab1484.Pages.DB;//Links to DB class and Dataclasses folders
+using Lab1484.Pages.DB;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http.Extensions;
 
@@ -10,46 +10,45 @@ namespace Lab1484.Pages
     public class DashBoardModel : PageModel
     {
         [BindProperty] public int SelectedProject { get; set; }
-        public String SelectMessage { get; set; }
+        public string SelectMessage { get; set; }
 
-        public List<Project> ProjectList { get; set; }//Creates project list
-        public List<Grant> GrantList { get; set; }//create grant object list
-        public DashBoardModel() 
-        { 
-        ProjectList = new List<Project>();
-        GrantList = new List<Grant>();
+        public List<Project> ProjectList { get; set; }
+        public List<Grant> GrantList { get; set; }
 
-        }
-        public void OnPostProjectSelect()//Produce output after clicking on drop down project list might be able to just remove since doesn't produce msg
+        public DashBoardModel()
         {
-            SelectMessage = "Selection Project was: " + SelectedProject;
+            ProjectList = new List<Project>();
+            GrantList = new List<Grant>();
+        }
+
+        public void OnPostProjectSelect()
+        {
+            SelectMessage = "Selected Project was: " + SelectedProject;
         }
 
         public IActionResult OnGet()
         {
-            //Check to see if the user is logged in
             string currentUser = HttpContext.Session.GetString("username");
-            //Redirect them if they aren't
             if (string.IsNullOrEmpty(currentUser))
             {
                 return RedirectToPage("/Login");
             }
 
-            SqlDataReader projectReader = DBClass.ProjectReader();//invokes data from project table
+            SqlDataReader projectReader = DBClass.ProjectReader();
             while (projectReader.Read())
             {
                 ProjectList.Add(new Project
                 {
                     ProjectID = Int32.Parse(projectReader["ProjectID"].ToString()),
                     ProjectName = projectReader["ProjectName"].ToString(),
-                    DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")), // Directly retrieve as DateTime
-                    DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")), // Directly retrieve as DateTime
+                    DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")),
+                    DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
                     DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
                     AdminName = projectReader["AdminName"].ToString()
                 });
             }
 
-            SqlDataReader grantReader = DBClass.GrantReader();//instantiates class to read grant table and produce all available summary data
+            SqlDataReader grantReader = DBClass.GrantReader();
             while (grantReader.Read())
             {
                 GrantList.Add(new Grant
@@ -58,19 +57,29 @@ namespace Lab1484.Pages
                     businessName = grantReader["businessName"].ToString(),
                     amount = Double.Parse(grantReader["amount"].ToString()),
                     category = grantReader["category"].ToString(),
-                    submissionDate = grantReader.GetDateTime(grantReader.GetOrdinal("submissionDate")),//getOrdinal finds the column index then GetDateTime pulls it from the list
-                    awardDate = grantReader.GetDateTime(grantReader.GetOrdinal("awardDate")),
+                    dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
                     facultyName = grantReader["FacultyLead"].ToString(),
                     grantStatus = grantReader["grantStatus"].ToString()
                 });
             }
 
-            // Close your connection in DBClass
             DBClass.Lab3DBConnection.Close();
+
+            var statusOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "In Progress", 1 },
+                { "Opportunity", 2 },
+                { "Pending", 3 },
+                { "Approved", 4 },
+                { "Rejected", 5 }
+            };
+
+            GrantList = GrantList
+                .OrderBy(g => statusOrder.ContainsKey(g.grantStatus) ? statusOrder[g.grantStatus] : int.MaxValue)
+                .ThenBy(g => g.businessName)
+                .ToList();
 
             return Page();
         }
-
-
     }
 }
