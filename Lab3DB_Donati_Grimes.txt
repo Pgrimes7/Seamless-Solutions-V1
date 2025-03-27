@@ -171,3 +171,11 @@ ADD dueDate DATE;
 UPDATE Grants
 SET dueDate = '2025-12-31';
 
+UPDATE Grants
+SET businessName = 'Research Fund'
+WHERE businessName = 'Business A';
+
+UPDATE Grants
+SET businessName = 'Tech Expansion'
+WHERE businessName = 'Business B';
+
