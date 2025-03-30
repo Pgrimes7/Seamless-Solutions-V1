@@ -669,8 +669,23 @@ namespace Lab1484.Pages.DB
         }
         public static void changePermission(grant_user g)
         {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
 
+            string checkPermission = "checkPermissionRecord";
+            string updatePermission = "updatePermissionRecord";
+            //Need if statement to check if theres already a record for the user and grant in the table
+            //If there is, update the record
+            //If there isn't, insert a new record
+            SqlCommand cmdCheckUserPermission = new SqlCommand();
+            cmdCheckUserPermission.Connection = Lab3DBConnection;
 
+            cmdCheckUserPermission.CommandText = checkPermission;
+            cmdCheckUserPermission.CommandType = CommandType.StoredProcedure;
+
+            cmdCheckUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
 
 
         }
