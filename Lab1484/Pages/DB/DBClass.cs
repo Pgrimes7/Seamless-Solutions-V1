@@ -686,7 +686,21 @@ namespace Lab1484.Pages.DB
             cmdCheckUserPermission.CommandType = CommandType.StoredProcedure;
 
             cmdCheckUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
+            cmdCheckUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
 
+
+
+
+            //If there is a record, update it
+            if (cmdCheckUserPermission.ExecuteScalar() != null)
+            {
+                SqlCommand cmdUpdateUserPermission = new SqlCommand();
+                cmdUpdateUserPermission.Connection = Lab3DBConnection;
+
+
+
+
+            }
 
         }
     }
