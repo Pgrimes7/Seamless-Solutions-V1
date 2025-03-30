@@ -103,6 +103,19 @@ CREATE TABLE Messages (
     IsRead BIT DEFAULT 0,
 );
 
+--Associative Table for grant permissions
+CREATE TABLE Grant_User(
+UserID int references Users (UserID),
+GrantID int references Grants(GrantID),
+PRIMARY KEY (UserID, GrantID),
+ViewPermission int,
+EditPermission int,
+SensitiveInfoPermission int
+
+
+)
+
+
 
 
 
@@ -178,4 +191,3 @@ WHERE businessName = 'Business A';
 UPDATE Grants
 SET businessName = 'Tech Expansion'
 WHERE businessName = 'Business B';
-
