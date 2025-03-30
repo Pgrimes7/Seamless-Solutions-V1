@@ -528,7 +528,7 @@ namespace Lab1484.Pages.DB
 
                 if (PasswordHash.ValidatePassword(Password, correctHash))
                 {
-                    httpcontext.Session.SetString("userID", userID.ToString());//used co pilot for calling httpcontext in this seting
+                    httpcontext.Session.SetString("userID", userID.ToString());//this sets the session userID data to the userID of the authenticated user
                     return true;
                 }
             }
@@ -631,7 +631,7 @@ namespace Lab1484.Pages.DB
             cmdNoteInsert.Connection.Open();
             cmdNoteInsert.ExecuteNonQuery();
         }
-        public static int checkUserType(HttpContext httpContext)//used copilot to call httpContext here
+        public static int checkUserType(HttpContext httpContext)//Calls httpContext to pull UserID 
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
@@ -646,7 +646,7 @@ namespace Lab1484.Pages.DB
                 cmdCheckUser.CommandText = findUserType;
                 cmdCheckUser.CommandType = CommandType.StoredProcedure;
 
-                string userID = httpContext.Session.GetString("userID");//Used AI to learn how to set the userID in the session
+                string userID = httpContext.Session.GetString("userID");
 
 
                 cmdCheckUser.Parameters.AddWithValue("@UserID", Convert.ToInt32(userID));
@@ -665,6 +665,13 @@ namespace Lab1484.Pages.DB
                     }
                 }
             }
+
+        }
+        public static void changePermission(grant_user g)
+        {
+
+
+
 
         }
     }
