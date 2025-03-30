@@ -34,6 +34,8 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Login");
             }
 
+
+
             SqlDataReader projectReader = DBClass.ProjectReader();
             while (projectReader.Read())
             {
