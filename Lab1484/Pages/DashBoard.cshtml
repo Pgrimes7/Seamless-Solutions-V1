@@ -2,7 +2,7 @@
 @model Lab1484.Pages.DashBoardModel
 
 @{
-    <!doctype html>
+    @*<!doctype html>
     <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -46,12 +46,16 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#submenu1" data-bs-toggle="collapse" class="nav-link link-body-emphasis px-0 align-middle" aria-expanded="false">
+                                    <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle">
                                         <i class="fa-solid fa-table-columns"></i>
                                         <span class="ms-1 d-none d-sm-inline">Dashboard</span>
+                                    </a>*@
+                                    @*<a href="#submenu1" data-bs-toggle="collapse" class="nav-link link-body-emphasis px-0 align-middle" aria-expanded="false">
+                                        <i class="fa-solid fa-table-columns"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Menu</span>
                                         <i class="fa-solid fa-caret-down"></i>
-                                    </a>
-                                    <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                                    </a>*@
+                                    @*<ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                                         <li class="w-100">
                                             <a href="#" class="nav-link link-body-emphasis px-0">
                                                 <span class="d-none d-sm-inline">Dropdown</span>
@@ -95,6 +99,7 @@
 
                 </div> <!-- End row -->
             </div> <!-- End container -->
+            *@
 
            
        
@@ -195,10 +200,10 @@
                 <p class="text-center text-body-secondary">© 2024 JMU Care, Inc</p>
             </footer>
 
-        </main>
+        @*</main>
 
     </body>
-    </html>
+    </html>*@
 
      
 }
