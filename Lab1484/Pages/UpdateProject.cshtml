@@ -1,12 +1,13 @@
 ﻿@page
 @model Lab1484.Pages.UpdateProjectModel
 @{
-	<h2>Edit Project: @Model.Proj.ProjectName</h2>
+	@Model.UpdateProj.ProjectID
+	<h2>Edit Project: @Model.UpdateProj.ProjectName</h2>
 	<form id="UpdateProject" asp-page="UpdateProject" method="post">
 		@*//Project Name (textbox)*@
 		Project Name
 		<br />
-		<input type="text" asp-for="@Model.UpdateProj.ProjectName" />
+		<input type="text" asp-for="UpdateProj.ProjectName" />
 		<span asp-validation-for="@Model.UpdateProj.ProjectName" class="text-danger"></span>
 		<br />
 		<br />
@@ -14,20 +15,20 @@
 		@*//Due Date (textbox with special perms)*@
 		Due Date
 		<br />
-		<input type="date" asp-for="@Model.UpdateProj.DateDue" />
+		<input type="date" asp-for="UpdateProj.DateDue" />
 		<br />
 		<br />
 
 		@*//Project Status (Radio Button)*@
 		Project Status
 		<div>
-			<input type="radio" asp-for="@Model.UpdateProj.ProjectStatus" value="Not Begun" checked /> Incomplete
+			<input type="radio" asp-for="UpdateProj.ProjectStatus" value="Not Begun" /> Incomplete
 		</div>
 		<div>
-			<input type="radio" asp-for="@Model.UpdateProj.ProjectStatus" value="Incomplete" /> In Progress
+			<input type="radio" asp-for="UpdateProj.ProjectStatus" value="Incomplete" /> In Progress
 		</div>
 		<div>
-			<input type="radio" asp-for="@Model.UpdateProj.ProjectStatus" value="Complete" /> Complete
+			<input type="radio" asp-for="UpdateProj.ProjectStatus" value="Complete" /> Complete
 		</div>
 		<br />
 		<input type="submit" value="Edit Project" />
