@@ -93,17 +93,23 @@
                             <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                                     
 
-                                    <li class="nav-item">
+                                    @*<li class="nav-item">
                                         <a href="#" class="nav-link link-body-emphasis align-middle px-0">
                                             <i class="fa-solid fa-house"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Home</span>
+                                            <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
+                                        </a>
+                                    </li>*@
+                                    <li>
+                                        <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle">
+                                            <i class="fa-solid fa-house"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-table-columns"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Dashboard</span>
-                                        </a>
+                                    <a asp-page="/GrantsAndProjects" class=" nav-link link-body-emphasis px-0 align-middle">
+                                        <i class="fa-solid fa-table-columns"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Grants and Projects</span>
+                                    </a> 
                                     </li>
                                     <li>
                                         <a asp-page="/ProjectCreation" class="nav-link link-body-emphasis px-0 align-middle">
@@ -136,9 +142,9 @@
                                             <span class="d-none d-sm-inline mx-2">@currentUser</span>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                                            <li><a class="dropdown-item" href="#">New project...</a></li>
+                                            @*<li><a class="dropdown-item" href="#">New project...</a></li>
                                             <li><a class="dropdown-item" href="#">Settings</a></li>
-                                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                                            <li><a class="dropdown-item" href="#">Profile</a></li>*@
                                     <li><a class="dropdown-item" asp-page="/Messages">Messages</a></li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li><a class="dropdown-item" asp-page="/Logout">Sign out</a></li>
