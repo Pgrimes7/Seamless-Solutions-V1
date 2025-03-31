@@ -50,7 +50,7 @@ namespace Lab1484.Pages
             //UpdateProj.ProjectName = "";
             //UpdateProj.DateDue = Proj.DateDue;
             //UpdateProj.ProjectStatus = "";
-            
+
             TempData["ProjectID"] = ProjectID;
             TempData.Keep("ProjectID");
             return Page();
