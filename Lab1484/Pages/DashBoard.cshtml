@@ -170,6 +170,7 @@
                                     </div> <!--close btn-toolbar-->
                                 </div> <!--close d-flex-->
                             </div> <!--close grant column-->
+
                             <!--grant table-->
                             <div class="table-responsive table-bordered rounded small">
                                 <table id="grantTable" class="table align-middle mb-0 bg-white">
@@ -209,6 +210,33 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach (var prod in Model.GrantList)
+                                        {
+                                            var statusClass = prod.grantStatus?.ToLower() switch
+                                            {
+                                                "in progress" => "badge bg-info text-dark",
+                                                "opportunity" => "badge bg-primary",
+                                                "pending" => "badge bg-warning text-dark",
+                                                "approved" => "badge bg-success",
+                                                "rejected" => "badge bg-danger",
+                                                _ => "badge bg-secondary"
+                                            };
+
+                                        <tr>
+                                            <td>@prod.GrantID</td>
+                                            <td>@prod.facultyName</td>
+                                            <td>@prod.dueDate.ToShortDateString()</td>
+                                            <td><span class="@statusClass">@prod.grantStatus</span></td>
+                                            <td>Orgnaization Name</td>
+                                            <td>
+                                                <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                            </td>
+                                            
+                                        </tr>
+                                        }
+                                    </tbody>
                                         <tr>
                                             <td>11111</td>
                                             <td>
@@ -383,10 +411,7 @@
             }
         </tbody>
     </table>
-
-            <footer class="py-3 my-4">
-                <p class="text-center text-body-secondary">© 2024 JMU Care, Inc</p>
-            </footer>*@
+*@
 
         </main>
 
