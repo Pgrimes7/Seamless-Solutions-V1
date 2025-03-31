@@ -224,86 +224,29 @@
 
                                         <tr>
                                             <td>@prod.GrantID</td>
-                                            <td>@prod.facultyName</td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
+                                                    <div class="ms-3">
+                                                        <p class="fw-bold mb-1">@prod.facultyName</p>
+                                                        <p class="text-muted mb-0">@prod.facultyEmail</p>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td>@prod.dueDate.ToShortDateString()</td>
                                             <td><span class="@statusClass">@prod.grantStatus</span></td>
                                             <td>Orgnaization Name</td>
                                             <td>
-                                                <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                <a asp-page="/UpdateGrant" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
                                                     <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
+                                                </a>
                                             </td>
                                             
                                         </tr>
                                         }
                                     </tbody>
-                                        <tr>
-                                            <td>11111</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">John Doe</p>
-                                                        <p class="text-muted mb-0">john.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-success rounded-pill d-inline">Completed</span>
-                                            </td>
-                                            <td>Organizaition name</td>
-                                            <td>
-                                                <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>22222</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/6.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">Jane Doe</p>
-                                                        <p class="text-muted mb-0">jane.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-info rounded-pill d-inline">Pending</span>
-                                            </td>
-                                            <td>Organization name</td>
-                                            <td>
-                                                <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>33333</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/7.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">Jan Doe</p>
-                                                        <p class="text-muted mb-0">jan.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-warning rounded-pill d-inline">Not started</span>
-                                            </td>
-                                            <td>Organization name</td>
-                                            <td>
-                                                <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                        
+                                    
                                 </table>
                             </div> <!--close table div-->
                         </div> <!--close grants col-->

@@ -25,5 +25,8 @@ namespace Lab1484.Pages.DataClasses
         public double amount { get; set; }
 
         public string? facultyName { get; set; }
+
+        public string? facultyEmail { get; set; }
+
     }
 }

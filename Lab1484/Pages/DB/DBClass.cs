@@ -106,7 +106,7 @@ namespace Lab1484.Pages.DB
             }
             cmdGrantRead.Connection = Lab3DBConnection;
             cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead " +
+            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
                 "from Grants " +
                 "join Users ON Users.UserID = Grants.FacultyLeadID; ";
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
