@@ -71,7 +71,7 @@
         <div class="container-fluid">
             <div class="row flex-nowrap">
 
-               
+
                 <!--main content div-->
                 <div class="col py-3">
                     <h1>Grants and Projects</h1>
@@ -188,57 +188,35 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>11111</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">John Doe</p>
-                                                        <p class="text-muted mb-0">john.doe@gmail.com</p>
+                                        @foreach (var prod in Model.GrantList)
+                                        {
+                                            var statusClass = prod.grantStatus?.ToLower() switch
+                                            {
+                                                "in progress" => "badge bg-info text-dark",
+                                                "opportunity" => "badge bg-primary",
+                                                "pending" => "badge bg-warning text-dark",
+                                                "approved" => "badge bg-success",
+                                                "rejected" => "badge bg-danger",
+                                                _ => "badge bg-secondary"
+                                            };
+
+                                            <tr>
+                                                <td>@prod.GrantID</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
+                                                        <div class="ms-3">
+                                                            <p class="fw-bold mb-1">@prod.facultyName</p>
+                                                            <p class="text-muted mb-0">@prod.facultyEmail</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-success rounded-pill d-inline">Completed</span>
-                                            </td>
-                                            <td>Organizaition name</td>
-                                        </tr>
-                                        <tr>
-                                            <td>22222</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/6.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">Jane Doe</p>
-                                                        <p class="text-muted mb-0">jane.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-info rounded-pill d-inline">Pending</span>
-                                            </td>
-                                            <td>Organization name</td>
-                                        </tr>
-                                        <tr>
-                                            <td>33333</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/7.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">Jan Doe</p>
-                                                        <p class="text-muted mb-0">jan.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-warning rounded-pill d-inline">Not started</span>
-                                            </td>
-                                            <td>Organization name</td>
-                                        </tr>
+                                                </td>
+                                                <td>@prod.dueDate.ToShortDateString()</td>
+                                                <td><span class="@statusClass">@prod.grantStatus</span></td>
+                                                <td>Orgnaization Name</td>
+
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div> <!--close table div-->
@@ -259,7 +237,7 @@
                                 <table id="grantTable" class="table align-middle mb-0 bg-white">
                                     <thead class="bg-light">
                                         <tr>
-                                            <th>Grant ID</th>
+                                            <th>Project ID</th>
                                             <th>Contact</th>
                                             <th>Due date</th>
                                             <th>Status</th>
@@ -267,57 +245,37 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>11111</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">John Doe</p>
-                                                        <p class="text-muted mb-0">john.doe@gmail.com</p>
+                                        @foreach (var prod in Model.ProjectList)
+                                        {
+                                            var statusClass = prod.ProjectStatus?.ToLower() switch
+                                            {
+                                                "in progress" => "badge bg-info text-dark",
+                                                "opportunity" => "badge bg-primary",
+                                                "pending" => "badge bg-warning text-dark",
+                                                "approved" => "badge bg-success",
+                                                "rejected" => "badge bg-danger",
+                                                _ => "badge bg-secondary"
+                                            };
+
+                                            <tr>
+                                                <td>@prod.ProjectID</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
+                                                        <div class="ms-3">
+                                                            <p class="fw-bold mb-1">@prod.AdminName</p>
+                                                            <p class="text-muted mb-0">@prod.AdminEmail</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-success rounded-pill d-inline">Completed</span>
-                                            </td>
-                                            <td>Organizaition name</td>
-                                        </tr>
-                                        <tr>
-                                            <td>22222</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/6.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">Jane Doe</p>
-                                                        <p class="text-muted mb-0">jane.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-info rounded-pill d-inline">Pending</span>
-                                            </td>
-                                            <td>Organization name</td>
-                                        </tr>
-                                        <tr>
-                                            <td>33333</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/7.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">Jan Doe</p>
-                                                        <p class="text-muted mb-0">jan.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-warning rounded-pill d-inline">Not started</span>
-                                            </td>
-                                            <td>Organization name</td>
-                                        </tr>
+                                                </td>
+                                                <td>@prod.DateDue.ToShortDateString()</td>
+                                                <td><span class="@statusClass">@prod.ProjectStatus</span></td>
+                                                <td>Orgnaization Name</td>
+                                                
+
+                                            </tr>
+                                        }
+                                        
                                     </tbody>
                                 </table>
                             </div> <!--close table div-->

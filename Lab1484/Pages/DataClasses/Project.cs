@@ -24,9 +24,11 @@ namespace Lab1484.Pages.DataClasses
         [Required]
         [DataType(DataType.Date)]
         [Range(typeof(DateTime), "1/1/1753", "12/31/9999", ErrorMessage = "Award Date must be between 01/01/1753 and 12/31/9999")]
-        public DateTime? DateDue { get; set; }
+        public DateTime DateDue { get; set; }
 
         public String AdminName { get; set; }
+
+        public String AdminEmail { get; set; }
 
         public String ProjectStatus { get; set; }
 

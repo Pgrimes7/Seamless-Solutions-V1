@@ -40,7 +40,7 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName " +
+            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Users.email AS AdminEmail " +
                 "from Project " +
                 "join Users ON Users.UserID = Project.ProjectAdminID; ";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
