@@ -23,7 +23,7 @@ namespace Lab1484.Pages
         public List<Project> ProjectList { get; set; } = new List<Project>();
 
         [BindProperty]
-        public float ProjectCost { get; set; }
+        public float ProjectCost { get; set; } = 0;
 
         [BindProperty]
         public DateTime DueDate { get; set; }
@@ -92,7 +92,7 @@ namespace Lab1484.Pages
                 DBClass.InsertEmployeeProject(newProjectID, employeeID);
             }
 
-            return RedirectToPage("/ProjectCreation");
+            return RedirectToPage("/DashBoard");
         }
         
 

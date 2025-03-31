@@ -46,7 +46,8 @@ namespace Lab1484.Pages
                     DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")),
                     DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
                     DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
-                    AdminName = projectReader["AdminName"].ToString()
+                    AdminName = projectReader["AdminName"].ToString(),
+                    ProjectStatus = projectReader["ProjectStatus"].ToString()
                 });
             }
 
