@@ -13,8 +13,11 @@ namespace Lab1484.Pages
            
             ViewData["LogoutMessage"] = "Successfully Logged Out!";
 
-
-            return Page();
+            
+            // Redirect user to Index page
+            return RedirectToPage("/Index");
+            
+                
         }
     }
 }
