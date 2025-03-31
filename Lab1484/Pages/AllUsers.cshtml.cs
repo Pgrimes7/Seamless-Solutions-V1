@@ -31,7 +31,7 @@ namespace Lab1484.Pages
 
             cmd.Connection = DBClass.Lab3DBConnection;
             cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
-            cmd.CommandText = "SELECT userType, firstName, lastName, email, phoneNumber FROM Users";
+            cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
             cmd.Connection.Open();
 
             SqlDataReader reader = cmd.ExecuteReader();
@@ -50,10 +50,12 @@ namespace Lab1484.Pages
                 Users.Add(new UserDisplay
                 {
                     UserTypeName = role,
-                    FirstName = reader.GetString(1),
-                    LastName = reader.GetString(2),
-                    Email = reader.GetString(3),
-                    Phone = reader.IsDBNull(4) ? "" : reader.GetString(4)
+                    UsersName = reader.GetString(1),
+
+                    /*LastName = reader.GetString(2),*/
+
+                    Email = reader.GetString(2),
+                    Phone = reader.IsDBNull(3) ? "" : reader.GetString(3)
                 });
             }
 
@@ -66,8 +68,9 @@ namespace Lab1484.Pages
         public class UserDisplay
         {
             public string UserTypeName { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
+            public string UsersName { get; set; }
+
+            /*public string LastName { get; set; }*/
             public string Email { get; set; }
             public string Phone { get; set; }
         }
