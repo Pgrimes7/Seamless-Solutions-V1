@@ -40,29 +40,29 @@
 
 
 <body>
-    <header>
+    @*<header>*@
                 @{
                     string currentUser = Context.Session.GetString("username");
                 }
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                    @*//Check to see if the user is logged in*@
+                    @*Check to see if the user is logged in
                     @if (string.IsNullOrEmpty(currentUser))
                     {
-                                <a class="navbar-brand" asp-area="" asp-page="/Index">JMU Care</a>
-                                <a asp-page="/Login" class="btn btn-primary position-relative">Login</a>
-                                <a class="btn btn-dark position-relative" asp-area="" asp-page="/AccountSignUp">Create Account</a>
+                        <a class="navbar-brand" asp-area="" asp-page="/Index">JMU Care</a>
+                        <a asp-page="/Login" class="btn btn-primary position-relative">Login</a>
+                        <a class="btn btn-dark position-relative" asp-area="" asp-page="/AccountSignUp">Create Account</a>
                     }
 
-                    else
+                    @*else
                     {
 
                     <a class="navbar-brand" asp-area="" asp-page="/Dashboard">JMU Care</a>
-                    @*<div class="dropdown">
+                    <div class="dropdown">
                         <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             @currentUser
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -75,21 +75,26 @@
                             <li><a class="dropdown-item" asp-page="/Logout">Log out</a></li>
                         </ul>
                     </div>
-                    *@
+                    
                         
                     }
             </div>
         </nav>
-     </header>
+     </header>*@
 
     <div class="container-fluid">
         <div class="row flex-nowrap">
             @if (!string.IsNullOrEmpty(currentUser))
                     {
                     <!-- Sidebar -->
-                    <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0">
-                        <div class="d-flex flex-column align-items-center align-items-sm-start px-4 pt-3 border border-light-subtle rounded">
-                            <h3>Menu</h3>
+                    <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 mt-2">
+                        <div class="d-flex flex-column align-items-center vh-100 align-items-sm-start px-4 pt-3 border-end border-light-subtle">
+                            <h3>JMU Care</h3>
+                            <!--search bar-->
+                            <div class="input-group rounded mb-4">
+                                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                            </div>
+
                             <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                                     
 
@@ -99,19 +104,53 @@
                                             <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
                                         </a>
                                     </li>*@
-                                    <li>
+
+                                    <li class="nav-item nav-active">
                                         <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-house"></i>
+                                            <i class="fa-solid fa-border-all"></i>
                                             <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
                                         </a>
                                     </li>
-                                    <li>
+                                    <li class="nav-item">
                                     <a asp-page="/GrantsAndProjects" class=" nav-link link-body-emphasis px-0 align-middle">
-                                        <i class="fa-solid fa-table-columns"></i>
+                                        <i class="fa-solid fa-file"></i>
                                         <span class="ms-1 d-none d-sm-inline">Grants and Projects</span>
                                     </a> 
                                     </li>
-                                    <li>
+                                    <li class="nav-item">
+                                        <a asp-page="/Tasks" class="nav-link link-body-emphasis px-0 align-middle">
+                                            <i class="fa-solid fa-list-check"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Tasks</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle">
+                                            <i class="fa-solid fa-users"></i>
+                                            <span class="ms-1 d-none d-sm-inline">All Users</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-page="/Messages" class="nav-link link-body-emphasis px-0 align-middle">
+                                            <i class="fa-solid fa-bell"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Messages</span>
+                                        </a>
+                                    </li>
+                                    <div>
+                                        <hr>
+                                    </div>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                                            <i class="fa-solid fa-gear"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Settings</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                            <span class="ms-1 d-none d-sm-inline">Support</span>
+                                        </a>
+                                    </li>
+                                    @*<li class="nav-item">
                                         <a asp-page="/ProjectCreation" class="nav-link link-body-emphasis px-0 align-middle">
                                             <i class="fa-solid fa-table-columns"></i>
                                             <span class="ms-1 d-none d-sm-inline">Create Project</span>
@@ -147,18 +186,17 @@
                                             <span class="ms-1 d-none d-sm-inline">All Users</span>
                                         </a>
                                      </li>
-                                    <hr>
+                                    <hr>*@
+                             </ul>
                                     <div class="dropup pb-4">
                                         <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                                             <img src="https://github.com/mdo.png" alt="username" width="30" height="30" class="rounded-circle">
                                             <span class="d-none d-sm-inline mx-2">@currentUser</span>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                                            @*<li><a class="dropdown-item" href="#">New project...</a></li>
-                                            <li><a class="dropdown-item" href="#">Settings</a></li>
-                                            <li><a class="dropdown-item" href="#">Profile</a></li>*@
-                                    <li><a class="dropdown-item" asp-page="/Messages">Messages</a></li>
-                                            <li><hr class="dropdown-divider"></li>
+                                            @*
+                                            <li><a class="dropdown-item" asp-page="/Messages">Messages</a></li>
+                                                    <li><hr class="dropdown-divider"></li>*@
                                             <li><a class="dropdown-item" asp-page="/Logout">Sign out</a></li>
                                         </ul>
                                     </div>
@@ -170,7 +208,11 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+                <footer class="py-3 my-4">
+                    <p class="text-center text-body-secondary">© 2024 JMU Care, Inc</p>
+                </footer>
     </div>
+            
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

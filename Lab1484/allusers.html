@@ -1,0 +1,528 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="YOUR DESCRIPTION HERE">
+    <meta name="author" content="YOUR NAME HERE">
+    <title>Test</title>
+
+    <!-- LOAD BOOTSTRAP CSS - DO NOT DELETE -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- END LOADING BOOTSTRAP CSS -->
+
+    <!-- Custom styles - add your own CSS to this stylesheet -->
+    <link href="style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  
+    <!-- DO NOT DELETE -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- DO NOT DELETE -->
+  </head>
+  
+  <body>      
+  
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+  
+          <!--sidebar-->
+          <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 mt-2">
+            <div class="d-flex flex-column align-items-center vh-100 align-items-sm-start px-4 pt-3 border-end border-light-subtle">
+              <h3>JMU Care</h3>
+  
+              <!--search bar-->
+              <div class="input-group rounded mb-4">
+                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+              </div>
+              <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                <li class="nav-item">
+                  <a href="dashboard.html" class="nav-link link-body-emphasis align-middle px-0">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="grants.html" class="nav-link link-body-emphasis px-0 align-middle">
+                    <i class="fa-solid fa-file"></i>
+                    <span class="ms-1 d-none d-sm-inline">Grants/Projects</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span class="ms-1 d-none d-sm-inline">Tasks</span>
+                  </a>
+                </li>
+                <li class="nav-item nav-active rounded-pill">
+                  <a href="allusers.html" class="nav-link px-0 align-middle">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="ms-1 d-none d-sm-inline">All Users</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="ms-1 d-none d-sm-inline">Messages</span>
+                  </a>
+                </li>
+                <div>
+                  <hr>
+                </div>
+                <li class="nav-item">
+                  <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                    <i class="fa-solid fa-gear"></i>
+                    <span class="ms-1 d-none d-sm-inline">Settings</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="ms-1 d-none d-sm-inline">Support</span>
+                  </a>
+                </li>
+              </ul>
+              <div class="dropdown pb-4">
+                <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="https://github.com/mdo.png" alt="username" width="30" height="30" class="rounded-circle">
+                  <span class="d-none d-sm-inline mx-2">Username</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                  <li><a class="dropdown-item" href="#">Sign out</a></li>
+                </ul>
+              </div> <!--close username dropdown-->
+            </div> <!--close flex column-->
+          </div> <!--close sidebar column-->
+  
+          <!--main content col-->
+          <div class="col py-3">
+            <h1>All Users</h1>
+
+            <!--row for search and filter-->
+            <div class="row row-cols-auto my-2 mb-md-0">
+                <div class="col">
+                    <select class="form-select rounded-pill" aria-label="Default select example">
+                        <option selected>All Users</option>
+                        <option value="1">User Type</option>
+                        <option value="2">User Type</option>
+                        <option value="3">User Type</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success me-2" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!--row for create user button-->
+            <div class="row row-cols-auto">
+                <div class="col my-2 mb-md-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-toggle="modal" data-bs-target="#createuserModal">
+                    Create
+                    <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+                  
+            <!--create user modal -->
+            <div class="modal fade" id="createuserModal" tabindex="-1" aria-labelledby="createuserModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="createuserModalLabel">Create New User</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <form class="form-floating">
+                            <div class="row mb-4">
+                              <div class="col">
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected>Select User Type</option>
+                                    <option value="1">User Type</option>
+                                    <option value="2">User Type</option>
+                                    <option value="3">User Type</option>
+                                </select>
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                              <div class="col">
+                                <div class="form-floating mb-4">
+                                    <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                    <label for="floatingMainContactName">First Name</label>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-floating mb-4">
+                                    <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                    <label for="floatingMainContactName">Last Name</label>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-floating mb-4">
+                                        <input type="email" class="form-control" id="floatingEmail" placeholder="john.doe@gmail.com">
+                                        <label for="floatingEmail">Email</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                  <div class="form-floating mb-4">
+                                      <input type="tel" class="form-control" id="floatingPhoneNumber" placeholder="123-456-7890">
+                                      <label for="floatingPhoneNumber">Phone Number</label>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-floating mb-4">
+                                        <input type="text" class="form-control" id="floatingUsername" placeholder="username">
+                                        <label for="floatingUsername">Username</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                  <div class="form-floating mb-4">
+                                      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                      <label for="floatingPassword">Password</label>
+                                  </div>
+                                </div>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                          <button type="button" class="btn btn-primary">Add User</button>
+                        </div>
+                    </div> <!--close modal content-->
+                </div> <!--close modal dialog-->
+            </div> <!--close modal-->
+            
+            <!--user table-->
+            <div class="table-responsive table-bordered rounded small my-2">
+                <table id="grantTable" class="table align-middle mb-0 bg-white">
+                    <thead class="bg-light">
+                      <tr>
+                        <th>Name</th>
+                        <th>Contact Information</th>
+                        <th>Role</th>
+                        <th># of Grants/Projects</th>
+                        <th>Edit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">
+                                    <div class="ms-3">
+                                        <p class="fw-bold mb-1">John Doe</p>
+                                    </div>
+                                </div> 
+                            </td>
+                            <td>
+                                <p class="text-muted mb-0">john.doe@gmail.com</p>
+                            </td>
+                            <td>Faculty</td>
+                            <td>
+                                <p class="text-muted mb-0">3</p>
+                            </td>
+                            <td>
+                                <!--edit button-->
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editUser">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                
+                                <!--edit modal-->
+                                <div class="modal fade" id="editUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="editUserLabel">Edit User</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="form-floating">
+                                                    <div class="row mb-4">
+                                                    <div class="col">
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Select User Type</option>
+                                                            <option value="1">User Type</option>
+                                                            <option value="2">User Type</option>
+                                                            <option value="3">User Type</option>
+                                                        </select>
+                                                    </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                                            <label for="floatingMainContactName">First Name</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                                            <label for="floatingMainContactName">Last Name</label>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-floating mb-4">
+                                                                <input type="email" class="form-control" id="floatingEmail" placeholder="john.doe@gmail.com">
+                                                                <label for="floatingEmail">Email</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="tel" class="form-control" id="floatingPhoneNumber" placeholder="123-456-7890">
+                                                            <label for="floatingPhoneNumber">Phone Number</label>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-floating mb-4">
+                                                                <input type="text" class="form-control" id="floatingUsername" placeholder="username">
+                                                                <label for="floatingUsername">Username</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                                            <label for="floatingPassword">Password</label>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </div> <!--close modal content-->
+                                    </div> <!--close modal dialog-->
+                                </div> <!--close modal-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://mdbootstrap.com/img/new/avatars/6.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
+                                    <div class="ms-3">
+                                        <p class="fw-bold mb-1">Jane Doe</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="text-muted mb-0">jane.doe@gmail.com</p>
+                            </td>
+                            <td>Primary Investigator</td>
+                            <td>
+                                <p class="text-muted mb-0">3</p>
+                            </td>
+                            <td>
+                                <!--edit button-->
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editUser">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                
+                                <!--edit modal-->
+                                <div class="modal fade" id="editUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="editUserLabel">Edit User</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="form-floating">
+                                                    <div class="row mb-4">
+                                                    <div class="col">
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Select User Type</option>
+                                                            <option value="1">User Type</option>
+                                                            <option value="2">User Type</option>
+                                                            <option value="3">User Type</option>
+                                                        </select>
+                                                    </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                                            <label for="floatingMainContactName">First Name</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                                            <label for="floatingMainContactName">Last Name</label>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-floating mb-4">
+                                                                <input type="email" class="form-control" id="floatingEmail" placeholder="john.doe@gmail.com">
+                                                                <label for="floatingEmail">Email</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="tel" class="form-control" id="floatingPhoneNumber" placeholder="123-456-7890">
+                                                            <label for="floatingPhoneNumber">Phone Number</label>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-floating mb-4">
+                                                                <input type="text" class="form-control" id="floatingUsername" placeholder="username">
+                                                                <label for="floatingUsername">Username</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                                            <label for="floatingPassword">Password</label>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </div> <!--close modal content-->
+                                    </div> <!--close modal dialog-->
+                                </div> <!--close modal-->
+                            </td>
+                         </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://mdbootstrap.com/img/new/avatars/7.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
+                                    <div class="ms-3">
+                                        <p class="fw-bold mb-1">Jan Doe</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="text-muted mb-0">jan.doe@gmail.com</p>
+                            </td>
+                            <td>Academic Coordinator</td>
+                            <td>
+                                <p class="text-muted mb-0">3</p>
+                            </td>
+                            <td>
+                                <!--edit button-->
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editUser">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                
+                                <!--edit modal-->
+                                <div class="modal fade" id="editUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="editUserLabel">Edit User</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="form-floating">
+                                                    <div class="row mb-4">
+                                                    <div class="col">
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Select User Type</option>
+                                                            <option value="1">User Type</option>
+                                                            <option value="2">User Type</option>
+                                                            <option value="3">User Type</option>
+                                                        </select>
+                                                    </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                                            <label for="floatingMainContactName">First Name</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                                            <label for="floatingMainContactName">Last Name</label>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-floating mb-4">
+                                                                <input type="email" class="form-control" id="floatingEmail" placeholder="john.doe@gmail.com">
+                                                                <label for="floatingEmail">Email</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="tel" class="form-control" id="floatingPhoneNumber" placeholder="123-456-7890">
+                                                            <label for="floatingPhoneNumber">Phone Number</label>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-floating mb-4">
+                                                                <input type="text" class="form-control" id="floatingUsername" placeholder="username">
+                                                                <label for="floatingUsername">Username</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                                            <label for="floatingPassword">Password</label>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary">Update</button>
+                                            </div>
+                                        </div> <!--close modal content-->
+                                    </div> <!--close modal dialog-->
+                                </div> <!--close modal-->
+                            </td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div> <!--close table div-->
+             
+              <footer class="py-3 my-4">
+                <p class="text-center text-body-secondary">© 2024 JMU Care, Inc</p>
+              </footer>
+              </div> <!--close grants tab-->
+            </div> <!--close main content row-->
+          </div> <!--close main content col-->
+  
+        </div> <!--close row-->
+      </div> <!--close container-->
+
+    <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+
+  </body>
+
+</html>

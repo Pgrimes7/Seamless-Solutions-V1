@@ -2,7 +2,8 @@
 @model Lab1484.Pages.DashBoardModel
 
 @{
-    @*<!doctype html>
+}
+    <!doctype html>
     <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -26,6 +27,8 @@
         <script src="script.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     </head>
 
     <body>
@@ -44,6 +47,7 @@
                             <div class="col-5">
                                 <canvas id="grantsChart"></canvas>
                             </div> <!--close donut chart column-->
+
                             <!--reminders column-->
                             <div class="col-4 border-light-subtle rounded">
                                 <h4>Reminders</h4>
@@ -151,7 +155,7 @@
                                                                         <input type="email" class=form-control id="assigneeEmail-1" name="assigneeEmail[]" placeholder="Email">
                                                                         <label for="assigneeEmail-1">Email</label>
                                                                     </div>
-                                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-assignee-btn" onclick="removeAssignee(this)">Remove Assignee</button>
+                                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-assignee-btn" onclick="removgorbereAssignee(this)">Remove Assignee</button>
                                                                     <button type="button" id="addAssigneeBtn" class="btn btn-sm btn-outline-secondary">Add Another Assignee</button>
                                                                 </div>
                                                             </div>
@@ -168,6 +172,7 @@
                                     </div> <!--close btn-toolbar-->
                                 </div> <!--close d-flex-->
                             </div> <!--close grant column-->
+
                             <!--grant table-->
                             <div class="table-responsive table-bordered rounded small">
                                 <table id="grantTable" class="table align-middle mb-0 bg-white">
@@ -175,31 +180,26 @@
                                         <tr>
                                             <th>
                                                 <button class="sort-button btn btn-sm fw-bold shadow-none">
-                                                    <i class="fa-solid fa-arrow-down-z-a"></i>
                                                     Grant ID
                                                 </button>
                                             </th>
                                             <th>
                                                 <button class="sort-button btn btn-sm fw-bold">
-                                                    <i class="fa-solid fa-arrow-down-z-a"></i>
                                                     Contact
                                                 </button>
                                             </th>
                                             <th>
                                                 <button class="sort-button btn btn-rounded btn-sm fw-bold">
-                                                    <i class="fa-solid fa-arrow-down-z-a"></i>
                                                     Due date
                                                 </button>
                                             </th>
                                             <th>
                                                 <button class="sort-button btn btn-rounded btn-sm fw-bold">
-                                                    <i class="fa-solid fa-arrow-down-z-a"></i>
                                                     Status
                                                 </button>
                                             </th>
                                             <th>
                                                 <button class="sort-button btn btn-rounded btn-sm fw-bold">
-                                                    <i class="fa-solid fa-arrow-down-z-a"></i>
                                                     Funding organization
                                                 </button>
                                             </th>
@@ -212,73 +212,43 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach (var prod in Model.GrantList)
+                                        {
+                                            var statusClass = prod.grantStatus?.ToLower() switch
+                                            {
+                                                "in progress" => "badge bg-info text-dark",
+                                                "opportunity" => "badge bg-primary",
+                                                "pending" => "badge bg-warning text-dark",
+                                                "approved" => "badge bg-success",
+                                                "rejected" => "badge bg-danger",
+                                                _ => "badge bg-secondary"
+                                            };
+
                                         <tr>
-                                            <td>11111</td>
+                                            <td>@prod.GrantID</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">
+                                                    @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
                                                     <div class="ms-3">
-                                                        <p class="fw-bold mb-1">John Doe</p>
-                                                        <p class="text-muted mb-0">john.doe@gmail.com</p>
+                                                        <p class="fw-bold mb-1">@prod.facultyName</p>
+                                                        <p class="text-muted mb-0">@prod.facultyEmail</p>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>03/01/2025</td>
+                                            <td>@prod.dueDate.ToShortDateString()</td>
+                                            <td><span class="@statusClass">@prod.grantStatus</span></td>
+                                            <td>Orgnaization Name</td>
                                             <td>
-                                                <span class="badge text-bg-success rounded-pill d-inline">Completed</span>
-                                            </td>
-                                            <td>Organizaition name</td>
-                                            <td>
-                                                <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                <a asp-page="/UpdateGrant" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
                                                     <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
+                                                </a>
                                             </td>
+                                            
                                         </tr>
-                                        <tr>
-                                            <td>22222</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/6.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">Jane Doe</p>
-                                                        <p class="text-muted mb-0">jane.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-info rounded-pill d-inline">Pending</span>
-                                            </td>
-                                            <td>Organization name</td>
-                                            <td>
-                                                <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>33333</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbootstrap.com/img/new/avatars/7.jpg" class="rounded-circle" alt="" style="width: 45px; height: 45px">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1">Jan Doe</p>
-                                                        <p class="text-muted mb-0">jan.doe@gmail.com</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>03/01/2025</td>
-                                            <td>
-                                                <span class="badge text-bg-warning rounded-pill d-inline">Not started</span>
-                                            </td>
-                                            <td>Organization name</td>
-                                            <td>
-                                                <button type="button" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        }
                                     </tbody>
+                                        
+                                    
                                 </table>
                             </div> <!--close table div-->
                         </div> <!--close grants col-->
@@ -288,14 +258,14 @@
 
             </div> <!--close row-->
             </div> <!--close container-->
-       *@
+       
 
 
 
 
 
 
-    <h1>Dashboard and Display</h1>
+    @*<h1>Dashboard and Display</h1>
     <br />
     <h2>List of Currently Live Projects</h2>
 
@@ -386,15 +356,12 @@
             }
         </tbody>
     </table>
+*@
 
-            <footer class="py-3 my-4">
-                <p class="text-center text-body-secondary">© 2024 JMU Care, Inc</p>
-            </footer>
-
-        @*</main>
+        </main>
 
     </body>
     </html>
-    *@
+    
      
-}
+

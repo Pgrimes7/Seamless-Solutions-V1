@@ -62,6 +62,7 @@ namespace Lab1484.Pages
                     category = grantReader["category"].ToString(),
                     dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
                     facultyName = grantReader["FacultyLead"].ToString(),
+                    facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
                     grantStatus = grantReader["grantStatus"].ToString()
                 });
             }

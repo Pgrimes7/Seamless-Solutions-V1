@@ -41,7 +41,7 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName " +
+            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Users.email AS AdminEmail " +
                 "from Project " +
                 "join Users ON Users.UserID = Project.ProjectAdminID; ";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
@@ -107,7 +107,7 @@ namespace Lab1484.Pages.DB
             }
             cmdGrantRead.Connection = Lab3DBConnection;
             cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead " +
+            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
                 "from Grants " +
                 "join Users ON Users.UserID = Grants.FacultyLeadID; ";
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
