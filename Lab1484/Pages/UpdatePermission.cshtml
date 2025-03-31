@@ -1,0 +1,66 @@
+﻿@page
+@model Lab1484.Pages.UpdatePermissionModel
+@{
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Grant View</title>
+        <link rel="stylesheet" href="path/to/your/css/file.css">
+    </head>
+    <body>
+        <main>
+
+   <div style="display: flex; align-items: center; gap: 10px;">
+        <h2 style="margin-right: 10px;">Grant View</h2>
+        <a class="btn btn-secondary" asp-area="" asp-page="/UpdateGrant">Update Grant</a>
+        <a class="btn btn-primary" asp-area="" asp-page="/GrantCreation">Create Grant</a>
+    </div>
+    <table class="table table-bordered table-responsive table-hover">
+        <thead>
+            <tr>
+                <th>Grant Name:</th>
+                <th>Grant Amount:</th>
+                <th>Due Date:</th>
+                <th>Faculty Name:</th>
+                <th>Grant Status:</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prod in Model.GrantList)
+            {
+                var statusClass = prod.grantStatus?.ToLower() switch
+                {
+                    "in progress" => "badge bg-info text-dark",
+                    "opportunity" => "badge bg-primary",
+                    "pending" => "badge bg-warning text-dark",
+                    "approved" => "badge bg-success",
+                    "rejected" => "badge bg-danger",
+                    _ => "badge bg-secondary"
+                };
+
+                <tr>
+                    <td>@prod.businessName</td>
+                    <td>@prod.amount</td>
+                    <td>@prod.dueDate.ToShortDateString()</td>
+                    <td>@prod.facultyName</td>
+                    <td><span class="@statusClass">@prod.grantStatus</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+            <footer class="py-3 my-4">
+                <p class="text-center text-body-secondary">© 2024 JMU Care, Inc</p>
+            </footer>
+
+        </main>
+
+    </body>
+    </html>
+
+
+
+}

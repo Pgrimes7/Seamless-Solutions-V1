@@ -528,7 +528,7 @@ namespace Lab1484.Pages.DB
 
                 if (PasswordHash.ValidatePassword(Password, correctHash))
                 {
-                    httpcontext.Session.SetString("userID", userID.ToString());//used co pilot for calling httpcontext in this seting
+                    httpcontext.Session.SetString("userID", userID.ToString());//this sets the session userID data to the userID of the authenticated user
                     return true;
                 }
             }
@@ -631,7 +631,7 @@ namespace Lab1484.Pages.DB
             cmdNoteInsert.Connection.Open();
             cmdNoteInsert.ExecuteNonQuery();
         }
-        public static int checkUserType(HttpContext httpContext)//used copilot to call httpContext here
+        public static int checkUserType(HttpContext httpContext)//Calls httpContext to pull UserID 
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
@@ -646,7 +646,7 @@ namespace Lab1484.Pages.DB
                 cmdCheckUser.CommandText = findUserType;
                 cmdCheckUser.CommandType = CommandType.StoredProcedure;
 
-                string userID = httpContext.Session.GetString("userID");//Used AI to learn how to set the userID in the session
+                string userID = httpContext.Session.GetString("userID");
 
 
                 cmdCheckUser.Parameters.AddWithValue("@UserID", Convert.ToInt32(userID));
@@ -664,6 +664,42 @@ namespace Lab1484.Pages.DB
                         throw new Exception("UserType not found for the given userID.");
                     }
                 }
+            }
+
+        }
+        public static void changePermission(grant_user g)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            string checkPermission = "checkPermissionRecord";
+            string updatePermission = "updatePermissionRecord";
+            //Need if statement to check if theres already a record for the user and grant in the table
+            //If there is, update the record
+            //If there isn't, insert a new record
+            SqlCommand cmdCheckUserPermission = new SqlCommand();
+            cmdCheckUserPermission.Connection = Lab3DBConnection;
+
+            cmdCheckUserPermission.CommandText = checkPermission;
+            cmdCheckUserPermission.CommandType = CommandType.StoredProcedure;
+
+            cmdCheckUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
+            cmdCheckUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
+
+
+
+
+            //If there is a record, update it
+            if (cmdCheckUserPermission.ExecuteScalar() != null)
+            {
+                SqlCommand cmdUpdateUserPermission = new SqlCommand();
+                cmdUpdateUserPermission.Connection = Lab3DBConnection;
+
+
+
+
             }
 
         }
