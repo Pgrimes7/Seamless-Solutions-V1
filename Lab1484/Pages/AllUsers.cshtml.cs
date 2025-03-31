@@ -1,0 +1,75 @@
+using Lab1484.Pages.DB;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data.SqlClient;
+
+namespace Lab1484.Pages
+{
+    public class AllUsersModel : PageModel
+    {
+        public List<UserDisplay> Users { get; set; } = new();
+
+        public IActionResult OnGet()
+        {
+            string currentUser = HttpContext.Session.GetString("username");
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            int userType = DBClass.checkUserType(HttpContext);
+            if (userType != 0) 
+            {
+                return RedirectToPage("/Dashboard");
+            }
+
+            SqlCommand cmd = new SqlCommand();
+            if (DBClass.Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                DBClass.Lab3DBConnection.Close();
+            }
+
+            cmd.Connection = DBClass.Lab3DBConnection;
+            cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+            cmd.CommandText = "SELECT userType, firstName, lastName, email, phoneNumber FROM Users";
+            cmd.Connection.Open();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int type = reader.GetInt32(0);
+                string role = "";
+
+                if (type == 0) role = "Admin";
+                else if (type == 1) role = "Faculty";
+                else if (type == 2) role = "Staff";
+                else if (type == 3) role = "Student";
+                else role = "Unknown";
+
+                Users.Add(new UserDisplay
+                {
+                    UserTypeName = role,
+                    FirstName = reader.GetString(1),
+                    LastName = reader.GetString(2),
+                    Email = reader.GetString(3),
+                    Phone = reader.IsDBNull(4) ? "" : reader.GetString(4)
+                });
+            }
+
+            reader.Close();
+            DBClass.Lab3DBConnection.Close();
+
+            return Page();
+        }
+
+        public class UserDisplay
+        {
+            public string UserTypeName { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Email { get; set; }
+            public string Phone { get; set; }
+        }
+    }
+}

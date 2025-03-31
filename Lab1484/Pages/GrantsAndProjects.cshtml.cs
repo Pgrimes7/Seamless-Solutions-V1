@@ -1,21 +1,21 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
 using System.Data.SqlClient;
-using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Lab1484.Pages
 {
-    public class DashBoardModel : PageModel
+    public class GrantsAndProjectsModel : PageModel
     {
+
         [BindProperty] public int SelectedProject { get; set; }
         public string SelectMessage { get; set; }
 
         public List<Project> ProjectList { get; set; }
         public List<Grant> GrantList { get; set; }
 
-        public DashBoardModel()
+        public GrantsAndProjectsModel()
         {
             ProjectList = new List<Project>();
             GrantList = new List<Grant>();
@@ -47,6 +47,7 @@ namespace Lab1484.Pages
                     DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
                     DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
                     AdminName = projectReader["AdminName"].ToString(),
+                    AdminEmail = projectReader["AdminEmail"].ToString(),
                     ProjectStatus = projectReader["ProjectStatus"].ToString()
                 });
             }

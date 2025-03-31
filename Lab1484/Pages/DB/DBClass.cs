@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using Lab1484.Pages.DataClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -40,7 +41,7 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName " +
+            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Users.email AS AdminEmail " +
                 "from Project " +
                 "join Users ON Users.UserID = Project.ProjectAdminID; ";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
@@ -106,7 +107,7 @@ namespace Lab1484.Pages.DB
             }
             cmdGrantRead.Connection = Lab3DBConnection;
             cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead " +
+            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
                 "from Grants " +
                 "join Users ON Users.UserID = Grants.FacultyLeadID; ";
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
@@ -752,5 +753,29 @@ namespace Lab1484.Pages.DB
             }
 
         }
+
+        public static SqlDataReader Grant_UserReader(int GrantID)//reads grant user table in sql that is associated with grant value passed
+        {
+            
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            SqlCommand cmdGrantRead = new SqlCommand();
+            Console.WriteLine("GrantID: " + GrantID);
+            cmdGrantRead.Parameters.Add(new SqlParameter("@GrantID", SqlDbType.Int) { Value = GrantID });
+            cmdGrantRead.Connection = new SqlConnection(Lab3DBConnString);
+            cmdGrantRead.CommandText = "Select * from Users join Grant_User ON users.UserID = Grant_User.UserID " +
+                                       "where Grant_User.GrantID = @GrantID;";
+
+            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
+            return tempReader;
+        }
+
+
+
     }
 }
