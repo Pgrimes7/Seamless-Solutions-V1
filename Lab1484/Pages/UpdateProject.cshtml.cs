@@ -14,6 +14,8 @@ namespace Lab1484.Pages
 
         public Project Proj { get; set; } = new Project();
 
+        public Project UpdateProj { get; set; } = new Project();
+
 
 
         public IActionResult OnGet()
@@ -32,12 +34,10 @@ namespace Lab1484.Pages
             SqlDataReader projectReader = DBClass.SingleProjectReader(ProjectID);
             while (projectReader.Read())
             {
-                Proj.ProjectID = ProjectID;
-                Proj.ProjectName = projectReader["ProjectName"].ToString();
-                Proj.DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate"));
-                Proj.DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated"));
-                Proj.DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted"));
-                Proj.AdminName = projectReader["AdminName"].ToString();
+                UpdateProj.ProjectID = ProjectID;
+                UpdateProj.ProjectName = projectReader["ProjectName"].ToString();
+                UpdateProj.DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate"));
+                UpdateProj.ProjectStatus = projectReader["ProjectStatus"].ToString();
             }
 
             return Page();
@@ -45,9 +45,15 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
+            //UPDATE THESE VALUES
+            //UpdateProj.ProjectID = ProjectID;
+            //UpdateProj.ProjectName = "";
+            //UpdateProj.DateDue = Proj.DateDue;
+            //UpdateProj.ProjectStatus = "";
+            
             TempData["ProjectID"] = ProjectID;
             TempData.Keep("ProjectID");
-            return RedirectToPage();
+            return Page();
         }
     }
 }
