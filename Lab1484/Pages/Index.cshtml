@@ -4,7 +4,14 @@
     ViewData["Title"] = "Lab1";
 }
 
+
+<header style="text-align: center; padding: 10px;">
+    <h1>JMU Care</h1>
+</header>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <a href="LogIn">Log in to account</a>
+    <h2 class="display-4">Welcome</h2>
+    <a asp-page="/Login" class="btn btn-primary position-relative">Login</a>
+    <br />
+    <a href="/AccountSignUp">Create Account</a>
 </div>
