@@ -1,0 +1,38 @@
+﻿@page
+@model Lab1484.Pages.GrantsAndProjectsModel
+@{
+}
+<!doctype html>
+
+<html lang="en">
+<head>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<div class="container mt-4">
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="myTabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="tab1-tab" data-bs-toggle="tab" href="#tab1">Grants</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tab2-tab" data-bs-toggle="tab" href="#tab2">Projects</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-3">
+        <!-- First Tab -->
+        <div class="tab-pane fade show active" id="tab1">
+            <h3>Tab 1 Content</h3>
+            <p>This is content for the first tab.</p>
+        </div>
+
+        <!-- Second Tab -->
+        <div class="tab-pane fade" id="tab2">
+            <h3>Tab 2 Content</h3>
+            <p>This is content for the second tab.</p>
+        </div>
+    </div>
+</div>
+</html>

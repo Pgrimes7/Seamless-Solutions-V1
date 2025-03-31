@@ -73,6 +73,30 @@ namespace Lab1484.Pages.DB
             return tempReader;
             cmdSingleProjectRead.Connection.Close();
         }
+
+        //Update Project
+        public static void UpdateProject(Project p)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "UPDATE Project " +
+                "SET projectStatus = @ProjectStatus, dueDate = @DueDate, projectName = @ProjectName " +
+                "WHERE ProjectID = @ProjectID;";
+            SqlCommand cmdProjectUpdate = new SqlCommand();
+            cmdProjectUpdate.Connection = Lab3DBConnection;
+            cmdProjectUpdate.Connection.ConnectionString = Lab3DBConnString;
+            cmdProjectUpdate.CommandText = sqlQuery;
+            cmdProjectUpdate.Parameters.AddWithValue("@ProjectStatus", p.ProjectStatus);
+            cmdProjectUpdate.Parameters.AddWithValue("@DueDate", p.DateDue);
+            cmdProjectUpdate.Parameters.AddWithValue("@ProjectName", p.ProjectName);
+            cmdProjectUpdate.Parameters.AddWithValue("@ProjectID", p.ProjectID);
+            cmdProjectUpdate.Connection.Open();
+            cmdProjectUpdate.ExecuteNonQuery();
+        }
+
+
         public static SqlDataReader GrantReader()//reads grant table in sql
         {
             SqlCommand cmdGrantRead = new SqlCommand();
@@ -501,7 +525,9 @@ namespace Lab1484.Pages.DB
                 Lab3DBConnection.Close();
             }
             string sqlQuery = "INSERT INTO Messages (Sender, Receiver, Content)" +
-                " VALUES (@Sender, @Receiver, @Content)";
+                " VALUES (@Sender, @Receiver, @Content);";
+
+            Lab3DBConnection.ConnectionString = Lab3DBConnString;
 
             using (SqlCommand cmdMessageInsert = new SqlCommand(sqlQuery, Lab3DBConnection))
             {

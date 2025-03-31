@@ -1,3 +1,10 @@
-html, body {
-    margin: 0;
+.nav-item {
+    padding: 10px;
+    width: 100%;
+}
+
+.nav-active {
+    background-color:#DACCE6;
+    color: #B599CE;
+    border-radius: 100px;
 }
