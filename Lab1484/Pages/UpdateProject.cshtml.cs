@@ -16,7 +16,18 @@ namespace Lab1484.Pages
 
         public Project UpdateProj { get; set; } = new Project();
 
+        public IActionResult OnPost()
+        {
+            //UPDATE THESE VALUES
+            //UpdateProj.ProjectID = ProjectID;
+            //UpdateProj.ProjectName = "";
+            //UpdateProj.DateDue = Proj.DateDue;
+            //UpdateProj.ProjectStatus = "";
 
+            TempData["ProjectID"] = ProjectID;
+            TempData.Keep("ProjectID");
+            return RedirectToPage("/UpdateProject");
+        }
 
         public IActionResult OnGet()
         {
@@ -40,19 +51,6 @@ namespace Lab1484.Pages
                 UpdateProj.ProjectStatus = projectReader["ProjectStatus"].ToString();
             }
 
-            return Page();
-        }
-
-        public IActionResult OnPost()
-        {
-            //UPDATE THESE VALUES
-            //UpdateProj.ProjectID = ProjectID;
-            //UpdateProj.ProjectName = "";
-            //UpdateProj.DateDue = Proj.DateDue;
-            //UpdateProj.ProjectStatus = "";
-
-            TempData["ProjectID"] = ProjectID;
-            TempData.Keep("ProjectID");
             return Page();
         }
     }
