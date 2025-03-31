@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using Lab1484.Pages.DataClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -752,5 +753,29 @@ namespace Lab1484.Pages.DB
             }
 
         }
+
+        public static SqlDataReader Grant_UserReader(int GrantID)//reads grant user table in sql that is associated with grant value passed
+        {
+            
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            SqlCommand cmdGrantRead = new SqlCommand();
+            Console.WriteLine("GrantID: " + GrantID);
+            cmdGrantRead.Parameters.Add(new SqlParameter("@GrantID", SqlDbType.Int) { Value = GrantID });
+            cmdGrantRead.Connection = new SqlConnection(Lab3DBConnString);
+            cmdGrantRead.CommandText = "Select * from Users join Grant_User ON users.UserID = Grant_User.UserID " +
+                                       "where Grant_User.GrantID = @GrantID;";
+
+            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
+            return tempReader;
+        }
+
+
+
     }
 }
