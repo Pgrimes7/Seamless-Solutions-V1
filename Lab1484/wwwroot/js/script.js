@@ -5,14 +5,15 @@ document.addEventListener("DOMContentLoaded", function () {
     var grantsChart = new Chart(grantsCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Pending', 'Not Started', 'Completed'],
+            labels: ['Active', 'Potential', 'Funded', 'Archived'],
             datasets: [{
                 label: 'Grant Status',
-                data: [10, 5, 15],
+                data: [10, 5, 15, 30],
                 backgroundColor: [
-                    '#ADD8E6', //pending
-                    '#FFD700', //not started
-                    'Green' //completed
+                    '#450084', //active
+                    '#CBB677', //potential
+                    '#F4EFE1', //funded
+                    '#DACCE6'  //archived
                 ],
                 hoverOffset: 4
             }]
