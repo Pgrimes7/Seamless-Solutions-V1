@@ -30,7 +30,7 @@ namespace Lab1484.Pages.DB
 
         //Connection Methods:
 
-        //Basic Product Reader
+        //Basic Project Reader
         public static SqlDataReader ProjectReader()
         {
             SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
@@ -49,6 +49,29 @@ namespace Lab1484.Pages.DB
 
             return tempReader;
             cmdProjectRead.Connection.Close();
+        }
+
+        //Project Reader with ProjectID
+        public static SqlDataReader SingleProjectReader(int ProjectID)
+        {
+            SqlCommand cmdSingleProjectRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdSingleProjectRead.Connection = Lab3DBConnection;
+            cmdSingleProjectRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdSingleProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName " +
+                "from Project " +
+                "join Users ON Users.UserID = Project.ProjectAdminID" +
+                " WHERE Project.ProjectID = @ProjectID; ";
+            cmdSingleProjectRead.Parameters.AddWithValue("@ProjectID", ProjectID);
+            cmdSingleProjectRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdSingleProjectRead.ExecuteReader();
+
+            return tempReader;
+            cmdSingleProjectRead.Connection.Close();
         }
         public static SqlDataReader GrantReader()//reads grant table in sql
         {

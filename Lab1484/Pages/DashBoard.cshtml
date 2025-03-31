@@ -129,12 +129,12 @@
     <table class="table table-bordered table-responsive table-hover">
         <thead>
             <tr>
-                <th>Project Name:</th>
-                <th>Date Due:</th>
-                <th>Date Created:</th>
-                <th>Date Completed</th>
+                <th>Project Name</th>
+                <th>Date Due</th>
                 <th>Primary Investigator</th>
+                <th>Status</th>
                 <th>Notes</th>
+                <th>Edit</th>
             </tr>
         </thead>
         <tbody>
@@ -142,14 +142,19 @@
             {
                 <tr>
                     <td>@prod.ProjectName</td>
-                    <td>@prod.DateDue</td>
-                    <td>@prod.DateCreated</td>
-                    <td>@prod.DateCompleted</td>
+                    <td>@(prod.DateDue.HasValue ? prod.DateDue.Value.ToString("MM/dd/yyyy") : "")</td>
                     <td>@prod.AdminName</td>
+                    <td>@prod.ProjectStatus</td>
                     <td>
                         <form asp-page="/ProjectNotes" method="post" style="display:inline;">
                             <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
                             <button type="submit" class="btn btn-link">Notes</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-page="/UpdateProject" method="post" style="display:inline;">
+                            <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
+                            <button type="submit" class="btn btn-link">Edit Project</button>
                         </form>
                     </td>
                 </tr>
