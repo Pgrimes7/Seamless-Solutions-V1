@@ -200,6 +200,11 @@
                                                 _ => "badge bg-secondary"
                                             };
 
+                                            if (prod.grantStatus?.ToLower() != "approved" &&
+                                            prod.grantStatus?.ToLower() != "rejected" &&
+                                            prod.grantStatus?.ToLower() != "in progress")
+                                            {
+
                                             <tr>
                                                 <td>@prod.GrantID</td>
                                                 <td>
@@ -216,6 +221,7 @@
                                                 <td>Orgnaization Name</td>
 
                                             </tr>
+                                            }
                                         }
                                     </tbody>
                                 </table>
@@ -257,6 +263,7 @@
                                                 _ => "badge bg-secondary"
                                             };
 
+                                            
                                             <tr>
                                                 <td>@prod.ProjectID</td>
                                                 <td>
@@ -274,6 +281,7 @@
                                                 
 
                                             </tr>
+                                            
                                         }
                                         
                                     </tbody>
