@@ -19,12 +19,14 @@
             <table class="table table-bordered table-responsive table-hover">
                 <thead>
                     <tr>
+                    
+                        <th></th>
                         <th>Grant Name:</th>
+                        <th>Business Name:</th>
                         <th>Grant Amount:</th>
-                        <th>Due Date:</th>
-                        <th>Faculty Name:</th>
-                        <th>Grant Status:</th>
-                        <th>Select</th>
+                        <th>Due Date</th>
+                        <th>Lead Faculty</th>
+                        <th>Grant Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,6 +49,7 @@
                                     <button type="submit">Select</button>
                                 </form>
                             </td>
+                            <td>@prod.grantName</td>
                             <td>@prod.businessName</td>
                             <td>@prod.amount</td>
                             <td>@prod.dueDate.ToShortDateString()</td>
@@ -64,7 +67,7 @@
                     <thead>
                         <tr>
                             <th>User ID</th>
-                            <th>User Name</th>
+                            <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Phone</th>
@@ -90,50 +93,51 @@
             }
 
             <!-- Modal -->
-            <div class="modal fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="permissionModalLabel">Update Permission</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="permissionForm" method="post" asp-page-handler="UpdatePermission">
+            <form method="post" asp-page-handler="UpdatePermission">
+                <div class="modal fade" id="permissionModal" tabindex="-1" aria-labelledby="permissionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="permissionModalLabel">Update User Permissions</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
                                 <input type="hidden" id="modalUserId" name="userId" />
                                 <input type="hidden" id="modalGrantId" name="grantId" />
-                                <div>
-                                    <label>
-                                        <input type="checkbox" asp-for="viewPermission" />
-                                        View Permission
-                                    </label>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <input asp-for="viewPermission" class="form-check-input" type="checkbox" id="viewPermission">
+                                            <label class="form-check-label" for="viewPermission">View Permission</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label>
-                                        <input type="checkbox" asp-for="editPermission" />
-                                        Edit Permission
-                                    </label>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <input asp-for="editPermission" class="form-check-input" type="checkbox" id="editPermission">
+                                            <label class="form-check-label" for="editPermission">Edit Permission</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label>
-                                        <input type="checkbox" asp-for="sensitiveInfoPermission" />
-                                        Sensitive Information Permission
-                                    </label>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <input asp-for="sensitiveInfoPermission" class="form-check-input" type="checkbox" id="sensitiveInfoPermission">
+                                            <label class="form-check-label" for="sensitiveInfoPermission">Sensitive Information Permission</label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="confirmUpdate">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div> <!--close modal content-->
+                    </div> <!--close modal dialog-->
+                </div> <!--close modal-->
+            </form>
 
-            <footer class="py-3 my-4">
-                <p class="text-center text-body-secondary">© 2024 JMU Care, Inc</p>
-            </footer>
         </main>
     </body>
     </html>
@@ -149,10 +153,6 @@
             var modal = $(this);
             modal.find('#modalUserId').val(userId);
             modal.find('#modalGrantId').val(grantId);
-        });
-
-        $('#confirmUpdate').on('click', function () {
-            $('#permissionForm').submit();
         });
     </script>
 }

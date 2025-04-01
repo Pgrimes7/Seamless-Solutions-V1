@@ -793,8 +793,9 @@ namespace Lab1484.Pages.DB
             cmdCheckUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
             cmdCheckUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
 
-            
 
+
+            Lab3DBConnection.Open();
 
 
 

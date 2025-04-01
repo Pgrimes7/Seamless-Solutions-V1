@@ -11,9 +11,6 @@ namespace Lab1484.Pages
         // Lists to store grants and users
         public List<Grant> GrantList { get; set; }
         public List<User> UserList { get; set; }
-        public int SelectedGrantId { get; set; }
-        [BindProperty]
-        public bool IsChecked { get; set; }
 
         [BindProperty]
         public bool viewPermission { get; set; }
@@ -24,13 +21,19 @@ namespace Lab1484.Pages
         [BindProperty]
         public bool sensitiveInfoPermission { get; set; }
 
+        [BindProperty]
+        public int userId { get; set; }
+
+        [BindProperty]
+        public int grantId { get; set; }
+
+        public int SelectedGrantId { get; set; }
 
         public UpdatePermissionModel()
         {
             // Initialize the lists
             GrantList = new List<Grant>();
             UserList = new List<User>();
-            
         }
 
         public void OnGet()
@@ -40,6 +43,7 @@ namespace Lab1484.Pages
             {
                 GrantList.Add(new Grant
                 {
+                    grantName = grantReader["category"].ToString(),
                     GrantID = (int)grantReader["GrantID"],
                     businessName = grantReader["businessName"].ToString(),
                     amount = Double.Parse(grantReader["amount"].ToString()),
@@ -53,6 +57,7 @@ namespace Lab1484.Pages
 
         public void OnPostSelectGrant(int grantId)
         {
+            SelectedGrantId = grantId;
             SqlDataReader userReader = DBClass.Grant_UserReader(grantId);
             UserList.Clear();
             GrantList.Clear();
@@ -67,20 +72,24 @@ namespace Lab1484.Pages
                     phone = userReader["PhoneNumber"].ToString(),
                 });
             }
-
         }
-        public void OnPostUpdatePermission(int userId, int grantId)
+
+        public IActionResult OnPostUpdatePermission()
         {
             // Create a grant_user object
             var grantUser = new grant_user
             {
                 userID = userId,
                 grantID = grantId,
-                //Since using checkboxes need to check for boolean values and then convert to int for the DB
                 viewPermission = viewPermission ? 1 : 0,
                 editPermission = editPermission ? 1 : 0,
                 sensitiveInfoPermission = sensitiveInfoPermission ? 1 : 0
             };
+
+            // Update the database with the new permission values
+            DBClass.updatePermission(grantUser);
+
+            return RedirectToPage();
         }
     }
 }
