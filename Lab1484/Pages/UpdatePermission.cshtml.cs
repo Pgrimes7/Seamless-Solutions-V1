@@ -8,16 +8,18 @@ namespace Lab1484.Pages
 {
     public class UpdatePermissionModel : PageModel
     {
-        //lists to store grants and users
+        // Lists to store grants and users
         public List<Grant> GrantList { get; set; }
         public List<User> UserList { get; set; }
 
         public UpdatePermissionModel()
         {
-            //Initialize the lists
+            // Initialize the lists
             GrantList = new List<Grant>();
             UserList = new List<User>();
+            
         }
+
         public void OnGet()
         {
             SqlDataReader grantReader = DBClass.GrantReader();
@@ -34,35 +36,29 @@ namespace Lab1484.Pages
                     grantStatus = grantReader["grantStatus"].ToString()
                 });
             }
-
-
-
-
-
         }
-        public void OnPostSelectGrant(int GrantID)
+
+        public void OnPostSelectGrant(int grantId)
         {
-            SqlDataReader userReader = DBClass.Grant_UserReader(GrantID);
+            SqlDataReader userReader = DBClass.Grant_UserReader(grantId);
+            UserList.Clear();
+            GrantList.Clear();
             while (userReader.Read())
             {
-                int userID;
-               
-                    UserList.Add(new User
-                    {
-                        userID = (int)userReader["UserID"],
-                        firstName = userReader["UserName"].ToString(),
-                        lastName = userReader["LastName"].ToString(),
-                        email = userReader["Email"].ToString(),
-                        phone = userReader["Phone"].ToString(),
-
-                    });
-                }
-                
-
-
-
-
+                UserList.Add(new User
+                {
+                    userID = Int32.Parse(userReader["UserID"].ToString()),
+                    firstName = userReader["FirstName"].ToString(),
+                    lastName = userReader["LastName"].ToString(),
+                    email = userReader["Email"].ToString(),
+                    phone = userReader["PhoneNumber"].ToString(),
+                });
             }
+
+        }
+        public void OnPostUpdatePermission(int userId, int grantId, int permission)
+        {
+           
         }
     }
-
+}
