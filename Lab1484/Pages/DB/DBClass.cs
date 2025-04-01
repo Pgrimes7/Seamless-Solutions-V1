@@ -163,6 +163,7 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
 
+      
 
 
         public static SqlDataReader AdminReader()//reads admin table
@@ -889,20 +890,78 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
         
-        public static void addGrant_User()
+        public static SqlDataReader readNonGrant_User(int GrantID)//When opening add user modal this will display users not associated with the grant
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
+            SqlCommand cmdDisplayUsers = new SqlCommand();
+            cmdDisplayUsers.Connection = Lab3DBConnection;
+            cmdDisplayUsers.Connection = new SqlConnection(Lab3DBConnString); ;
+            cmdDisplayUsers.Parameters.Add(new SqlParameter("@GrantID", SqlDbType.Int) { Value = GrantID });
+
+            cmdDisplayUsers.CommandText = "SELECT Users.* FROM Users " +
+                "LEFT JOIN Grant_User ON Users.UserID = Grant_User.UserID" +
+                " AND Grant_User.GrantID = @GrantID " +
+                "WHERE Grant_User.UserID IS NULL;";
+         
 
 
+            cmdDisplayUsers.Connection.Open(); // Open connection here, close in Model!
 
+            SqlDataReader tempReader = cmdDisplayUsers.ExecuteReader();
 
+            return tempReader;
 
 
         }
 
+
+        public static void addGrantUser(int GrantID, int UserID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            SqlCommand cmdAddUsers = new SqlCommand();
+            cmdAddUsers.Connection = Lab3DBConnection;
+            cmdAddUsers.Connection.ConnectionString = Lab3DBConnString;
+
+            //add parameters grandID and userID
+            cmdAddUsers.Parameters.Add(new SqlParameter("@GrantID", SqlDbType.Int) { Value = GrantID });
+            cmdAddUsers.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
+
+            cmdAddUsers.CommandText = "INSERT INTO Grant_User (GrantID, UserID) VALUES (@GrantID, @UserID);";
+
+            cmdAddUsers.Connection.Open(); // Open connection here, close in Model!
+
+            cmdAddUsers.ExecuteNonQuery();
+        }
+
+
+
+        public static SqlDataReader SingleGrantReader(int GrantID)//reads grant table in sql
+        {
+            SqlCommand cmdGrantRead = new SqlCommand();
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            cmdGrantRead.Parameters.Add(new SqlParameter("@GrantID", SqlDbType.Int) { Value = GrantID });
+            cmdGrantRead.Connection = Lab3DBConnection;
+            cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdGrantRead.CommandText = "SELECT Grants.*, CONCAT(Users.firstName," +
+                " ' ', Users.lastName) AS FacultyLead," +
+                "Users.email AS FacultyLeadEmail FROM Grants JOIN Users ON Users.UserID = Grants.FacultyLeadID " +
+                "WHERE Grants.GrantID = @GrantID;";
+            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
+
+            return tempReader;
+        }
 
 
     }
