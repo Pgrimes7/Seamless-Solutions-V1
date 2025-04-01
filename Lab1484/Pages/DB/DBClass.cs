@@ -121,6 +121,28 @@ namespace Lab1484.Pages.DB
             cmdProjectRead.Connection.Close();
         }
 
+        //Insert Task
+        public static void InsertTask(ProjTask t)
+        {
+            {
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+
+                string sqlQuery = "INSERT INTO Tasks (ProjectID, taskDescription) VALUES (@ProjectID, @taskDescription);";
+
+                SqlCommand cmdTaskInsert = new SqlCommand();
+                cmdTaskInsert.Connection = Lab3DBConnection;
+                cmdTaskInsert.Connection.ConnectionString = Lab3DBConnString;
+                cmdTaskInsert.CommandText = sqlQuery;
+                cmdTaskInsert.Parameters.AddWithValue("@ProjectID", t.ProjectID);
+                cmdTaskInsert.Parameters.AddWithValue("@taskDescription", t.taskDescription);
+                cmdTaskInsert.Connection.Open();
+                cmdTaskInsert.ExecuteNonQuery();
+            }
+        }
+
 
         public static SqlDataReader GrantReader()//reads grant table in sql
         {
