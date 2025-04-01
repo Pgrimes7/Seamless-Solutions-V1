@@ -1,3 +1,4 @@
+using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,6 +8,7 @@ namespace Lab1484.Pages
 {
     public class AllUsersModel : PageModel
     {
+        public User NewUser { get; set; } = new User();
         public List<UserDisplay> Users { get; set; } = new();
 
         public IActionResult OnGet()
@@ -65,14 +67,34 @@ namespace Lab1484.Pages
             return Page();
         }
 
+
+
+
         public class UserDisplay
         {
+
             public string UserTypeName { get; set; }
             public string UsersName { get; set; }
 
             /*public string LastName { get; set; }*/
             public string Email { get; set; }
             public string Phone { get; set; }
+        }
+
+
+        public IActionResult OnPostCreateUser()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            Console.WriteLine(NewUser.UserType);
+
+            DBClass.CreateHashedUser(NewUser);
+            DBClass.Lab3DBConnection.Close();
+
+            return RedirectToPage("/AllUsers");
         }
     }
 }
