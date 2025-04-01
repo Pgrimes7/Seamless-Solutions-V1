@@ -75,6 +75,8 @@ namespace Lab1484.Pages.DB
             cmdSingleProjectRead.Connection.Close();
         }
 
+        
+
         //Update Project
         public static void UpdateProject(Project p)
         {

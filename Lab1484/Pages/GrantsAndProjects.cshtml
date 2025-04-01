@@ -245,11 +245,17 @@
                                 <table id="grantTable" class="table align-middle mb-0 bg-white">
                                     <thead class="bg-light">
                                         <tr>
-                                            <th>Project ID</th>
+                                            <th>Project Name</th>
                                             <th>Contact</th>
                                             <th>Due date</th>
                                             <th>Status</th>
                                             <th>Funding organization</th>
+                                            <th class="fw-bold">
+                                                <button class="btn btn-rounded btn-sm fw-bold">
+                                                    <i class="fa-solid fa-edit"></i>
+                                                    Edit
+                                                </button>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -261,13 +267,14 @@
                                                 "opportunity" => "badge bg-primary",
                                                 "pending" => "badge bg-warning text-dark",
                                                 "approved" => "badge bg-success",
+                                                "completed" => "badge bg-success",
                                                 "rejected" => "badge bg-danger",
                                                 _ => "badge bg-secondary"
                                             };
 
                                             
                                             <tr>
-                                                <td>@prod.ProjectID</td>
+                                                <td>@prod.ProjectName</td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
@@ -280,7 +287,14 @@
                                                 <td>@prod.DateDue.ToShortDateString()</td>
                                                 <td><span class="@statusClass">@prod.ProjectStatus</span></td>
                                                 <td>Orgnaization Name</td>
-                                                
+                                                <td>
+                                                    <form method="post" asp-page="/UpdateProject">
+                                                        <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
+                                                        <button type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
 
                                             </tr>
                                             

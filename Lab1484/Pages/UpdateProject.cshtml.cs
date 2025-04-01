@@ -14,9 +14,21 @@ namespace Lab1484.Pages
 
         public Project Proj { get; set; } = new Project();
 
+        [BindProperty]
         public Project UpdateProj { get; set; } = new Project();
 
+        public IActionResult OnPost()
+        {
+            //UPDATE THESE VALUES
+            //UpdateProj.ProjectID = ProjectID;
+            //UpdateProj.ProjectName = NewProjectName;
+            //UpdateProj.DateDue = Proj.DateDue;
+            //UpdateProj.ProjectStatus = "";
 
+            TempData["ProjectID"] = ProjectID;
+            TempData.Keep("ProjectID");
+            return RedirectToPage("/UpdateProject");
+        }
 
         public IActionResult OnGet()
         {
@@ -43,17 +55,10 @@ namespace Lab1484.Pages
             return Page();
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPostUpdateProjectPost()
         {
-            //UPDATE THESE VALUES
-            //UpdateProj.ProjectID = ProjectID;
-            //UpdateProj.ProjectName = "";
-            //UpdateProj.DateDue = Proj.DateDue;
-            //UpdateProj.ProjectStatus = "";
-            
-            TempData["ProjectID"] = ProjectID;
-            TempData.Keep("ProjectID");
-            return Page();
+            DBClass.UpdateProject(UpdateProj);
+            return RedirectToPage("/GrantsAndProjects");
         }
     }
 }
