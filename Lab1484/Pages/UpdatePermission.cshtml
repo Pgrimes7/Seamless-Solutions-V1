@@ -11,12 +11,16 @@
     </head>
     <body>
         <main>
+            <br />
             <div style="display: flex; align-items: center; gap: 10px;">
                 <h2 style="margin-right: 10px;">Active Grants</h2>
+            </div>
+            <div style ="display: flex; align-items: center; gap: 10px;">
                 <a class="btn btn-secondary" asp-area="" asp-page="/UpdateGrant">Update Grant</a>
                 <a class="btn btn-primary" asp-area="" asp-page="/GrantCreation">Create Grant</a>
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Add User</button>
             </div>
+            <br />
             <table class="table table-bordered table-responsive table-hover">
                 <thead>
                     <tr>
