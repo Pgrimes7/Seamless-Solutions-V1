@@ -642,6 +642,9 @@ namespace Lab1484.Pages.DB
             {
                 Lab3DBConnection.Close();
             }
+
+
+
             string userInsertQuery = @"
              INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
              VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);

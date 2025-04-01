@@ -8,6 +8,7 @@ namespace Lab1484.Pages
 {
     public class AllUsersModel : PageModel
     {
+        [BindProperty]
         public User NewUser { get; set; } = new User();
         public List<UserDisplay> Users { get; set; } = new();
 
