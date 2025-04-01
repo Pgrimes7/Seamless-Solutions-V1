@@ -191,3 +191,6 @@ WHERE businessName = 'Business A';
 UPDATE Grants
 SET businessName = 'Tech Expansion'
 WHERE businessName = 'Business B';
+
+ALTER TABLE Grants
+ADD grantName NVARCHAR(100);

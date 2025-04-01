@@ -6,6 +6,29 @@ BEGIN
     SELECT userType FROM Users WHERE userID = @UserID
 END
 
+CREATE PROCEDURE checkPermissionRecord 
+@UserID int,
+@GrantID int
+AS
+BEGIN 
+select * from Grant_User WHERE UserID = @UserID AND GrantID = @GrantID
+END
+
+
+CREATE PROCEDURE updatePermissionRecord
+@UserID int,
+@GrantID int,
+@ViewPermission int, 
+@EditPermission int,
+@SensitivePermission int
+AS BEGIN 
+UPDATE Grant_User
+SET ViewPermission = @ViewPermission, EditPermission = @EditPermission, SensitiveInfoPermission = @SensitivePermission
+WHERE
+UserID = @UserID AND GrantID = @GrantID
+END
+
+
 USE AUTH
 
 CREATE PROCEDURE sp_Lab3Login
