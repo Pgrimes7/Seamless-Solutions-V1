@@ -194,3 +194,13 @@ WHERE businessName = 'Business B';
 
 ALTER TABLE Grants
 ADD grantName NVARCHAR(100);
+
+UPDATE Grants
+SET grantName = 'Federal Biosketch'
+WHERE GrantID = 1;
+
+UPDATE Grants
+SET grantName = 'State Technology'
+WHERE GrantID = 2;
+
+
