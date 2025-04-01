@@ -779,6 +779,8 @@ namespace Lab1484.Pages.DB
 
             string checkPermission = "checkPermissionRecord";
             string updatePermission = "updatePermissionRecord";
+            string insertPermission = "insertPermissionRecord";
+
             //Need if statement to check if theres already a record for the user and grant in the table
             //If there is, update the record
             //If there isn't, insert a new record THEN Update.. 
@@ -805,13 +807,16 @@ namespace Lab1484.Pages.DB
                 }
                 SqlCommand cmdUpdateUserPermission = new SqlCommand();
                 cmdUpdateUserPermission.Connection = Lab3DBConnection;
+                cmdUpdateUserPermission.CommandText = updatePermission;
+                cmdUpdateUserPermission.CommandType = CommandType.StoredProcedure;
                 cmdUpdateUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
                 cmdUpdateUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
                 cmdUpdateUserPermission.Parameters.AddWithValue("@ViewPermission", Convert.ToInt32(g.viewPermission));
                 cmdUpdateUserPermission.Parameters.AddWithValue("@EditPermission", Convert.ToInt32(g.editPermission));
-                cmdUpdateUserPermission.Parameters.AddWithValue("@SensitiveInfoPermission", Convert.ToInt32(g.sensitiveInfoPermission));
-                //Parameters for the stored procedure that will alter the table
-                cmdUpdateUserPermission.CommandText = updatePermission;
+                cmdUpdateUserPermission.Parameters.AddWithValue("@SensitivePermission", Convert.ToInt32(g.sensitiveInfoPermission));
+
+                Lab3DBConnection.Open();
+                cmdUpdateUserPermission.ExecuteNonQuery();
 
 
 
@@ -824,11 +829,16 @@ namespace Lab1484.Pages.DB
                 }
                 SqlCommand cmdInsertUserPermission = new SqlCommand();
                 cmdInsertUserPermission.Connection = Lab3DBConnection;
+                cmdInsertUserPermission.CommandText = insertPermission;
+                cmdInsertUserPermission.CommandType = CommandType.StoredProcedure;
                 cmdInsertUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
                 cmdInsertUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
-                //Insert in grant user zero permissions for current user selected table starts with UserID, GrantID, then 3 permissions
-                cmdInsertUserPermission.CommandText = "Insert INTO Grant_User VALUES (@UserID, @GrantID, 0, 0, 0)";
+                cmdInsertUserPermission.Parameters.AddWithValue("@ViewPermission", Convert.ToInt32(g.viewPermission));
+                cmdInsertUserPermission.Parameters.AddWithValue("@EditPermission", Convert.ToInt32(g.editPermission));
+                cmdInsertUserPermission.Parameters.AddWithValue("@SensitivePermission", Convert.ToInt32(g.sensitiveInfoPermission));
 
+                Lab3DBConnection.Open();
+                cmdInsertUserPermission.ExecuteNonQuery();
 
 
             }
@@ -854,6 +864,20 @@ namespace Lab1484.Pages.DB
 
             SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
             return tempReader;
+        }
+        
+        public static void addGrant_User()
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+
+
+
+
+
         }
 
 

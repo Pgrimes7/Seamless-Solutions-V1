@@ -68,6 +68,7 @@
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Grant Permission</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -79,36 +80,56 @@
                                 <td>@user.lastName</td>
                                 <td>@user.email</td>
                                 <td>@user.phone</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#permissionModal" data-userid="@user.userID" data-grantid="@Model.SelectedGrantId">Update</button>
+                                </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             }
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Launch modal</button>
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- Modal -->
+            <div class="modal fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <h5 class="modal-title" id="permissionModalLabel">Update Permission</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>
-                        
-                            
-                            </p>
+                            <form id="permissionForm" method="post" asp-page-handler="UpdatePermission">
+                                <input type="hidden" id="modalUserId" name="userId" />
+                                <input type="hidden" id="modalGrantId" name="grantId" />
+                                <div>
+                                    <label>
+                                        <input type="checkbox" asp-for="viewPermission" />
+                                        View Permission
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input type="checkbox" asp-for="editPermission" />
+                                        Edit Permission
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input type="checkbox" asp-for="sensitiveInfoPermission" />
+                                        Sensitive Information Permission
+                                    </label>
+                                </div>
+                            </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary" id="confirmUpdate">Save changes</button>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <footer class="py-3 my-4">
                 <p class="text-center text-body-secondary">© 2024 JMU Care, Inc</p>
@@ -116,9 +137,22 @@
         </main>
     </body>
     </html>
-            <!-- Include jQuery -->
-            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-            <!-- Include Bootstrap JS -->
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Include Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $('#permissionModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var userId = button.data('userid');
+            var grantId = button.data('grantid');
+            var modal = $(this);
+            modal.find('#modalUserId').val(userId);
+            modal.find('#modalGrantId').val(grantId);
+        });
 
+        $('#confirmUpdate').on('click', function () {
+            $('#permissionForm').submit();
+        });
+    </script>
 }

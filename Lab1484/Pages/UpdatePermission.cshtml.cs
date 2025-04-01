@@ -11,6 +11,19 @@ namespace Lab1484.Pages
         // Lists to store grants and users
         public List<Grant> GrantList { get; set; }
         public List<User> UserList { get; set; }
+        public int SelectedGrantId { get; set; }
+        [BindProperty]
+        public bool IsChecked { get; set; }
+
+        [BindProperty]
+        public bool viewPermission { get; set; }
+
+        [BindProperty]
+        public bool editPermission { get; set; }
+
+        [BindProperty]
+        public bool sensitiveInfoPermission { get; set; }
+
 
         public UpdatePermissionModel()
         {
@@ -56,9 +69,18 @@ namespace Lab1484.Pages
             }
 
         }
-        public void OnPostUpdatePermission(int userId, int grantId, int permission)
+        public void OnPostUpdatePermission(int userId, int grantId)
         {
-           
+            // Create a grant_user object
+            var grantUser = new grant_user
+            {
+                userID = userId,
+                grantID = grantId,
+                //Since using checkboxes need to check for boolean values and then convert to int for the DB
+                viewPermission = viewPermission ? 1 : 0,
+                editPermission = editPermission ? 1 : 0,
+                sensitiveInfoPermission = sensitiveInfoPermission ? 1 : 0
+            };
         }
     }
 }
