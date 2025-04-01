@@ -3,6 +3,7 @@ using Lab1484.Pages.DB;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace Lab1484.Pages
 {
@@ -11,6 +12,7 @@ namespace Lab1484.Pages
         // Lists to store grants and users
         public List<Grant> GrantList { get; set; }
         public List<User> UserList { get; set; }
+        public List<User> NonGrantUserList { get; set; }
 
         [BindProperty]
         public bool viewPermission { get; set; }
@@ -34,6 +36,7 @@ namespace Lab1484.Pages
             // Initialize the lists
             GrantList = new List<Grant>();
             UserList = new List<User>();
+            NonGrantUserList = new List<User>();
         }
 
         public void OnGet()
@@ -43,7 +46,7 @@ namespace Lab1484.Pages
             {
                 GrantList.Add(new Grant
                 {
-                    grantName = grantReader["category"].ToString(),
+                    grantName = grantReader["grantName"].ToString(),
                     GrantID = (int)grantReader["GrantID"],
                     businessName = grantReader["businessName"].ToString(),
                     amount = Double.Parse(grantReader["amount"].ToString()),
@@ -61,6 +64,26 @@ namespace Lab1484.Pages
             SqlDataReader userReader = DBClass.Grant_UserReader(grantId);
             UserList.Clear();
             GrantList.Clear();
+            NonGrantUserList.Clear();
+
+            using (SqlDataReader grantReader = DBClass.SingleGrantReader(grantId))
+            {
+                while (grantReader.Read())
+                {
+                    GrantList.Add(new Grant
+                    {
+                        grantName = grantReader["grantName"].ToString(),
+                        GrantID = (int)grantReader["GrantID"],
+                        businessName = grantReader["businessName"].ToString(),
+                        amount = Double.Parse(grantReader["amount"].ToString()),
+                        category = grantReader["category"].ToString(),
+                        dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                        facultyName = grantReader["FacultyLead"].ToString(),
+                        grantStatus = grantReader["grantStatus"].ToString()
+                    });
+                }
+            }
+
             while (userReader.Read())
             {
                 UserList.Add(new User
@@ -71,6 +94,21 @@ namespace Lab1484.Pages
                     email = userReader["Email"].ToString(),
                     phone = userReader["PhoneNumber"].ToString(),
                 });
+            }
+
+            using (SqlDataReader grantNonUserList = DBClass.readNonGrant_User(grantId))
+            {
+                while (grantNonUserList.Read())
+                {
+                    NonGrantUserList.Add(new User
+                    {
+                        userID = Int32.Parse(grantNonUserList["UserID"].ToString()),
+                        firstName = grantNonUserList["FirstName"].ToString(),
+                        lastName = grantNonUserList["LastName"].ToString(),
+                        email = grantNonUserList["Email"].ToString(),
+                        phone = grantNonUserList["PhoneNumber"].ToString(),
+                    });
+                }
             }
         }
 
@@ -88,8 +126,23 @@ namespace Lab1484.Pages
 
             // Update the database with the new permission values
             DBClass.updatePermission(grantUser);
-
-            return RedirectToPage();
+            return RedirectToPage("/UpdatePermission");
         }
+
+        public IActionResult OnPostAddUser(int UserID, int GrantID)
+        {
+            
+     
+            UserID = userId;
+            GrantID = grantId;
+            DBClass.addGrantUser(GrantID, UserID);
+
+            return RedirectToPage("/UpdatePermission");
+
+
+
+        }
+
+         
     }
 }
