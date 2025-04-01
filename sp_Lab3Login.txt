@@ -28,6 +28,20 @@ WHERE
 UserID = @UserID AND GrantID = @GrantID
 END
 
+CREATE PROCEDURE insertPermissionRecord
+    @UserID int,
+    @GrantID int,
+    @ViewPermission int, 
+    @EditPermission int,
+    @SensitivePermission int
+AS
+BEGIN
+    INSERT INTO Grant_User (UserID, GrantID, ViewPermission, EditPermission, SensitiveInfoPermission)
+    VALUES (@UserID, @GrantID, @ViewPermission, @EditPermission, @SensitivePermission)
+END
+
+
+
 
 USE AUTH
 
