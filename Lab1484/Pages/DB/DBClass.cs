@@ -159,6 +159,32 @@ namespace Lab1484.Pages.DB
             //cmdAdminRead.Connection.Close();
         }
 
+        public static SqlDataReader AllUsersReader() // Reads all users
+        {
+            SqlCommand cmdAllUsersRead = new SqlCommand();
+
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            cmdAllUsersRead.Connection = Lab3DBConnection;
+            cmdAllUsersRead.Connection.ConnectionString = Lab3DBConnString;
+
+            // Removed WHERE clause to include ALL users
+            cmdAllUsersRead.CommandText = @"
+        SELECT userID, firstName, lastName
+        FROM Users
+        ORDER BY firstName, lastName;";
+
+            cmdAllUsersRead.Connection.Open(); // Open connection here, close it in the model
+
+            SqlDataReader tempReader = cmdAllUsersRead.ExecuteReader();
+
+            return tempReader;
+        }
+
+
         public static SqlDataReader FacultyReader()//reads employee table
         {
             SqlCommand cmdEmployeeRead = new SqlCommand();
