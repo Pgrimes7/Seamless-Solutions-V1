@@ -4,8 +4,15 @@
     <form id="GrantCreation" asp-page="GrantCreation" method="post">
         <h1>Create a Grant</h1>
         <p>Please complete all forms</p>
+        @*//Grant Name (textbox)*@
+        Grant Name
+        <br />
+        <input type="text" asp-for="NewGrant.grantName" placeholder="Grant Name" />
+        <span asp-validation-for="NewGrant.grantName" class="text-danger"></span>
+        <br />
+        <br />
         @*//Project Name (textbox)*@
-        Business Name
+        Funding Organization
         <br />
         <input type="text" asp-for="NewGrant.businessName" placeholder="Business name" />
         <span asp-validation-for="NewGrant.businessName" class="text-danger"></span>
@@ -45,10 +52,9 @@
         Grant Category
 
         <select asp-for="NewGrant.category" class="form-select">
-            <option value="Research">Research</option>
-            <option value="Athletic">Athletic</option>
-            <option value="Fundraising">Fundraising</option>
-            <option value="Scholarship">Scholarship</option>
+            <option value="Federal">Federal</option>
+            <option value="State">State</option>
+            <option value="Foundation">Foundation</option>
             <option value="Other">Other</option>
         </select>
         <br />
@@ -56,13 +62,19 @@
         @*Grant status Radio Buttons *@
         Grant Status
         <div>
-            <input type="radio" asp-for="NewGrant.grantStatus" value="Not Begun" /> Incomplete
+            <input type="radio" asp-for="NewGrant.grantStatus" value="Potential" /> Potential
         </div>
         <div>
-            <input type="radio" asp-for="NewGrant.grantStatus" value="Incomplete" /> In Progress
+            <input type="radio" asp-for="NewGrant.grantStatus" value="Funded" /> Funded
         </div>
         <div>
-            <input type="radio" asp-for="NewGrant.grantStatus" value="Complete" /> Complete
+            <input type="radio" asp-for="NewGrant.grantStatus" value="Active" /> Active
+        </div>
+        <div>
+            <input type="radio" asp-for="NewGrant.grantStatus" value="Rejected" /> Rejected
+        </div>
+        <div>
+            <input type="radio" asp-for="NewGrant.grantStatus" value="Archived" /> Archived
         </div>
         <span asp-validation-for="NewGrant.grantStatus" class="text-danger"></span>
         <br />
@@ -72,11 +84,13 @@
         <br />
         <input type="date" asp-for="NewGrant.dueDate" />
         <span asp-validation-for="NewGrant.dueDate" class="text-danger"></span>
+        <br />
+        <br />
 
         <input type="submit" value="Create Grant" />
 
         @*//Populate Button*@
-        <button asp-page="GrantCreation" asp-page-handler="PopulateHandler" class="btn btn-danger" formnovalidate>Populate</button>
+        @*<button asp-page="GrantCreation" asp-page-handler="PopulateHandler" class="btn btn-danger" formnovalidate>Populate</button>*@
 
     </form>
 }

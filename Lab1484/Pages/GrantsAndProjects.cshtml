@@ -106,11 +106,16 @@
                                     <i class="fa-solid fa-filter"></i>
                                 </button>
 
+                                @*Using the GrantCreation page rather than modal for this sprint*@
                                 <!--create grant button trigger modal-->
-                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#creategrantModal">
+                                @*<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#creategrantModal">
                                     Create
                                     <i class="fa-solid fa-plus"></i>
-                                </button>
+                                </button>*@
+                                <a href="/GrantCreation" class="btn btn-outline-secondary">
+                                    Create
+                                    <i class="fa-solid fa-plus"></i>
+                                </a>
 
                                 <!--create grant modal -->
                                 <div class="modal fade" id="creategrantModal" tabindex="-1" aria-labelledby="creategrantModalLabel" aria-hidden="true">
