@@ -87,15 +87,14 @@ namespace Lab1484.Pages
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                return RedirectToPage("/AllUsers");
             }
-
-            Console.WriteLine(NewUser.UserType);
 
             DBClass.CreateHashedUser(NewUser);
             DBClass.Lab3DBConnection.Close();
 
             return RedirectToPage("/AllUsers");
+            
         }
     }
 }
