@@ -99,6 +99,27 @@ namespace Lab1484.Pages.DB
             cmdProjectUpdate.ExecuteNonQuery();
         }
 
+        //Task Reader
+        public static SqlDataReader TaskReader()
+        {
+            SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdProjectRead.Connection = Lab3DBConnection;
+            cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdProjectRead.CommandText = "SELECT Tasks.*, Project.ProjectName " +
+                "FROM Tasks " +
+                "JOIN Project ON Project.ProjectID = Tasks.ProjectID;";
+            cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
+
+            return tempReader;
+            cmdProjectRead.Connection.Close();
+        }
+
 
         public static SqlDataReader GrantReader()//reads grant table in sql
         {

@@ -250,6 +250,7 @@
                                             <th>Due date</th>
                                             <th>Status</th>
                                             <th>Funding organization</th>
+                                            <th>Notes</th>
                                             <th class="fw-bold">
                                                 <button class="btn btn-rounded btn-sm fw-bold">
                                                     <i class="fa-solid fa-edit"></i>
@@ -287,6 +288,14 @@
                                                 <td>@prod.DateDue.ToShortDateString()</td>
                                                 <td><span class="@statusClass">@prod.ProjectStatus</span></td>
                                                 <td>Orgnaization Name</td>
+                                                <td>
+                                                    <form method="post" asp-page="/ProjectNotes">
+                                                        <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
+                                                        <button type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                            Notes
+                                                        </button>
+                                                    </form>
+                                                </td>
                                                 <td>
                                                     <form method="post" asp-page="/UpdateProject">
                                                         <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
