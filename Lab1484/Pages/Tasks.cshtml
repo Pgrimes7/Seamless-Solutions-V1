@@ -53,75 +53,44 @@
                     </div>
                 </div>
 
-                <!--create user modal -->
+                <!--create task modal -->
                 <div class="modal fade" id="createtaskModal" tabindex="-1" aria-labelledby="createtaskModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="createtaskModalLabel">Create New User</h1>
+                                <h1 class="modal-title fs-5" id="createtaskModalLabel">Create New Task</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                                <form class="form-floating">
-                                    <div class="row mb-4">
-                                        <div class="col">
-                                            <select class="form-select" aria-label="Default select example">
-                                                <option selected>Select User Type</option>
-                                                <option value="1">User Type</option>
-                                                <option value="2">User Type</option>
-                                                <option value="3">User Type</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-floating mb-4">
-                                                <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
-                                                <label for="floatingMainContactName">First Name</label>
+                            <form method="post">
+                                <div class="modal-body">
+                                        <div class="row mb-4">
+                                            <div class="col">
+                                            <label asp-for="NewTask.ProjectID" class="form-label">Associated Project</label>
+                                                <select asp-for="NewTask.ProjectID" class="form-select" aria-label="Default select example">
+                                                    @foreach (var proj in Model.projects) {
+                                                        <option value="@proj.ProjectID">@proj.ProjectName</option>
+                                                    }
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <div class="form-floating mb-4">
-                                                <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
-                                                <label for="floatingMainContactName">Last Name</label>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col">
+                                            <label asp-for="NewTask.taskDescription" class="form-label">Task Description</label>
+                                                <div class="form-floating mb-4">
+                                                <input asp-for="NewTask.taskDescription" type="text" class="form-control" id="floatingTaskDesc" placeholder="Enter Task Description" required
+                                                       oninvalid="this.setCustomValidity('Please enter a task description')"
+                                                       oninput="this.setCustomValidity('')">
+                                                    <label for="floatingTaskDesc">Task Description</label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-floating mb-4">
-                                                <input type="email" class="form-control" id="floatingEmail" placeholder="john.doe@gmail.com">
-                                                <label for="floatingEmail">Email</label>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-floating mb-4">
-                                                <input type="tel" class="form-control" id="floatingPhoneNumber" placeholder="123-456-7890">
-                                                <label for="floatingPhoneNumber">Phone Number</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-floating mb-4">
-                                                <input type="text" class="form-control" id="floatingUsername" placeholder="username">
-                                                <label for="floatingUsername">Username</label>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-floating mb-4">
-                                                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                                                <label for="floatingPassword">Password</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary">Add Task</button>
-                            </div>
+                                </div>
+                                <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Add Task</button>
+                                </div>
+                            </form>
                         </div> <!--close modal content-->
                     </div> <!--close modal dialog-->
                 </div> <!--close modal-->

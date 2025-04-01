@@ -92,7 +92,7 @@ namespace Lab1484.Pages
                 DBClass.InsertEmployeeProject(newProjectID, employeeID);
             }
 
-            return RedirectToPage("/DashBoard");
+            return RedirectToPage("/GrantsAndProjects");
         }
         
 

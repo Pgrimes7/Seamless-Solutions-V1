@@ -10,6 +10,11 @@ namespace Lab1484.Pages
     {
         public List<ProjTask> tasks { get; set; } = new List<ProjTask>();
 
+        public List<Project> projects { get; set; } = new List<Project>();
+
+        [BindProperty]
+        public ProjTask NewTask { get; set; } = new ProjTask();
+
         public IActionResult OnGet()
         {
             //Check to see if the user is logged in
@@ -20,6 +25,7 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Login");
             }
 
+            //Read DB Tasks into tasks list
             SqlDataReader taskReader = DBClass.TaskReader();
             while (taskReader.Read())
             {
@@ -31,7 +37,29 @@ namespace Lab1484.Pages
                     ProjectName = taskReader["ProjectName"].ToString()
                 });
             }
+
+            //Read DB Projects into projects list
+            SqlDataReader projReader = DBClass.ProjectReader();
+            while (projReader.Read())
+            {
+                projects.Add(new Project
+                {
+                    ProjectID = Int32.Parse(projReader["ProjectID"].ToString()),
+                    ProjectName = projReader["ProjectName"].ToString()
+                });
+            }
+
             return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            if (!string.IsNullOrWhiteSpace(NewTask.taskDescription))
+            {
+                DBClass.InsertTask(NewTask);
+            }
+
+            return RedirectToPage("/Tasks");
         }
     }
 }
