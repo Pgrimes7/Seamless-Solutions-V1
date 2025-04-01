@@ -183,15 +183,51 @@
                                 </div> <!--close modal-->
                             </div> <!--close btn toolbar-->
                             <!--grant table-->
-                            <div class="table-responsive table-bordered rounded small my-2">
+                            <div class="table-responsive table-bordered rounded small">
                                 <table id="grantTable" class="table align-middle mb-0 bg-white">
                                     <thead class="bg-light">
                                         <tr>
-                                            <th>Grant ID</th>
-                                            <th>Contact</th>
-                                            <th>Due date</th>
-                                            <th>Status</th>
-                                            <th>Funding organization</th>
+                                            <th>
+                                                <button class="sort-button btn btn-sm fw-bold shadow-none">
+                                                    Grant Name
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="sort-button btn btn-sm fw-bold">
+                                                    Primary Investigator
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="sort-button btn btn-sm fw-bold">
+                                                    Amount
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="sort-button btn btn-rounded btn-sm fw-bold">
+                                                    Due date
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="sort-button btn btn-rounded btn-sm fw-bold">
+                                                    Status
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="sort-button btn btn-rounded btn-sm fw-bold">
+                                                    Funding Organization
+                                                </button>
+                                            </th>
+                                            <th>
+                                                <button class="sort-button btn btn-sm fw-bold">
+                                                    Category
+                                                </button>
+                                            </th>
+                                            <th class="fw-bold">
+                                                <button class="btn btn-rounded btn-sm fw-bold">
+                                                    <i class="fa-solid fa-edit"></i>
+                                                    Edit
+                                                </button>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -199,21 +235,16 @@
                                         {
                                             var statusClass = prod.grantStatus?.ToLower() switch
                                             {
-                                                "in progress" => "badge bg-info text-dark",
-                                                "opportunity" => "badge bg-primary",
-                                                "pending" => "badge bg-warning text-dark",
-                                                "approved" => "badge bg-success",
+                                                "archived" => "badge bg-info text-dark",
+                                                "active" => "badge bg-primary",
+                                                "potential" => "badge bg-warning text-dark",
+                                                "funded" => "badge bg-success",
                                                 "rejected" => "badge bg-danger",
                                                 _ => "badge bg-secondary"
                                             };
 
-                                            if (prod.grantStatus?.ToLower() != "approved" &&
-                                            prod.grantStatus?.ToLower() != "rejected" &&
-                                            prod.grantStatus?.ToLower() != "in progress")
-                                            {
-
                                             <tr>
-                                                <td>@prod.GrantID</td>
+                                                <td>@prod.grantName</td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
@@ -223,14 +254,22 @@
                                                         </div>
                                                     </div>
                                                 </td>
+                                                <td>@prod.amount</td>
                                                 <td>@prod.dueDate.ToShortDateString()</td>
                                                 <td><span class="@statusClass">@prod.grantStatus</span></td>
-                                                <td>Orgnaization Name</td>
+                                                <td>@prod.businessName</td>
+                                                <td>@prod.category</td>
+                                                <td>
+                                                    <a asp-page="/UpdateGrant" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </a>
+                                                </td>
 
                                             </tr>
-                                            }
                                         }
                                     </tbody>
+
+
                                 </table>
                             </div> <!--close table div-->
                         </div> <!--close grants tab-->
