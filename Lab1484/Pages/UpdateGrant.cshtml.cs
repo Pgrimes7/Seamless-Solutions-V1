@@ -64,7 +64,7 @@ namespace Lab1484.Pages
                     businessName = grantReader["businessName"].ToString(),
                     category = grantReader["category"].ToString(),
                     amount = Double.Parse(grantReader["amount"].ToString()),
-                    dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("submissionDate")),
+                    dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
                     grantStatus = grantReader["grantStatus"].ToString(),
                     facultyName = grantReader["FacultyLead"].ToString()
                 });
@@ -152,7 +152,7 @@ namespace Lab1484.Pages
 
             if (EditDueDate.HasValue)
             {
-                setClauses.Add("submissionDate = @DueDate");
+                setClauses.Add("dueDate = @DueDate");
                 cmd.Parameters.AddWithValue("@DueDate", EditDueDate.Value);
             }
 

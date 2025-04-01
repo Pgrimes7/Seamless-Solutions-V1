@@ -30,5 +30,6 @@ namespace Lab1484.Pages.DataClasses
         public string? FacultyLeadID { get; set; }
 
 
+
     }
 }
