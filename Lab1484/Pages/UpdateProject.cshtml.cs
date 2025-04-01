@@ -14,13 +14,14 @@ namespace Lab1484.Pages
 
         public Project Proj { get; set; } = new Project();
 
+        [BindProperty]
         public Project UpdateProj { get; set; } = new Project();
 
         public IActionResult OnPost()
         {
             //UPDATE THESE VALUES
             //UpdateProj.ProjectID = ProjectID;
-            //UpdateProj.ProjectName = "";
+            //UpdateProj.ProjectName = NewProjectName;
             //UpdateProj.DateDue = Proj.DateDue;
             //UpdateProj.ProjectStatus = "";
 
@@ -52,6 +53,12 @@ namespace Lab1484.Pages
             }
 
             return Page();
+        }
+
+        public IActionResult OnPostUpdateProjectPost()
+        {
+            DBClass.UpdateProject(UpdateProj);
+            return RedirectToPage("/GrantsAndProjects");
         }
     }
 }
