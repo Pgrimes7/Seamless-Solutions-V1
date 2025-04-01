@@ -1,35 +1,44 @@
 ﻿@page
 @model Lab1484.Pages.UpdateProjectModel
 @{
-	<h2>Edit Project: @Model.Proj.ProjectName</h2>
-	<form id="UpdateProject" asp-page="UpdateProject" method="post">
-		@*//Project Name (textbox)*@
-		Project Name
-		<br />
-		<input type="text" asp-for="@Model.UpdateProj.ProjectName" />
-		<span asp-validation-for="@Model.UpdateProj.ProjectName" class="text-danger"></span>
-		<br />
-		<br />
+    <br />
+    <h2>Edit Project: @Model.UpdateProj.ProjectName</h2>
+    <br />
 
-		@*//Due Date (textbox with special perms)*@
-		Due Date
-		<br />
-		<input type="date" asp-for="@Model.UpdateProj.DateDue" />
-		<br />
-		<br />
+    <form id="UpdateProject" asp-page="UpdateProject" method="post">
+        <input type="hidden" asp-for="UpdateProj.ProjectID" />
 
-		@*//Project Status (Radio Button)*@
-		Project Status
-		<div>
-			<input type="radio" asp-for="@Model.UpdateProj.ProjectStatus" value="Not Begun" checked /> Incomplete
-		</div>
-		<div>
-			<input type="radio" asp-for="@Model.UpdateProj.ProjectStatus" value="Incomplete" /> In Progress
-		</div>
-		<div>
-			<input type="radio" asp-for="@Model.UpdateProj.ProjectStatus" value="Complete" /> Complete
-		</div>
-		<br />
-		<input type="submit" value="Edit Project" />
-	</form>
+        @* Project Name (textbox) *@
+        <div class="mb-3">
+            <label asp-for="UpdateProj.ProjectName" class="form-label">Project Name</label>
+            <input asp-for="UpdateProj.ProjectName" class="form-control w-25" />
+            <span asp-validation-for="UpdateProj.ProjectName" class="text-danger"></span>
+        </div>
+
+        @* Due Date (textbox) *@
+        <div class="mb-3">
+            <label asp-for="UpdateProj.DateDue" class="form-label">Date Due</label>
+            <input asp-for="UpdateProj.DateDue" class="form-control w-50" />
+            <span asp-validation-for="UpdateProj.DateDue" class="text-danger"></span>
+        </div>
+
+        @* Project Status (Radio Button) *@
+        <div class="mb-3">
+            <label class="form-label">Project Status</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="UpdateProj.ProjectStatus" value="Incomplete" id="statusIncomplete" />
+                <label class="form-check-label" for="statusIncomplete">Incomplete</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="UpdateProj.ProjectStatus" value="In Progress" id="statusInProgress" />
+                <label class="form-check-label" for="statusInProgress">In Progress</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" asp-for="UpdateProj.ProjectStatus" value="Completed" id="statusCompleted" />
+                <label class="form-check-label" for="statusCompleted">Completed</label>
+            </div>
+        </div>
+
+        <input type="submit" asp-page-handler="UpdateProjectPost" value="Edit Project" />
+    </form>
 }

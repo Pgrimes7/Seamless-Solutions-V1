@@ -57,6 +57,7 @@ namespace Lab1484.Pages
                 GrantList.Add(new Grant
                 {
                     GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
+                    grantName = grantReader["grantName"].ToString(),
                     businessName = grantReader["businessName"].ToString(),
                     amount = Double.Parse(grantReader["amount"].ToString()),
                     category = grantReader["category"].ToString(),

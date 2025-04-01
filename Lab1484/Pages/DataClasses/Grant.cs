@@ -7,8 +7,6 @@ namespace Lab1484.Pages.DataClasses
     {
         public int GrantID { get; set; }
 
-        public string FacultyLeadID { get; set; }
-
         public string BusinessPartnerID { get; set; }
 
         public string businessName { get; set; }
@@ -27,6 +25,11 @@ namespace Lab1484.Pages.DataClasses
         public string? facultyName { get; set; }
 
         public string? facultyEmail { get; set; }
+
+        public string? grantName { get; set; }
+        public string? FacultyLeadID { get; set; }
+
+
 
     }
 }

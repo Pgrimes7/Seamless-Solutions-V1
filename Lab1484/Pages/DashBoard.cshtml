@@ -24,7 +24,7 @@
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
-        <script src="script.js"></script>
+        <script src="~/js/script.js" asp-append-version="true"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -178,31 +178,41 @@
                                 <table id="grantTable" class="table align-middle mb-0 bg-white">
                                     <thead class="bg-light">
                                         <tr>
-                                            <th>
-                                                <button class="sort-button btn btn-sm fw-bold shadow-none">
-                                                    Grant ID
-                                                </button>
-                                            </th>
-                                            <th>
-                                                <button class="sort-button btn btn-sm fw-bold">
-                                                    Contact
-                                                </button>
-                                            </th>
-                                            <th>
-                                                <button class="sort-button btn btn-rounded btn-sm fw-bold">
-                                                    Due date
-                                                </button>
-                                            </th>
-                                            <th>
-                                                <button class="sort-button btn btn-rounded btn-sm fw-bold">
-                                                    Status
-                                                </button>
-                                            </th>
-                                            <th>
-                                                <button class="sort-button btn btn-rounded btn-sm fw-bold">
-                                                    Funding organization
-                                                </button>
-                                            </th>
+                                        <th>
+                                            <button class="sort-button btn btn-sm fw-bold shadow-none">
+                                                Grant Name
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="sort-button btn btn-sm fw-bold">
+                                                Primary Investigator
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="sort-button btn btn-sm fw-bold">
+                                                Amount
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="sort-button btn btn-rounded btn-sm fw-bold">
+                                                Due date
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="sort-button btn btn-rounded btn-sm fw-bold">
+                                                Status
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="sort-button btn btn-rounded btn-sm fw-bold">
+                                                Funding Organization
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button class="sort-button btn btn-sm fw-bold">
+                                                Category
+                                            </button>
+                                        </th>
                                             <th class="fw-bold">
                                                 <button class="btn btn-rounded btn-sm fw-bold">
                                                     <i class="fa-solid fa-edit"></i>
@@ -225,7 +235,7 @@
                                             };
 
                                         <tr>
-                                            <td>@prod.GrantID</td>
+                                            <td>@prod.grantName</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
@@ -235,9 +245,11 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            <td>@prod.amount</td>
                                             <td>@prod.dueDate.ToShortDateString()</td>
                                             <td><span class="@statusClass">@prod.grantStatus</span></td>
-                                            <td>Orgnaization Name</td>
+                                            <td>@prod.businessName</td>
+                                            <td>@prod.category</td>
                                             <td>
                                                 <a asp-page="/UpdateGrant" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
                                                     <i class="fa-solid fa-pen-to-square"></i>

@@ -11,11 +11,12 @@
             <tr>
                 <th>Select</th>
                 <th>Grant Name</th>
-                <th>Category</th>
+                <th>Primary Investigator</th>
                 <th>Amount</th>
                 <th>Due Date</th>
-                <th>Faculty Name</th>
-                <th>Grant Status</th>
+                <th>Status</th>
+                <th>Funding Organization</th>
+                <th>Category</th>
             </tr>
         </thead>
         <tbody>
@@ -33,15 +34,19 @@
 
                 <tr>
                     <td>
-                        <input type="radio" name="selectedGrant" value="@grant.GrantID" onchange="selectGrant('@grant.GrantID', '@grant.grantStatus')" />
+                        <input type="radio" name="selectedGrant"
+                               value="@grant.GrantID"
+                               onchange="selectGrant('@grant.GrantID', '@grant.grantStatus', '@grant.FacultyLeadID')" />
                     </td>
+                    <td>@grant.grantName</td>
+                    <td>@grant.facultyName</td> 
+                    <td>@grant.amount.ToString("C")</td>
+                    <td>@grant.dueDate.ToShortDateString()</td>
+                    <td><span class="@statusClass">@grant.grantStatus</span></td>
                     <td>@grant.businessName</td>
                     <td>@grant.category</td>
-                    <td>@grant.amount</td>
-                    <td>@grant.dueDate.ToShortDateString()</td>
-                    <td>@grant.facultyName</td>
-                    <td><span class="@statusClass">@grant.grantStatus</span></td>
                 </tr>
+
             }
         </tbody>
     </table>
@@ -52,21 +57,60 @@
 
     <div id="error-message" class="text-danger mb-2" style="display: none;"></div>
 
-    <form method="post" onsubmit="return validateGrantSelection();">
+    <form method="post">
         <input type="hidden" asp-for="SelectedGrantId" id="selectedGrantId" />
 
-        <label for="newStatus">Select New Status:</label>
-        <select asp-for="NewGrantStatus" class="form-select" id="newStatus">
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Opportunity">Opportunity</option>
-        </select>
+        <div class="mb-2">
+            <label asp-for="EditGrantName">Grant Name</label>
+            <input asp-for="EditGrantName" class="form-control" />
+        </div>
 
-        <br />
+        <div class="mb-3">
+            <label asp-for="EditFacultyLeadID" class="form-label fw-bold">Primary Investigator</label>
+            <select asp-for="EditFacultyLeadID" class="form-select" id="EditFacultyLeadID">
+                <option value="">-- Select a User --</option>
+                @foreach (var user in Model.AllUsersList)
+                {
+                    <option value="@user.userID">@user.firstName @user.lastName</option>
+                }
+            </select>
+        </div>
 
-        <button type="submit" class="btn btn-primary">Update Status</button>
+
+
+        <div class="mb-2">
+            <label asp-for="EditAmount">Amount</label>
+            <input asp-for="EditAmount" type="number" step="0.01" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="EditDueDate">Due Date</label>
+            <input asp-for="EditDueDate" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="NewGrantStatus">Grant Status</label>
+            <select asp-for="NewGrantStatus" class="form-select">
+                <option value="">-- Select a Status--</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Opportunity">Opportunity</option>
+            </select>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="EditBusinessName">Funding Organization</label>
+            <input asp-for="EditBusinessName" class="form-control" />
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="EditCategory">Category</label>
+            <input asp-for="EditCategory" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Grant</button>
     </form>
 
     <script>

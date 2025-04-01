@@ -76,6 +76,8 @@ namespace Lab1484.Pages.DB
             cmdSingleProjectRead.Connection.Close();
         }
 
+        
+
         //Update Project
         public static void UpdateProject(Project p)
         {
@@ -96,6 +98,27 @@ namespace Lab1484.Pages.DB
             cmdProjectUpdate.Parameters.AddWithValue("@ProjectID", p.ProjectID);
             cmdProjectUpdate.Connection.Open();
             cmdProjectUpdate.ExecuteNonQuery();
+        }
+
+        //Task Reader
+        public static SqlDataReader TaskReader()
+        {
+            SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdProjectRead.Connection = Lab3DBConnection;
+            cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdProjectRead.CommandText = "SELECT Tasks.*, Project.ProjectName " +
+                "FROM Tasks " +
+                "JOIN Project ON Project.ProjectID = Tasks.ProjectID;";
+            cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
+
+            return tempReader;
+            cmdProjectRead.Connection.Close();
         }
 
 
@@ -159,6 +182,32 @@ namespace Lab1484.Pages.DB
             return tempReader;
             //cmdAdminRead.Connection.Close();
         }
+
+        public static SqlDataReader AllUsersReader() // Reads all users
+        {
+            SqlCommand cmdAllUsersRead = new SqlCommand();
+
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            cmdAllUsersRead.Connection = Lab3DBConnection;
+            cmdAllUsersRead.Connection.ConnectionString = Lab3DBConnString;
+
+            // Removed WHERE clause to include ALL users
+            cmdAllUsersRead.CommandText = @"
+        SELECT userID, firstName, lastName
+        FROM Users
+        ORDER BY firstName, lastName;";
+
+            cmdAllUsersRead.Connection.Open(); // Open connection here, close it in the model
+
+            SqlDataReader tempReader = cmdAllUsersRead.ExecuteReader();
+
+            return tempReader;
+        }
+
 
         public static SqlDataReader FacultyReader()//reads employee table
         {
@@ -594,6 +643,9 @@ namespace Lab1484.Pages.DB
             {
                 Lab3DBConnection.Close();
             }
+
+
+
             string userInsertQuery = @"
              INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
              VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
