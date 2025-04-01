@@ -22,8 +22,20 @@ document.addEventListener("DOMContentLoaded", function () {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: '70%'
+            cutout: '70%',
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Grant Status',
+                    font: {
+                        size: 17
+                    },
+                  
+                }
+            }
         }
     });
 
 });
+               
+   
