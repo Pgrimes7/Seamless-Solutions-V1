@@ -203,4 +203,18 @@ UPDATE Grants
 SET grantName = 'State Technology'
 WHERE GrantID = 2;
 
+UPDATE Grants
+SET grantStatus = 'Archived'
+WHERE GrantID = 1;
 
+UPDATE Grants
+SET grantStatus = 'Potential'
+WHERE GrantID = 2;
+
+UPDATE Grants
+SET Grants.category = 'State'
+WHERE GrantID = 1;
+
+UPDATE Grants
+SET category = 'Foundation'
+WHERE GrantID = 2;

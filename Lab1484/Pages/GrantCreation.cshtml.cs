@@ -53,15 +53,15 @@ namespace Lab1484.Pages
 
         public IActionResult OnPost()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
 
             DBClass.InsertGrant(NewGrant);
             DBClass.Lab3DBConnection.Close();
 
-            return RedirectToPage("/GrantCreation");
+            return RedirectToPage("/DashBoard");
         }
 
         public IActionResult OnPostPopulateHandler()

@@ -174,7 +174,7 @@ namespace Lab1484.Pages
 
             cmd.ExecuteNonQuery();
 
-            return RedirectToPage();
+            return RedirectToPage("/DashBoard");
         }
 
     }

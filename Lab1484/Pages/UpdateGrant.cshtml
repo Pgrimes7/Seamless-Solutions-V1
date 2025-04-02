@@ -1,6 +1,7 @@
 ﻿@page
 @model Lab1484.Pages.UpdateGrantModel
 @{
+    <br />
     <h1>Update A Grant</h1>
     <br />
 
@@ -24,11 +25,11 @@
             {
                 var statusClass = grant.grantStatus?.ToLower() switch
                 {
-                    "pending" => "badge bg-warning text-dark",
-                    "approved" => "badge bg-success",
+                    "archived" => "badge bg-info text-dark",
+                    "active" => "badge bg-primary",
+                    "potential" => "badge bg-warning text-dark",
+                    "funded" => "badge bg-success",
                     "rejected" => "badge bg-danger",
-                    "in progress" => "badge bg-info text-dark",
-                    "opportunity" => "badge bg-primary",
                     _ => "badge bg-secondary"
                 };
 
@@ -92,11 +93,11 @@
             <label asp-for="NewGrantStatus">Grant Status</label>
             <select asp-for="NewGrantStatus" class="form-select">
                 <option value="">-- Select a Status--</option>
-                <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
+                <option value="Potential">Potential</option>
+                <option value="Funded">Funded</option>
+                <option value="Active">Active</option>
                 <option value="Rejected">Rejected</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Opportunity">Opportunity</option>
+                <option value="Archived">Archived</option>
             </select>
         </div>
 
@@ -107,7 +108,12 @@
 
         <div class="mb-2">
             <label asp-for="EditCategory">Category</label>
-            <input asp-for="EditCategory" class="form-control" />
+            <select asp-for="EditCategory" class="form-select">
+                <option value="">-- Select a Category--</option>
+			    <option value="Federal">Federal</option>
+			    <option value="State">State</option>
+			    <option value="Foundation">Foundation</option>
+            </select>
         </div>
 
         <button type="submit" class="btn btn-primary">Update Grant</button>
