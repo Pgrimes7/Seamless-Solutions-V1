@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col">
+    <h5>Person Name</h5>
+  </div>
+  <div class="col">
+     <select class="form-select" aria-label="Select Permission">
+        <option selected>Select Persmissions</option>
+        <option value="1">View</option>
+        <option value="2">Edit</option>
+        <option value="3">Comment</option>
+     </select>
+  </div>
+  <div class="col-12 mt-2">
+     <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">
+          Allow user to view sensitive information?
+        </label>
+     </div>
+  </div>
+</div> <!--close row-->
