@@ -51,8 +51,17 @@ namespace Lab1484.Pages
 
 
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            //Check to see if the user is logged in
+            string currentUser = HttpContext.Session.GetString("username");
+            //Redirect them if they aren't
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                return RedirectToPage("/Login");
+            }
+
+
             SqlDataReader grantReader = DBClass.GrantReader();
 
             while (grantReader.Read())
@@ -100,6 +109,9 @@ namespace Lab1484.Pages
                 .OrderBy(g => statusOrder.ContainsKey(g.grantStatus) ? statusOrder[g.grantStatus] : int.MaxValue)
                 .ThenBy(g => g.businessName)
                 .ToList();
+
+
+            return Page();
         }
 
 

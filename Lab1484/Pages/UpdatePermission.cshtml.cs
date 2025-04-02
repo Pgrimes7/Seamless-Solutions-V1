@@ -39,8 +39,16 @@ namespace Lab1484.Pages
             NonGrantUserList = new List<User>();
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            //Check to see if the user is logged in
+            string currentUser = HttpContext.Session.GetString("username");
+            //Redirect them if they aren't
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                return RedirectToPage("/Login");
+            }
+
             SqlDataReader grantReader = DBClass.GrantReader();
             while (grantReader.Read())
             {
@@ -56,6 +64,8 @@ namespace Lab1484.Pages
                     grantStatus = grantReader["grantStatus"].ToString()
                 });
             }
+
+            return Page();
         }
 
         public void OnPostSelectGrant(int grantId)
@@ -110,6 +120,8 @@ namespace Lab1484.Pages
                     });
                 }
             }
+
+           
         }
 
         public IActionResult OnPostUpdatePermission()
@@ -143,6 +155,7 @@ namespace Lab1484.Pages
 
         }
 
+        
          
     }
 }
