@@ -142,14 +142,14 @@ VALUES (1, 2),
        (2, 2);
 
 INSERT INTO Tasks (ProjectID, taskDescription) 
-VALUES (1, 'Task 1 '),
-       (1, 'Task 2 '),
-       (2, 'Task 1');
+VALUES (1, 'Complete Biosketch form '),
+       (1, 'Assign PI '),
+       (2, 'Meet with faculty');
 
 INSERT INTO Notes (ProjectID, noteBody) 
-VALUES (1, 'Note 1'),
-       (1, 'Note 2 '),
-       (2, 'Note 1 ');
+VALUES (1, 'Note from meeting 3/31'),
+       (1, 'Faculty meeting notes '),
+       (2, 'Share Holder notes ');
 
 INSERT INTO BusinessPartner (RepresentativeID, firstName, lastName, orgType, businessType, statusFlag) 
 VALUES (3, 'Frank', 'James', 'Non-Profit', 'Research', 'Active'),
