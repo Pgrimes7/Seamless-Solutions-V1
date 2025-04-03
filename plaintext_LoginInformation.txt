@@ -1,5 +1,12 @@
-PLAIN TEXT LOGIN INFORMATION
+PLAIN TEXT LOGIN INFORMATION & INSTRUCTIONS
+Login with admin login, create grant and create project are on the grants & projects page or accessible from the dashboard and on the projects page the user is able to add notes to a project
+To assign a user to the associative table use the Update Permissions page which is a litte WIP on the front end side, currently you must select a grant then the add user button will work to add a user, then you can change their permissions after selecting the grant again. 
 
+NOTE: This will be fixed by sprint 3 so you need only select the grant and not reselect grant multiple times and the buttons will be more unified, post grant creation a user will also be redirected to the update permission page or a modal will appear.
+
+The all users page displays a list of all users and the funciton to add new users and the messages page allows messages to be sent by a selected user and then displays messages. Tasks page allows you to add tasks and associate them with a project.
+
+LOGINS BELOW
 
 Admin-
 username: admin
