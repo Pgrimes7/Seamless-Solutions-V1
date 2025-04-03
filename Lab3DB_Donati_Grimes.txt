@@ -123,12 +123,12 @@ SensitiveInfoPermission int
 
 INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) 
 VALUES (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
-       (1, 'Grant', 'Gorber', 'Grant.Gorber@example.com', '234-567-8901'),
+       (1, 'Ben', 'Gorber', 'Grant.Gorber@example.com', '234-567-8901'),
        (2, 'Charlie', 'Brown', 'charlie.brown@example.com', '345-678-9012'),
        (3, 'Bowwow', 'Jordan', 'Bowow@example.com', '456-789-0123'),
 	   (0, 'Boss', 'Man', 'BossMan@example.com', '123-456-7890'),
        (1, 'Johnson', 'Brant', 'Grahhh@example.com', '234-567-8901'),
-       (2, 'Bulh', 'Gomber', 'Gomber@example.com', '345-678-9012'),
+       (2, 'Blaire', 'Gomber', 'Gomber@example.com', '345-678-9012'),
        (3, 'Magnus', 'Yang', 'Bowow@example.com', '456-789-0123'),
        (0, 'admin', 'test', 'admintest@example.com', '777-888-0000');
 
@@ -152,12 +152,12 @@ VALUES (1, 'Note 1'),
        (2, 'Note 1 ');
 
 INSERT INTO BusinessPartner (RepresentativeID, firstName, lastName, orgType, businessType, statusFlag) 
-VALUES (3, 'LeBron', 'James', 'Sports', 'Athletics', 'Active'),
+VALUES (3, 'Frank', 'James', 'Non-Profit', 'Research', 'Active'),
        (4, 'Bob', 'Jordan', 'For-Profit', 'Technology', 'Inactive');
 
 INSERT INTO MeetingMinutes (BusinessPartnerID, minutesBody) 
-VALUES (1, 'Meeting minutes ex'),
-       (2, 'Meeting minutes ex');
+VALUES (1, 'Attended zoom meeting'),
+       (2, 'Received feed back from faculty');
 
 INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName, category, submissionDate, awardDate, grantStatus, amount) 
 VALUES (1, 1, 'Business A', 'Research', '2025-01-15', '2025-02-15', 'Approved', 50000.00),
