@@ -12,82 +12,104 @@
     <body>
         <main>
             <br />
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <h2 style="margin-right: 10px;">Active Grants</h2>
-            </div>
-            <div style ="display: flex; align-items: center; gap: 10px;">
-                <a class="btn btn-secondary" asp-area="" asp-page="/UpdateGrant">Update Grant</a>
-                <a class="btn btn-primary" asp-area="" asp-page="/GrantCreation">Create Grant</a>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Add User</button>
-            </div>
-            <br />
-            <table class="table table-bordered table-responsive table-hover">
-                <thead>
-                    <tr>
-                        <th>Grant Name:</th>
-                        <th>Grant Amount:</th>
-                        <th>Due Date:</th>
-                        <th>Faculty Name:</th>
-                        <th>Grant Status:</th>
-                        <th>Select</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var prod in Model.GrantList)
-                    {
-                        var statusClass = prod.grantStatus?.ToLower() switch
-                        {
-                            "in progress" => "badge bg-info text-dark",
-                            "opportunity" => "badge bg-primary",
-                            "pending" => "badge bg-warning text-dark",
-                            "approved" => "badge bg-success",
-                            "rejected" => "badge bg-danger",
-                            _ => "badge bg-secondary"
-                        };
-
-                        <tr>
-                            <td>
-                                <form method="post" asp-page-handler="SelectGrant">
-                                    <input type="hidden" name="grantId" value="@prod.GrantID" />
-                                    <button type="submit">Select</button>
-                                </form>
-                            </td>
-                            <td>@prod.businessName</td>
-                            <td>@prod.amount</td>
-                            <td>@prod.dueDate.ToShortDateString()</td>
-                            <td>@prod.facultyName</td>
-                            <td><span class="@statusClass">@prod.grantStatus</span></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-            @if (Model.UserList != null && Model.UserList.Count > 0)
+            @if (Model.SelectedGrantId == 0)
             {
-                <h3>Users Associated with Selected Grant</h3>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <h2 style="margin-right: 10px;">Active Grants</h2>
+                </div>
+            }
+            else
+            {
+                <h2>Update @Model.SelectedGrantName Permissions</h2>
+            }
+            @if (Model.SelectedGrantId == 0)
+            {
+                <div style ="display: flex; align-items: center; gap: 10px;">
+                    <a class="btn btn-secondary" class="btn btn-secondary" asp-page="/GrantsAndProjects">Grants List</a>
+                </div>
+                <br />
+            }
+            else
+            {
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <a class="btn btn-secondary" class="btn btn-secondary" asp-page="/GrantsAndProjects">Grants List</a>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Add User</button>
+                </div>
+                <br />
+
+
+
+            }
+            @if (Model.SelectedGrantId == 0)
+            {
                 <table class="table table-bordered table-responsive table-hover">
                     <thead>
                         <tr>
+                            <th>Select</th>
+                            <th>Grant Name:</th>
+                            <th>Grant Amount:</th>
+                            <th>Due Date:</th>
+                            <th>Faculty Name:</th>
+                            <th>Grant Status:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var prod in Model.GrantList)
+                        {
+                            var statusClass = prod.grantStatus?.ToLower() switch
+                            {
+                                "in progress" => "badge bg-info text-dark",
+                                "opportunity" => "badge bg-primary",
+                                "pending" => "badge bg-warning text-dark",
+                                "approved" => "badge bg-success",
+                                "rejected" => "badge bg-danger",
+                                _ => "badge bg-secondary"
+                            };
+
+                            <tr>
+                                <td>
+                                    <form method="post" asp-page-handler="SelectGrant">
+                                        <input type="hidden" name="grantId" value="@prod.GrantID" />
+                                        <button type="submit">Select</button>
+                                    </form>
+                                </td>
+                                <td>@prod.businessName</td>
+                                <td>@prod.amount</td>
+                                <td>@prod.dueDate.ToShortDateString()</td>
+                                <td>@prod.facultyName</td>
+                                <td><span class="@statusClass">@prod.grantStatus</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            @if (Model.UserList != null && Model.UserList.Count > 0)
+            {
+                <h3>Users Associated with @Model.SelectedGrantName</h3>
+                <table class="table table-bordered table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th>Grant Permission</th>
                             <th>User ID</th>
                             <th>User Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Grant Permission</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var user in Model.UserList)
                         {
                             <tr>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#permissionModal" data-userid="@user.userID" data-grantid="@Model.SelectedGrantId">Update</button>
+                                </td>
                                 <td>@user.userID</td>
                                 <td>@user.firstName</td>
                                 <td>@user.lastName</td>
                                 <td>@user.email</td>
                                 <td>@user.phone</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#permissionModal" data-userid="@user.userID" data-grantid="@Model.SelectedGrantId">Update</button>
-                                </td>
                             </tr>
                         }
                     </tbody>

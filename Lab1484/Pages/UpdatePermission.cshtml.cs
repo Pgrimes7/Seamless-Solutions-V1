@@ -28,11 +28,14 @@ namespace Lab1484.Pages
 
         [BindProperty]
         public int grantId { get; set; }
-        [BindProperty]
 
-        public int SelectedGrantId { get; set; }
         [BindProperty]
         public int Permission { get; set; }
+        
+        [BindProperty]
+        public int SelectedGrantId { get; set; }
+        [BindProperty]
+        public string SelectedGrantName { get; set; }
 
 
         public UpdatePermissionModel()
@@ -41,6 +44,7 @@ namespace Lab1484.Pages
             GrantList = new List<Grant>();
             UserList = new List<User>();
             NonGrantUserList = new List<User>();
+
         }
 
         public IActionResult OnGet()
@@ -67,6 +71,8 @@ namespace Lab1484.Pages
                     facultyName = grantReader["FacultyLead"].ToString(),
                     grantStatus = grantReader["grantStatus"].ToString()
                 });
+                SelectedGrantName = grantReader["grantName"].ToString();
+
             }
 
             return Page();
@@ -95,7 +101,9 @@ namespace Lab1484.Pages
                         facultyName = grantReader["FacultyLead"].ToString(),
                         grantStatus = grantReader["grantStatus"].ToString()
                     });
+                    SelectedGrantName = grantReader["grantName"].ToString();
                 }
+                
             }
 
             while (userReader.Read())
