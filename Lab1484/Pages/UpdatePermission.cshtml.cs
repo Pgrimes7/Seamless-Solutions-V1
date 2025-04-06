@@ -28,8 +28,12 @@ namespace Lab1484.Pages
 
         [BindProperty]
         public int grantId { get; set; }
+        [BindProperty]
 
         public int SelectedGrantId { get; set; }
+        [BindProperty]
+        public int Permission { get; set; }
+
 
         public UpdatePermissionModel()
         {
@@ -131,8 +135,8 @@ namespace Lab1484.Pages
             {
                 userID = userId,
                 grantID = grantId,
-                viewPermission = viewPermission ? 1 : 0,
-                editPermission = editPermission ? 1 : 0,
+                viewPermission = (Permission == 1) ? 1 : 0,
+                editPermission = (Permission == 2) ? 1 : 0,
                 sensitiveInfoPermission = sensitiveInfoPermission ? 1 : 0
             };
 
