@@ -10,7 +10,7 @@ namespace Lab1484.Pages
     {
         [BindProperty]
         public User NewUser { get; set; } = new User();
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public int? UserType { get; set; }
         public List<UserDisplay> Users { get; set; } = new();
 
