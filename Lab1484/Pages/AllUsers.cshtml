@@ -45,15 +45,17 @@
 
                 <!--row for search and filter-->
                 <div class="row row-cols-auto my-2 mb-md-0">
-                    <div class="col">
-                        <select class="form-select rounded-pill" aria-label="Default select example">
-                            <option disabled selected>All Users</option>
-                            <option value="0">Admin</option>
-                            <option value="1">Faculty</option>
-                            <option value="2">Employee</option>
-                            <option value="3">Representative</option>
-                        </select>
-                    </div>
+                    <form method="get" asp-page="/AllUsers">
+                        <div class="col">
+                            <select name="userType" class="form-select rounded-pill" aria-label="User Type Filter" onchange="this.form.submit()">
+                                <option value="" selected="@(Model.UserType == null)">All Users</option>
+                                <option value="0" selected="@(Model.UserType == 0)">Admin</option>
+                                <option value="1" selected="@(Model.UserType == 1)">Faculty</option>
+                                <option value="2" selected="@(Model.UserType == 2)">Employee</option>
+                                <option value="3" selected="@(Model.UserType == 3)">Representative</option>
+                            </select>
+                        </div>
+                    </form>
                     <div class="col">
                         <form class="d-flex" role="search">
                             <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search">

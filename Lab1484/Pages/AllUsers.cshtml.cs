@@ -10,6 +10,8 @@ namespace Lab1484.Pages
     {
         [BindProperty]
         public User NewUser { get; set; } = new User();
+        [BindProperty]
+        public int? UserType { get; set; }
         public List<UserDisplay> Users { get; set; } = new();
 
         public IActionResult OnGet()
@@ -32,10 +34,21 @@ namespace Lab1484.Pages
                 DBClass.Lab3DBConnection.Close();
             }
 
-            cmd.Connection = DBClass.Lab3DBConnection;
-            cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
-            cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
-            cmd.Connection.Open();
+            if (UserType.HasValue)
+            {
+                cmd.Connection = DBClass.Lab3DBConnection;
+                cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+                cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE UserType = @UserType";
+                cmd.Parameters.AddWithValue("@UserType", UserType.Value);
+                cmd.Connection.Open();
+            }
+            else
+            {
+                cmd.Connection = DBClass.Lab3DBConnection;
+                cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+                cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
+                cmd.Connection.Open();
+            }
 
             SqlDataReader reader = cmd.ExecuteReader();
 
