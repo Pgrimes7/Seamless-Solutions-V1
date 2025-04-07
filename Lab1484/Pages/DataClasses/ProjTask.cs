@@ -8,6 +8,7 @@
 
         public string? taskDescription { get; set; }
 
+        public DateTime? dueDate { get; set; }
 
         public string? ProjectName { get; set; }
     }

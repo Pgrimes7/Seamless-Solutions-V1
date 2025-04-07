@@ -14,6 +14,8 @@ namespace Lab1484.Pages
 
         public List<Project> ProjectList { get; set; }
         public List<Grant> GrantList { get; set; }
+        public List<ProjTask> TaskList { get; set; } = new List<ProjTask>();
+
 
         public DashBoardModel()
         {
@@ -34,6 +36,18 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Login");
             }
 
+            SqlDataReader taskReader = DBClass.TaskReader();
+            while (taskReader.Read())
+            {
+                TaskList.Add(new ProjTask
+                {
+                    TaskID = Convert.ToInt32(taskReader["TaskID"]),
+                    ProjectID = Convert.ToInt32(taskReader["ProjectID"]),
+                    taskDescription = taskReader["taskDescription"].ToString(),
+                    dueDate = taskReader["duedate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(taskReader["duedate"]),
+                    ProjectName = taskReader["ProjectName"].ToString()
+                });
+            }
 
 
             SqlDataReader projectReader = DBClass.ProjectReader();
