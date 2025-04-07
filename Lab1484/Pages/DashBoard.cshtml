@@ -216,7 +216,7 @@
                             title: "@grant.grantName (Grant)",
                             start: "@grant.dueDate.ToString("yyyy-MM-dd")",
                             color: "#4B0082"
-                        }, </text>
+                                    }, </text>
         }
 
         @foreach (var project in Model.ProjectList)
@@ -227,10 +227,22 @@
                                 title: "@project.ProjectName (Project)",
                                 start: "@project.DateDue.ToString("yyyy-MM-dd")",
                                 color: "#800080"
-                            }, </text>
+                                            }, </text>
             }
         }
-                    ]
+
+        @foreach (var task in Model.TaskList)
+        {
+            if (task.dueDate.HasValue)
+            {
+                <text>{
+                                title: "@task.taskDescription (Task)",
+                                start: "@task.dueDate.Value.ToString("yyyy-MM-dd")",
+                                color: "#BA55D3"
+                                            }, </text>
+            }
+        }
+                            ]
             });
 
             calendar.render();
