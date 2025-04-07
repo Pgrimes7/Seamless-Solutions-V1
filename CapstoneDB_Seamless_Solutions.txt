@@ -218,3 +218,8 @@ WHERE GrantID = 1;
 UPDATE Grants
 SET category = 'Foundation'
 WHERE GrantID = 2;
+
+ALTER TABLE Tasks
+ADD dueDate DATE;
+UPDATE Tasks
+SET dueDate = '2025-12-31';
