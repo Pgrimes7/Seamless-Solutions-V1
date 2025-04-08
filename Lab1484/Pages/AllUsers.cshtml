@@ -57,8 +57,8 @@
                         </div>
                     </form>
                     <div class="col">
-                        <form class="d-flex" role="search">
-                            <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search">
+                        <form class="d-flex" method="get" asp-page="/AllUsers" role="search">
+                            <input class="form-control me-2 rounded-pill" type="search" Name="SearchQuery" placeholder="Search" aria-label="Search" value="@Model.SearchQuery">
                             <button class="btn btn-outline-success me-2" type="submit">Search</button>
                         </form>
                     </div>

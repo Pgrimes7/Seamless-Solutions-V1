@@ -1,0 +1,30 @@
+.nav-item {
+    padding: 10px;
+    width: 100%;
+}
+
+.nav-active {
+    background-color: #DACCE6;
+    color: #B599CE;
+    border-radius: 100px;
+}
+.button {
+    background-color: #B599CE;
+    color: #333333;
+    border-radius: 100px;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.btn-success {
+    background-color: #B599CE !important; /* Change this to your desired color */
+    color: #333333 !important; /* Change this to your desired text color */
+    border-radius: 100px; /* Optional: keep the same border-radius */
+    border: none; /* Optional: keep the same border style */
+    padding: 10px 20px; /* Optional: keep the same padding */
+    cursor: pointer; /* Optional: keep the same cursor style */
+}
+.btn.btn-secondary {
+    background-color: #CBB677;
+    color: #333333;
+}
