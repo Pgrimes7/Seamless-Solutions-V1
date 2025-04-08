@@ -10,8 +10,13 @@ namespace Lab1484.Pages
     {
         [BindProperty]
         public User NewUser { get; set; } = new User();
+
         [BindProperty(SupportsGet = true)]
         public int? UserType { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? SearchQuery { get; set; }
+
         public List<UserDisplay> Users { get; set; } = new();
 
         public IActionResult OnGet()
@@ -34,20 +39,29 @@ namespace Lab1484.Pages
                 DBClass.Lab3DBConnection.Close();
             }
 
+            cmd.Connection = DBClass.Lab3DBConnection;
+            cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+            cmd.Connection.Open();
+
             if (UserType.HasValue)
             {
-                cmd.Connection = DBClass.Lab3DBConnection;
-                cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
                 cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE UserType = @UserType";
                 cmd.Parameters.AddWithValue("@UserType", UserType.Value);
+            }
+            /*else
+            {
+                cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
                 cmd.Connection.Open();
+            }*/
+
+            else if (!string.IsNullOrEmpty(SearchQuery))
+            {
+                cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE firstName LIKE @SearchQuery OR lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR phoneNumber LIKE @SearchQuery";
+                cmd.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
             }
             else
             {
-                cmd.Connection = DBClass.Lab3DBConnection;
-                cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
                 cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
-                cmd.Connection.Open();
             }
 
             SqlDataReader reader = cmd.ExecuteReader();
