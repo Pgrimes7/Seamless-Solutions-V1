@@ -890,7 +890,30 @@ namespace Lab1484.Pages.DB
             SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
             return tempReader;
         }
-        
+
+        public static SqlDataReader User_GrantReader(int UserID)//reads grant user table in sql that is associated with grant value passed
+        {
+
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            SqlCommand cmdGrantRead = new SqlCommand();
+            cmdGrantRead.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
+            cmdGrantRead.Connection = new SqlConnection(Lab3DBConnString);
+            cmdGrantRead.CommandText = "Select * from Grants join Grant_User ON Grants.GrantID = Grant_User.GrantID " +
+                                       "where Grant_User.UserID = @UserID;";
+
+            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
+            return tempReader;
+        }
+
+
+
+
         public static SqlDataReader readNonGrant_User(int GrantID)//When opening add user modal this will display users not associated with the grant
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
