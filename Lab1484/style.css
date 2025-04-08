@@ -8,3 +8,9 @@
     color: #B599CE;
     border-radius: 100px;
 }
+
+.logo {
+    height: 69.395px;
+    align-self: stretch;
+    aspect-ratio: 232.00/69.40;
+}
