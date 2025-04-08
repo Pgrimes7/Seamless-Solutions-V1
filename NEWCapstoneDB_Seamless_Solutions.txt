@@ -1,0 +1,183 @@
+CREATE DATABASE Lab3;
+USE Lab3;
+
+--User Table
+CREATE TABLE Users (
+	UserID INT IDENTITY(1,1) PRIMARY KEY,
+	userType INT NOT NULL, -- 0=Admin, 1=Faculty, 2=Employee, 3=Representative
+	firstName NVARCHAR(50) NOT NULL,
+	lastName NVARCHAR(50) NOT NULL,
+	email NVARCHAR(50),
+	phoneNumber NVARCHAR(20)
+);
+
+--Project Table
+CREATE TABLE Project (
+	ProjectID INT IDENTITY(1,1) PRIMARY KEY,
+	ProjectAdminID INT,
+	projectStatus NVARCHAR(50),
+	dateCreated DATE,
+	dateCompleted DATE,
+	dueDate DATE,
+	ProjectName NVARCHAR(50),
+	FOREIGN KEY (ProjectAdminID) REFERENCES Users(UserID)
+);
+
+--EmployeeProject Table
+CREATE TABLE EmployeeProject (
+	ProjectID INT,
+	EmployeeID INT,
+	PRIMARY KEY (ProjectID, EmployeeID),
+	FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID),
+	FOREIGN KEY (EmployeeID) REFERENCES Users(UserID)
+);
+
+--Tasks Table
+CREATE TABLE Tasks (
+	TaskID INT IDENTITY(1,1) PRIMARY KEY,
+	ProjectID INT,
+	taskDescription NVARCHAR(200),
+	dueDate DATE,
+	FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+);
+
+--Notes Table
+CREATE TABLE Notes (
+	NoteID INT IDENTITY(1,1) PRIMARY KEY,
+	ProjectID INT,
+	noteBody NVARCHAR(200),
+	FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+);
+
+--BusinessPartner Table
+CREATE TABLE BusinessPartner (
+	BusinessPartnerID INT IDENTITY(1,1) PRIMARY KEY,
+	RepresentativeID INT,
+	firstName NVARCHAR(50) NOT NULL,
+	lastName NVARCHAR(50) NOT NULL,
+	orgType NVARCHAR(50),
+	businessType NVARCHAR(50),
+	statusFlag NVARCHAR(50),
+	FOREIGN KEY (RepresentativeID) REFERENCES Users(UserID)
+);
+
+--MeetingMinutes Table
+CREATE TABLE MeetingMinutes (
+	MinutesID INT IDENTITY(1,1) PRIMARY KEY,
+	BusinessPartnerID INT,
+	minutesBody NVARCHAR(200),
+	FOREIGN KEY (BusinessPartnerID) REFERENCES BusinessPartner(BusinessPartnerID)
+);
+
+--Grants Table
+CREATE TABLE Grants (
+	GrantID INT IDENTITY(1,1) PRIMARY KEY,
+	FacultyLeadID INT,
+	BusinessPartnerID INT,
+	businessName NVARCHAR(100),
+	category NVARCHAR(50),
+	submissionDate DATE,
+	awardDate DATE,
+	grantStatus NVARCHAR(50),
+	amount FLOAT,
+	dueDate DATE,
+	grantName NVARCHAR(100),
+	FOREIGN KEY (FacultyLeadID) REFERENCES Users(UserID),
+	FOREIGN KEY (BusinessPartnerID) REFERENCES BusinessPartner(BusinessPartnerID)
+);
+
+--FacultyGrant Table
+CREATE TABLE FacultyGrant (
+	GrantID INT,
+	FacultyID INT,
+	PRIMARY KEY (GrantID, FacultyID),
+	FOREIGN KEY (GrantID) REFERENCES Grants(GrantID),
+	FOREIGN KEY (FacultyID) REFERENCES Users(UserID)
+);
+
+--Messages Table
+CREATE TABLE Messages (
+	MessageID INT IDENTITY(1,1) PRIMARY KEY,
+	Sender NVARCHAR(50) NOT NULL,
+	Receiver NVARCHAR(50) NOT NULL,
+	Content NVARCHAR(MAX) NOT NULL,
+	Timestamp DATETIME DEFAULT GETDATE(),
+	IsRead BIT DEFAULT 0
+);
+
+--Grant_User Table
+CREATE TABLE Grant_User (
+	UserID INT REFERENCES Users(UserID),
+	GrantID INT REFERENCES Grants(GrantID),
+	PRIMARY KEY (UserID, GrantID),
+	ViewPermission INT,
+	EditPermission INT,
+	SensitiveInfoPermission INT
+);
+
+--Users Inserts
+INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES
+(0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
+(1, 'Ben', 'Gorber', 'Grant.Gorber@example.com', '234-567-8901'),
+(2, 'Charlie', 'Brown', 'charlie.brown@example.com', '345-678-9012'),
+(3, 'Bob', 'Jordan', 'Bowow@example.com', '456-789-0123'),
+(0, 'Lucas', 'Langley', 'Langley@example.com', '123-456-7890'),
+(1, 'Johnson', 'Brant', 'BrantJ@example.com', '234-567-8901'),
+(2, 'Blaire', 'Gomber', 'BlaireGomber@example.com', '345-678-9012'),
+(3, 'Magnus', 'Yang', 'YangMagnus@example.com', '456-789-0123'),
+(0, 'admin', 'test', 'admintest@example.com', '777-888-0000');
+
+--Project Inserts
+INSERT INTO Project (ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, ProjectName) VALUES
+(1, 'In Progress', '2025-01-01', '2000-10-10', '2025-12-31', 'Cancer Research'),
+(2, 'Completed', '2024-01-01', '2024-12-31', '2024-12-31', 'Children In Stem');
+
+--EmployeeProject Inserts
+INSERT INTO EmployeeProject (ProjectID, EmployeeID) VALUES
+(1, 2),
+(1, 3),
+(2, 2);
+
+--Tasks Inserts
+INSERT INTO Tasks (ProjectID, taskDescription, dueDate) VALUES
+(1, 'Complete Biosketch form ', '2025-12-31'),
+(1, 'Assign PI ', '2025-12-31'),
+(2, 'Meet with faculty', '2025-12-31');
+
+-- Insert Notes
+INSERT INTO Notes (ProjectID, noteBody) VALUES
+(1, 'Note from meeting 3/31'),
+(1, 'Faculty meeting notes '),
+(2, 'Share Holder notes ');
+
+--BusinessPartner Inserts
+INSERT INTO BusinessPartner (RepresentativeID, firstName, lastName, orgType, businessType, statusFlag) VALUES
+(3, 'Frank', 'James', 'Non-Profit', 'Research', 'Active'),
+(4, 'Bob', 'Jordan', 'For-Profit', 'Technology', 'Inactive');
+
+--MeetingMinutes Inserts
+INSERT INTO MeetingMinutes (BusinessPartnerID, minutesBody) VALUES
+(1, 'Attended zoom meeting'),
+(2, 'Received feed back from faculty');
+
+--Grants Inserts
+INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName, category, submissionDate, awardDate, grantStatus, amount, dueDate, grantName) VALUES
+(1, 1, 'Research Fund', 'State', '2025-01-15', '2025-02-15', 'Archived', 50000.00, '2025-12-31', 'Federal Biosketch'),
+(2, 2, 'Tech Expansion', 'Foundation', '2025-03-01', '2025-04-01', 'Potential', 75000.00, '2025-12-31', 'State Technology');
+
+--FacultyGrant Inserts
+INSERT INTO FacultyGrant (GrantID, FacultyID) VALUES
+(1, 1),
+(1, 2),
+(2, 1);
+
+--Messages Inserts
+INSERT INTO Messages (Sender, Receiver, Content, IsRead) VALUES
+('smithto', 'brownch', 'Just wanted to send a reminder about the project"s upcoming due date.', 1),
+('brownch', 'smithto', 'Thanks for the reminder!', 0),
+('gomberbu', 'smithto', 'Could we look at this later?', 0),
+('manbos', 'brownch', 'Reminder of the upcoming due date of the project!', 1),
+('brownch', 'manbos', 'Thank you!', 0),
+('jordanbow', 'brantjo', 'I have a question I would like to talk with you about.', 1),
+('brantjo', 'jordanbow', 'When would you be available to discuss?', 0),
+('yangmag', 'gorbergr', 'Are we still able to meet about this tomorrow?', 0);
