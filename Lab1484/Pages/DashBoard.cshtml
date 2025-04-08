@@ -37,11 +37,8 @@
     <script src=https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js></script>
 
     <style>
-        /* 🔮 FullCalendar dark purple theming */
-
         /* Container settings */
         <style >
-        /* 🔮 FullCalendar Dark Purple Theme + Layout Fixes */
         #calendar {
             --fc-border-color: #4B0082;
             --fc-daygrid-event-dot-width: 10px;
@@ -73,7 +70,7 @@
 
         .fc .fc-daygrid-day {
             background-color: #f5f0fa;
-            min-width: 14.28%; /* ensure full width of each day */
+            min-width: 14.28%;
         }
 
         .fc-daygrid-event {
@@ -201,11 +198,9 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 height: 500,
-                eventDisplay: 'block', // makes the full title visible
+                eventDisplay: 'block', 
                 eventDidMount: function (info) {
-                    // Tooltip using title attribute
                     info.el.setAttribute('title', info.event.title);
-                    // Optional: Wrap text
                     info.el.style.whiteSpace = "normal";
                     info.el.style.overflow = "visible";
                 },
