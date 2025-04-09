@@ -2,39 +2,54 @@
 @model Lab1484.Pages.AccountSignUpModel
 @{
     <link href="~/css/style.css" rel="stylesheet">
-
-    <form id="CreateNewAccout" method="post">
-        <h1>Create a New Account</h1>
-
-        <label>User Type:</label>
-        <br />
-        <input asp-for="NewUser.UserType" type="radio" value="2" /> Employee
-        <br />
-        <input asp-for="NewUser.UserType" type="radio" value="3" /> Representative
-        <br />
-        <span asp-validation-for="NewUser.UserType" class="text-danger"></span>
-        <br />
-        <input type="text" asp-for="NewUser.firstName" placeholder="First Name" />
-        <br />
-        <input type="text" asp-for="NewUser.lastName" placeholder="Last Name" width="100" />
-        <br />
-        <input type="text" asp-for="NewUser.email" placeholder="Email" />
-        <br />
-        <input type="text" asp-for="NewUser.phone" placeholder="Phone Number" />
-        <br />
-        <input type="text" asp-for="NewUser.username" placeholder="Username" />
-        <br />
-        <input type="text" asp-for="NewUser.password" placeholder="Password" />
-        <br />
-        <button type="submit" class="btn btn-secondary">Add User -> </button>
-        <br />
-        <button asp-page="CreateUser" asp-page-handler="PopulateHandler" class="btn btn-danger" formnovalidate>Populate</button>
-        <br />
-        <a asp-page="/Dashboard">Cancel</a>
-        <br />
-        <button type="submit" asp-page-handler="Clear" class="btn btn-secondary">Click here to clear</button>
-    </form>
-
-
-
 }
+
+<form id="CreateNewAccout" method="post">
+    <h1>Create a New Account</h1>
+
+    <label>User Type:</label>
+    <br />
+    <input asp-for="NewUser.UserType" type="radio" value="2" /> Employee
+    <br />
+    <input asp-for="NewUser.UserType" type="radio" value="3" /> Representative
+    <br />
+    <span asp-validation-for="NewUser.UserType" class="text-danger"></span>
+    <br />
+    <input type="text" asp-for="NewUser.firstName" placeholder="First Name" />
+    <br />
+    <input type="text" asp-for="NewUser.lastName" placeholder="Last Name" width="100" />
+    <br />
+    <input type="text" asp-for="NewUser.email" placeholder="Email" />
+    <br />
+    <input type="text" asp-for="NewUser.phone" placeholder="Phone Number" />
+    <br />
+    <input type="text" asp-for="NewUser.username" placeholder="Username" />
+    <br />
+    <input type="text" asp-for="NewUser.password" placeholder="Password" />
+    <br />
+    <button type="submit" class="btn btn-secondary">Add User -> </button>
+    <br />
+    <button asp-page="CreateUser" asp-page-handler="PopulateHandler" class="btn btn-danger" formnovalidate>Populate</button>
+    <br />
+    <a asp-page="/Dashboard">Cancel</a>
+    <br />
+    <button type="submit" asp-page-handler="Clear" class="btn btn-secondary">Click here to clear</button>
+</form>
+
+<hr />
+
+<div class="resources">
+    <h2>Links and Resources</h2>
+    <p>For more information and tools for employees, visit:</p>
+    <p>
+        <a href="https://www.jmu.edu/humanresources/recruitment/dukesatwork/index.shtml" target="_blank">
+            Dukes at Work - JMU Human Resources
+        </a>
+    </p>
+    <p>
+        <a href="https://www.jmu.edu/humanresources/recruitment/onboardresources.shtml" target="_blank">
+            Onboarding Resources - JMU Human Resources
+        </a>
+    </p>
+</div>
+    
