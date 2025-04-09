@@ -2,7 +2,10 @@ using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics.Contracts;
 
 namespace Lab1484.Pages
 {
@@ -10,6 +13,9 @@ namespace Lab1484.Pages
     {
         [BindProperty]
         public User NewUser { get; set; } = new User();
+
+        [BindProperty]
+        public UserUpdate UpdateUser { get; set; } = new UserUpdate();
 
         [BindProperty(SupportsGet = true)]
         public int? UserType { get; set; }
@@ -45,30 +51,26 @@ namespace Lab1484.Pages
 
             if (UserType.HasValue)
             {
-                cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE UserType = @UserType";
+                cmd.CommandText = "SELECT UserID, userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE UserType = @UserType";
                 cmd.Parameters.AddWithValue("@UserType", UserType.Value);
             }
-            /*else
-            {
-                cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
-                cmd.Connection.Open();
-            }*/
+            
 
             else if (!string.IsNullOrEmpty(SearchQuery))
             {
-                cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE firstName LIKE @SearchQuery OR lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR phoneNumber LIKE @SearchQuery";
+                cmd.CommandText = "SELECT UserID, userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE firstName LIKE @SearchQuery OR lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR phoneNumber LIKE @SearchQuery";
                 cmd.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
             }
             else
             {
-                cmd.CommandText = "SELECT userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
+                cmd.CommandText = "SELECT UserID, userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
             }
 
             SqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
-                int type = reader.GetInt32(0);
+                int type = reader.GetInt32(1);
                 string role = "";
 
                 if (type == 0) role = "Admin";
@@ -79,13 +81,14 @@ namespace Lab1484.Pages
 
                 Users.Add(new UserDisplay
                 {
+                    UserID = reader.GetInt32(0),
                     UserTypeName = role,
-                    UsersName = reader.GetString(1),
+                    UsersName = reader.GetString(2),
 
                     /*LastName = reader.GetString(2),*/
 
-                    Email = reader.GetString(2),
-                    Phone = reader.IsDBNull(3) ? "" : reader.GetString(3)
+                    Email = reader.GetString(3),
+                    Phone = reader.IsDBNull(4) ? "" : reader.GetString(4)
                 });
             }
 
@@ -100,7 +103,8 @@ namespace Lab1484.Pages
 
         public class UserDisplay
         {
-
+            [BindProperty]
+            public int UserID { get; set; }
             public string UserTypeName { get; set; }
             public string UsersName { get; set; }
 
@@ -122,6 +126,19 @@ namespace Lab1484.Pages
 
             return RedirectToPage("/AllUsers");
             
+        }
+
+        public IActionResult OnPostUpdateUser()
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToPage("/AllUsers");
+            }
+
+            DBClass.UpdateHashedUser(UpdateUser);
+            DBClass.Lab3DBConnection.Close();
+
+            return RedirectToPage("/AllUsers");
         }
     }
 }

@@ -708,6 +708,60 @@ namespace Lab1484.Pages.DB
         }
 
 
+        public static void UpdateHashedUser(UserUpdate p)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            
+            string userUpdatetQuery = @"
+             UPDATE Users
+             SET userType = @UserType, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @Phone
+             WHERE UserID = @UserID;";
+
+            SqlCommand cmdUserUpdate = new SqlCommand();
+            cmdUserUpdate.Connection = Lab3DBConnection;
+            cmdUserUpdate.CommandText = userUpdatetQuery;
+
+            cmdUserUpdate.Parameters.AddWithValue("@UserID", p.UserID);
+            cmdUserUpdate.Parameters.AddWithValue("@UserType", p.UserType);
+            cmdUserUpdate.Parameters.AddWithValue("@firstName", p.FirstName);
+            cmdUserUpdate.Parameters.AddWithValue("@lastName", p.LastName);
+            cmdUserUpdate.Parameters.AddWithValue("@email", p.Email);
+            cmdUserUpdate.Parameters.AddWithValue("@phoneNumber", p.Phone);
+
+            cmdUserUpdate.Connection.Open();
+
+            cmdUserUpdate.ExecuteNonQuery();
+            cmdUserUpdate.Connection.Close();
+
+            /*int userID = Convert.ToInt32(cmdUserUpdate.ExecuteScalar());*/
+
+            string updatedHashedCredsQuery = @"
+            UPDATE HashedCredentials
+            Set Username = @Username, Password = @Password
+            WHERE UserID = @UserID;";
+
+            SqlCommand cmdUpdatedHashed = new SqlCommand();
+            cmdUpdatedHashed.Connection = new SqlConnection(AuthConnString);
+            cmdUpdatedHashed.CommandText = updatedHashedCredsQuery;
+            cmdUpdatedHashed.Parameters.AddWithValue("@Username", p.Username);
+            cmdUpdatedHashed.Parameters.AddWithValue("@UserID", p.UserID);
+            cmdUpdatedHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.Password));
+            cmdUpdatedHashed.Connection.Open();
+
+            /*cmdUpdatedHashed.ExecuteNonQuery();*/
+            cmdUpdatedHashed.Connection.Open();
+            cmdUpdatedHashed.ExecuteNonQuery();
+            cmdUpdatedHashed.Connection.Close();
+
+        }
+
+
+
+
+
         //Get Notes for Proj
         public static List<Note> GetProjNotes(int ProjectID)
         {
