@@ -144,20 +144,37 @@ namespace Lab1484.Pages.DB
         }
 
 
-        public static SqlDataReader GrantReader()//reads grant table in sql
+        public static SqlDataReader GrantReader(string? SearchQuery)//reads grant table in sql
         {
             SqlCommand cmdGrantRead = new SqlCommand();
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
+
             cmdGrantRead.Connection = Lab3DBConnection;
             cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
-                "from Grants " +
-                "join Users ON Users.UserID = Grants.FacultyLeadID; ";
-            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
 
+
+            if (!string.IsNullOrEmpty(SearchQuery))
+            {
+                cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
+                    "from Grants " +
+                    "join Users ON Users.UserID = Grants.FacultyLeadID " +
+                    "where grantName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR amount LIKE @SearchQuery OR dueDate LIKE @SearchQuery OR grantStatus LIKE @SearchQuery OR businessName LIKE @SearchQuery OR category LIKE @SearchQuery; ";
+                
+                cmdGrantRead.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
+
+            }
+
+            else
+            {
+                cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
+                    "from Grants " +
+                    "join Users ON Users.UserID = Grants.FacultyLeadID; ";
+            }
+
+            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
             SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
 
             return tempReader;
@@ -708,6 +725,60 @@ namespace Lab1484.Pages.DB
         }
 
 
+        public static void UpdateHashedUser(UserUpdate p)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            
+            string userUpdatetQuery = @"
+             UPDATE Users
+             SET userType = @UserType, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @Phone
+             WHERE UserID = @UserID;";
+
+            SqlCommand cmdUserUpdate = new SqlCommand();
+            cmdUserUpdate.Connection = Lab3DBConnection;
+            cmdUserUpdate.CommandText = userUpdatetQuery;
+
+            cmdUserUpdate.Parameters.AddWithValue("@UserID", p.UserID);
+            cmdUserUpdate.Parameters.AddWithValue("@UserType", p.UserType);
+            cmdUserUpdate.Parameters.AddWithValue("@firstName", p.FirstName);
+            cmdUserUpdate.Parameters.AddWithValue("@lastName", p.LastName);
+            cmdUserUpdate.Parameters.AddWithValue("@email", p.Email);
+            cmdUserUpdate.Parameters.AddWithValue("@phoneNumber", p.Phone);
+
+            cmdUserUpdate.Connection.Open();
+
+            cmdUserUpdate.ExecuteNonQuery();
+            cmdUserUpdate.Connection.Close();
+
+            /*int userID = Convert.ToInt32(cmdUserUpdate.ExecuteScalar());*/
+
+            /**string updatedHashedCredsQuery = @"
+            UPDATE HashedCredentials
+            Set Username = @Username, Password = @Password
+            WHERE UserID = @UserID;";
+
+            SqlCommand cmdUpdatedHashed = new SqlCommand();
+            cmdUpdatedHashed.Connection = new SqlConnection(AuthConnString);
+            cmdUpdatedHashed.CommandText = updatedHashedCredsQuery;
+            cmdUpdatedHashed.Parameters.AddWithValue("@Username", p.Username);
+            cmdUpdatedHashed.Parameters.AddWithValue("@UserID", p.UserID);
+            cmdUpdatedHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.Password));
+            cmdUpdatedHashed.Connection.Open();**/
+
+            /*cmdUpdatedHashed.ExecuteNonQuery();*/
+            /**cmdUpdatedHashed.Connection.Open();
+            cmdUpdatedHashed.ExecuteNonQuery();
+            cmdUpdatedHashed.Connection.Close();**/
+
+        }
+
+
+
+
+
         //Get Notes for Proj
         public static List<Note> GetProjNotes(int ProjectID)
         {
@@ -890,7 +961,30 @@ namespace Lab1484.Pages.DB
             SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
             return tempReader;
         }
-        
+
+        public static SqlDataReader User_GrantReader(int UserID)//reads grants from grant user table in sql that is associated with user value passed
+        {
+
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            SqlCommand cmdGrantRead = new SqlCommand();
+            cmdGrantRead.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
+            cmdGrantRead.Connection = new SqlConnection(Lab3DBConnString);
+            cmdGrantRead.CommandText = "Select * from Grants join Grant_User ON Grants.GrantID = Grant_User.GrantID " +
+                                       "where Grant_User.UserID = @UserID;";
+
+            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
+            return tempReader;
+        }
+
+
+
+
         public static SqlDataReader readNonGrant_User(int GrantID)//When opening add user modal this will display users not associated with the grant
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
