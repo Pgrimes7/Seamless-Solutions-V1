@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,7 +11,7 @@
     <link rel="stylesheet" href="~/Lab1484.styles.css" asp-append-version="true" />
     <style>
         body {
-        background-color: #F8F9FA;
+            background-color: #F8F9FA;
         }
     </style>
 
@@ -38,222 +40,146 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-
 <body>
     @*<header>*@
-                @{
-                    string currentUser = Context.Session.GetString("username");
-                }
-        @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                    @*Check to see if the user is logged in
-                    @if (string.IsNullOrEmpty(currentUser))
-                    {
-                        <a class="navbar-brand" asp-area="" asp-page="/Index">JMU Care</a>
-                        <a asp-page="/Login" class="btn btn-primary position-relative">Login</a>
-                        <a class="btn btn-dark position-relative" asp-area="" asp-page="/AccountSignUp">Create Account</a>
-                    }
+    @{
+        string currentUser = Context.Session.GetString("username");
+        string currentPath = HttpContextAccessor.HttpContext.Request.Path;
+    }
+    @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+             <div class="container-fluid">
+                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                         aria-expanded="false" aria-label="Toggle navigation">
+                     <span class="navbar-toggler-icon"></span>
+                 </button>
+                     @*Check to see if the user is logged in
+                     @if (string.IsNullOrEmpty(currentUser))
+                     {
+                         <a class="navbar-brand" asp-area="" asp-page="/Index">JMU Care</a>
+                         <a asp-page="/Login" class="btn btn-primary position-relative">Login</a>
+                         <a class="btn btn-dark position-relative" asp-area="" asp-page="/AccountSignUp">Create Account</a>
+                     }
 
-                    @*else
-                    {
+                     @*else
+                     {
 
-                    <a class="navbar-brand" asp-area="" asp-page="/Dashboard">JMU Care</a>
-                    <div class="dropdown">
-                        <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            @currentUser
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                !
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item active" asp-page="/Messages">Messages</a></li>
-                            <li><a class="dropdown-item" asp-page="/Logout">Log out</a></li>
-                        </ul>
-                    </div>
-                    
-                        
-                    }
-            </div>
-        </nav>
-     </header>*@
+                     <a class="navbar-brand" asp-area="" asp-page="/Dashboard">JMU Care</a>
+                     <div class="dropdown">
+                         <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                             @currentUser
+                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                 !
+                                 <span class="visually-hidden">unread messages</span>
+                             </span>
+                         </button>
+                         <ul class="dropdown-menu dropdown-menu-dark">
+                             <li><a class="dropdown-item active" asp-page="/Messages">Messages</a></li>
+                             <li><a class="dropdown-item" asp-page="/Logout">Log out</a></li>
+                         </ul>
+                     </div>
 
-     <main>
 
-    <div class="container-fluid">
-        <div class="row flex-nowrap">
-            @if (!string.IsNullOrEmpty(currentUser))
-                    {
+                     }
+             </div>
+         </nav>
+      </header>*@
+
+    <main>
+        <div class="container-fluid">
+            <div class="row flex-nowrap">
+                @if (!string.IsNullOrEmpty(currentUser))
+                {
                     <!-- Sidebar -->
                     <div class="sidebar-col col-auto col-md-3 col-xl-2 inline-flex flex-column align-items-start px-sm-2 px-0 mt-2">
                         <div class="d-flex flex-column align-items-center vh-100 align-items-sm-start px-4 pt-3 border-end border-light-subtle">
                             <img class="logo align-self-stretch" src="~/lib/NewFolder/JMU Care-purple.png" alt="jmu care logo">
-                            <!--search bar-->
-                            <div class="input-group rounded mb-4">
-                                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                            </div>
-                            @{
-                                var currentPage = Context.Request.Path;
-                            }
-
 
                             <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                                    
-
-                                    @*<li class="nav-item">
-                                        <a href="#" class="nav-link link-body-emphasis align-middle px-0">
-                                            <i class="fa-solid fa-house"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
-                                        </a>
-                                    </li>*@
-
-                                <li >
-                                        <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-border-all"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
-                                        </a>
-                                    </li>
-                                    <li id="nav-grantsandprojects" class="nav-item">
-                                    <a asp-page="/GrantsAndProjects" class=" nav-link link-body-emphasis px-0 align-middle">
+                                <li class="nav-item">
+                                    <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Dashboard", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                                        <i class="fa-solid fa-border-all"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-page="/GrantsAndProjects" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/GrantsAndProjects", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
                                         <i class="fa-solid fa-file"></i>
                                         <span class="ms-1 d-none d-sm-inline">Grants and Projects</span>
-                                    </a> 
-                                    </li>
-                                <li id="nav-tasks"  class="nav-item">
-                                        <a asp-page="/Tasks" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-list-check"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Tasks</span>
-                                        </a>
-                                    </li>
-                                <li id="nav-users" class="nav-item">
-                                        <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-users"></i>
-                                            <span class="ms-1 d-none d-sm-inline">All Users</span>
-                                        </a>
-                                    </li>
-                                <li id="nav-updatePermission" class="nav-item">
-                                        <a asp-page="/UpdatePermission" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-user-gear"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Permission Update</span>
-                                        </a>
-                                    </li>
-                                <li id="nav-messages" class="nav-item">
-                                        <a asp-page="/Messages" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-bell"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Messages</span>
-                                        </a>
-                                    </li>
-                                <li id="nav-archive" class="nav-item">
-                                        <a asp-page="/Archive" class="nav-link link-body-emphasis px-0 align-middle">
-                                           <i class="fa-solid fa-box-archive"></i>
-                                           <span class="ms-1 d-none d-sm-inline">Grant Archive</span>
-                                         </a>
-                                     </li>
-
-                                    <div>
-                                        <hr>
-                                    </div>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-gear"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Settings</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-circle-info"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Support</span>
-                                        </a>
-                                    </li>
-                                    @*<li class="nav-item">
-                                        <a asp-page="/ProjectCreation" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-table-columns"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Create Project</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a asp-page="/GrantCreation" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-table-columns"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Create Grant</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a asp-page="/CreateUser" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-table-columns"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Create User</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a asp-page="/AdminSearch" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-table-columns"></i>
-                                            <span class="ms-1 d-none d-sm-inline">Admin Search</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                         <a asp-page="/UpdatePermission" class="nav-link link-body-emphasis px-0 align-middle">
-                                              <i class="fa-solid fa-table-columns"></i>
-                                         <span class="ms-1 d-none d-sm-inline">User Permissions</span>
                                     </a>
-                                   </li>
-                                     <li>
-                                        <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle">
-                                            <i class="fa-solid fa-table-columns"></i>
-                                            <span class="ms-1 d-none d-sm-inline">All Users</span>
-                                        </a>
-                                     </li>
-                                    <hr>*@
-                             </ul>
-                                    <div class="dropup pb-4">
-                                        <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <img src="https://github.com/mdo.png" alt="username" width="30" height="30" class="rounded-circle">
-                                            <span class="d-none d-sm-inline mx-2">@currentUser</span>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                                            @*
-                                            <li><a class="dropdown-item" asp-page="/Messages">Messages</a></li>
-                                                    <li><hr class="dropdown-divider"></li>*@
-                                            <li><a class="dropdown-item" asp-page="/Logout">Sign out</a></li>
-                                        </ul>
-                                <script>
-                                    document.querySelectorAll('.nav-item a').forEach(link => {
-                                        link.addEventListener('click', function(event) {
-                                            event.preventDefault();
-                                            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('nav-active'));
-                                            this.parentElement.classList.add('nav-active');
-                                            // Here you can add code to load the new page content dynamically if needed
-                                            console.log('Navigating to:', this.getAttribute('data-page'));
-                                        });
-                                    });
-                                </script>
-                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-page="/Tasks" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Tasks", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                                        <i class="fa-solid fa-list-check"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Tasks</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/AllUsers", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                                        <i class="fa-solid fa-users"></i>
+                                        <span class="ms-1 d-none d-sm-inline">All Users</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-page="/UpdatePermission" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/UpdatePermission", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                                        <i class="fa-solid fa-user-gear"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Permission Update</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-page="/Messages" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Messages", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                                        <i class="fa-solid fa-bell"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Messages</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-page="/Archive" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Archive", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                                        <i class="fa-solid fa-box-archive"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Grant Archive</span>
+                                    </a>
+                                </li>
+                                <div>
+                                    <hr>
+                                </div>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                                        <i class="fa-solid fa-gear"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Settings</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Support</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="dropup pb-4">
+                                <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="https://github.com/mdo.png" alt="username" width="30" height="30" class="rounded-circle">
+                                    <span class="d-none d-sm-inline mx-2">@currentUser</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                                    <li><a class="dropdown-item" asp-page="/Logout">Sign out</a></li>
+                                </ul>
                             </div>
                         </div>
-                        }
-                
-        
-   
-       <div class="col py-3">
+                    </div>
+                }
 
-            @RenderBody()
-       </div>
+                <div class="col py-3">
+                    @RenderBody()
+                </div>
             </div>
         </div>
-                <footer class="py-3 my-4">
-                    <p class="text-center text-body-secondary">© 2025 JMU Care, Inc</p>
-                </footer>
-   
-
-      </main>
+        <footer class="py-3 my-4">
+            <p class="text-center text-body-secondary">© 2025 JMU Care, Inc</p>
+        </footer>
+    </main>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-
 </body>
 </html>
