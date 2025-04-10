@@ -37,6 +37,10 @@
     --bs-btn-active-border-color: #CBB677;
 }
 
+.btn-outline-danger {
+    --bs-btn-font-weight: 600;
+}
+
 .grantstatus {
     background-color: #D2EBF5;
 }
