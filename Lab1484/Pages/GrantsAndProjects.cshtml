@@ -203,7 +203,6 @@
                                                             <label for="floatingStatus">Grant Status</label>
                                                         </div>
                                                     </div>
-                                                    @*</div>*@
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
                                                         <button type="submit" class="btn btn-primary">Add Grant</button>
@@ -366,7 +365,7 @@
                                                 </td>
                                                 <td>@prod.DateDue.ToShortDateString()</td>
                                                 <td><span class="@statusClass">@prod.ProjectStatus</span></td>
-                                                <td>Orgnaization Name</td>
+                                                <td>Organization Name</td>
                                                 <td>
                                                     <form method="post" asp-page="/ProjectNotes">
                                                         <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
