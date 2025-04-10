@@ -962,7 +962,7 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
 
-        public static SqlDataReader User_GrantReader(int UserID)//reads grant user table in sql that is associated with grant value passed
+        public static SqlDataReader User_GrantReader(int UserID)//reads grants from grant user table in sql that is associated with user value passed
         {
 
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
