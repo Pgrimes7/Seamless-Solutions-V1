@@ -26,7 +26,8 @@
                             <th>Due Date</th>
                             <th>Status</th>
                             <th>Funding Organization</th>
-                            <th>Category</th>
+                            <th>Category</th>               
+                            <th><i class="fa-solid fa-edit"></i> Edit</th>               
                         </tr>
                     </thead>
                     <tbody>
@@ -52,6 +53,11 @@
                                 <td><span class="@statusClass">@grant.grantStatus</span></td>
                                 <td>@grant.businessName</td>
                                 <td>@grant.category</td>
+                                <td>
+                                    <a asp-page="/UpdateGrant" asp-route-GrantID="@grant.GrantID" class="btn btn-link btn-rounded btn-sm fw-bold">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </td>
                             </tr>
                         }
                     </tbody>

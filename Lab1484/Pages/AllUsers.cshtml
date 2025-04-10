@@ -181,82 +181,87 @@
                                     @*<td>#</td>*@ @*Not Functional yet, omitting*@
                                     <td>
                                         <!--edit button-->
-                                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editUser">
+                                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editUser"
+                                                onclick="populateEditForm(@user.UserID, '@user.UserTypeName', '@user.UsersName', '@user.Email', '@user.Phone', '@user.Username', '@user.Password')">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
 
                                         <!--edit modal-->
-                                        <div class="modal fade" id="editUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="editUserLabel">Edit User</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form class="form-floating">
-                                                            <div class="row mb-4">
-                                                                <div class="col">
-                                                                    <select class="form-select" aria-label="Default select example">
-                                                                        <option selected>Select User Type</option>
-                                                                        <option value="1">User Type</option>
-                                                                        <option value="2">User Type</option>
-                                                                        <option value="3">User Type</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="form-floating mb-4">
-                                                                        <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
-                                                                        <label for="floatingMainContactName">First Name</label>
+                                        <form method="post" asp-page-handler="UpdateUser" class="form-floating">
+                                            <div class="modal fade" id="editUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="editUserLabel">Edit User</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <input type="hidden" id="editUserID" asp-for="UpdateUser.UserID"/>
+                                                                <div class="row mb-4">
+                                                                    <div class="col">
+                                                                        <select asp-for="UpdateUser.UserType"class="form-select" aria-label="Default select example">
+                                                                            <option value="" disabled selected>Select User Type</option>
+                                                                            <option value="0">Admin</option>
+                                                                            <option value="1">Faculty</option>
+                                                                            <option value="2">Employee</option>
+                                                                            <option value="3">Representative</option>
+                                                                        </select>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col">
-                                                                    <div class="form-floating mb-4">
-                                                                        <input type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
-                                                                        <label for="floatingMainContactName">Last Name</label>
+                                                                <hr>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-floating mb-4">
+                                                                            <input asp-for="UpdateUser.FirstName" type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                                                            <label for="floatingMainContactName">First Name</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="form-floating mb-4">
+                                                                            <input asp-for="UpdateUser.LastName" type="text" class="form-control" id="floatingMainContactName" placeholder="Name (First and Last)">
+                                                                            <label for="floatingMainContactName">Last Name</label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="form-floating mb-4">
-                                                                        <input type="email" class="form-control" id="floatingEmail" placeholder="john.doe@gmail.com">
-                                                                        <label for="floatingEmail">Email</label>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-floating mb-4">
+                                                                            <input asp-for="UpdateUser.Email" type="email" class="form-control" id="floatingEmail" placeholder="john.doe@gmail.com">
+                                                                            <label for="floatingEmail">Email</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="form-floating mb-4">
+                                                                            <input asp-for="UpdateUser.Phone" type="tel" class="form-control" id="floatingPhoneNumber" placeholder="123-456-7890">
+                                                                            <label for="floatingPhoneNumber">Phone Number</label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col">
-                                                                    <div class="form-floating mb-4">
-                                                                        <input type="tel" class="form-control" id="floatingPhoneNumber" placeholder="123-456-7890">
-                                                                        <label for="floatingPhoneNumber">Phone Number</label>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-floating mb-4">
+                                                                            <input asp-for="UpdateUser.Username" type="text" class="form-control" id="floatingUsername" placeholder="username" value="@user.Username" disabled/>
+                                                                            <label for="floatingUsername">Username</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <div class="form-floating mb-4">
+                                                                            <input asp-for="UpdateUser.Password" type="password" class="form-control" id="floatingPassword" placeholder="Password" value="@user.Password" disabled/>
+                                                                            <label for="floatingPassword">Password</label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="form-floating mb-4">
-                                                                        <input type="text" class="form-control" id="floatingUsername" placeholder="username">
-                                                                        <label for="floatingUsername">Username</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <div class="form-floating mb-4">
-                                                                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                                                                        <label for="floatingPassword">Password</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                                                        <button type="button" class="btn btn-primary">Update</button>
-                                                    </div>
-                                                </div> <!--close modal content-->
-                                            </div> <!--close modal dialog-->
-                                        </div> <!--close modal-->
+                                                        
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                        </div>
+                                                    </div> <!--close modal content-->
+                                                </div> <!--close modal dialog-->
+                                            </div> <!--close modal-->
+                                        </form>
                                     </td>
                                 </tr>
                             }
@@ -274,6 +279,35 @@
 
     <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+    <script>
+        function populateEditForm(userID, userTypeName, usersName, email, phone) {
+            // Split full name into first and last
+            const nameParts = usersName.split(' ');
+            const firstName = nameParts[0];
+            const lastName = nameParts.slice(1).join(' ');
+
+            document.querySelector('[name="UpdateUser.UserID"]').value = userID;
+            document.querySelector('[name="UpdateUser.FirstName"]').value = firstName;
+            document.querySelector('[name="UpdateUser.LastName"]').value = lastName;
+            document.querySelector('[name="UpdateUser.Email"]').value = email;
+            document.querySelector('[name="UpdateUser.Phone"]').value = phone;
+            /*document.querySelector('[name="UpdateUser.Username"]').value = username;
+            document.querySelector('[name="UpdateUser.Password"]').value = password;*/
+            
+            
+
+            // Map role name back to its value (Admin=0, etc.)
+            let typeValue = "";
+            switch (userTypeName) {
+                case "Admin": typeValue = 0; break;
+                case "Faculty": typeValue = 1; break;
+                case "Staff": typeValue = 2; break;
+                case "Student": typeValue = 3; break;
+            }
+            document.querySelector('[name="UpdateUser.UserType"]').value = typeValue;
+        }
+    </script>
+
 
 </body>
 

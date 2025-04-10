@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\DataClasses\UserDisplay.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\css\style.css" />
     <None Include="wwwroot\js\script.js" />
   </ItemGroup>
