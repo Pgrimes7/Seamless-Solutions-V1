@@ -15,6 +15,13 @@ namespace Lab1484.Pages
         public List<Project> ProjectList { get; set; }
         public List<Grant> GrantList { get; set; }
 
+        public List<User> AdminList { get; set; } = new List<User>();
+
+        public List<User> PartnerList { get; set; } = new List<User>();
+
+        [BindProperty]
+        public Grant newGrant { get; set; } = new Grant();
+
         public GrantsAndProjectsModel()
         {
             ProjectList = new List<Project>();
@@ -51,6 +58,68 @@ namespace Lab1484.Pages
                     ProjectStatus = projectReader["ProjectStatus"].ToString()
                 });
             }
+
+            SqlDataReader adminReader = DBClass.AdminReader();
+            while (adminReader.Read())
+            {
+                AdminList.Add(new User
+                {
+                    userID = Int32.Parse(adminReader["UserID"].ToString()),
+                    firstName = adminReader["firstName"].ToString(),
+                    lastName = adminReader["lastName"].ToString()
+                });
+            }
+
+            SqlDataReader partnerReader = DBClass.BusinessPartnerReader();
+            while (partnerReader.Read())
+            {
+                PartnerList.Add(new User
+                {
+                    userID = Int32.Parse(partnerReader["BusinessPartnerID"].ToString()),
+                    firstName = partnerReader["firstName"].ToString(),
+                    lastName = partnerReader["lastName"].ToString()
+                });
+            }
+
+            SqlDataReader grantReader = DBClass.GrantReader();
+            while (grantReader.Read())
+            {
+                GrantList.Add(new Grant
+                {
+                    GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
+                    businessName = grantReader["businessName"].ToString(),
+                    amount = Double.Parse(grantReader["amount"].ToString()),
+                    category = grantReader["category"].ToString(),
+                    dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                    facultyName = grantReader["FacultyLead"].ToString(),
+                    facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
+                    grantStatus = grantReader["grantStatus"].ToString(),
+                    grantName = grantReader["grantName"].ToString()
+                });
+            }
+
+            DBClass.Lab3DBConnection.Close();
+
+            var statusOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "In Progress", 1 },
+                { "Opportunity", 2 },
+                { "Pending", 3 },
+                { "Approved", 4 },
+                { "Rejected", 5 }
+            };
+
+            GrantList = GrantList
+                .OrderBy(g => statusOrder.ContainsKey(g.grantStatus) ? statusOrder[g.grantStatus] : int.MaxValue)
+                .ThenBy(g => g.businessName)
+                .ToList();
+
+            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            DBClass.InsertGrant(newGrant);
 
             SqlDataReader grantReader = DBClass.GrantReader();
             while (grantReader.Read())
