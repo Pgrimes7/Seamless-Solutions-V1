@@ -182,7 +182,7 @@
                                     <td>
                                         <!--edit button-->
                                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editUser"
-                                                onclick="populateEditForm(@user.UserID, '@user.UserTypeName', '@user.UsersName', '@user.Email', '@user.Phone')">
+                                                onclick="populateEditForm(@user.UserID, '@user.UserTypeName', '@user.UsersName', '@user.Email', '@user.Phone', '@user.Username', '@user.Password')">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
 
@@ -241,13 +241,13 @@
                                                                 <div class="row">
                                                                     <div class="col">
                                                                         <div class="form-floating mb-4">
-                                                                            <input asp-for="UpdateUser.Username" type="text" class="form-control" id="floatingUsername" placeholder="username">
+                                                                            <input asp-for="UpdateUser.Username" type="text" class="form-control" id="floatingUsername" placeholder="username" value="@user.Username" disabled/>
                                                                             <label for="floatingUsername">Username</label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col">
                                                                         <div class="form-floating mb-4">
-                                                                            <input asp-for="UpdateUser.Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                                                            <input asp-for="UpdateUser.Password" type="password" class="form-control" id="floatingPassword" placeholder="Password" value="@user.Password" disabled/>
                                                                             <label for="floatingPassword">Password</label>
                                                                         </div>
                                                                     </div>
@@ -291,8 +291,12 @@
             document.querySelector('[name="UpdateUser.LastName"]').value = lastName;
             document.querySelector('[name="UpdateUser.Email"]').value = email;
             document.querySelector('[name="UpdateUser.Phone"]').value = phone;
+            /*document.querySelector('[name="UpdateUser.Username"]').value = username;
+            document.querySelector('[name="UpdateUser.Password"]').value = password;*/
+            
+            
 
-            // Optionally map role name back to its value (Admin=0, etc.)
+            // Map role name back to its value (Admin=0, etc.)
             let typeValue = "";
             switch (userTypeName) {
                 case "Admin": typeValue = 0; break;

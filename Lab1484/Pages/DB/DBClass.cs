@@ -738,7 +738,7 @@ namespace Lab1484.Pages.DB
 
             /*int userID = Convert.ToInt32(cmdUserUpdate.ExecuteScalar());*/
 
-            string updatedHashedCredsQuery = @"
+            /**string updatedHashedCredsQuery = @"
             UPDATE HashedCredentials
             Set Username = @Username, Password = @Password
             WHERE UserID = @UserID;";
@@ -749,12 +749,12 @@ namespace Lab1484.Pages.DB
             cmdUpdatedHashed.Parameters.AddWithValue("@Username", p.Username);
             cmdUpdatedHashed.Parameters.AddWithValue("@UserID", p.UserID);
             cmdUpdatedHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.Password));
-            cmdUpdatedHashed.Connection.Open();
+            cmdUpdatedHashed.Connection.Open();**/
 
             /*cmdUpdatedHashed.ExecuteNonQuery();*/
-            cmdUpdatedHashed.Connection.Open();
+            /**cmdUpdatedHashed.Connection.Open();
             cmdUpdatedHashed.ExecuteNonQuery();
-            cmdUpdatedHashed.Connection.Close();
+            cmdUpdatedHashed.Connection.Close();**/
 
         }
 

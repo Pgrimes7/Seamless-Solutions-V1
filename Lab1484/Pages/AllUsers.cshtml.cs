@@ -51,19 +51,19 @@ namespace Lab1484.Pages
 
             if (UserType.HasValue)
             {
-                cmd.CommandText = "SELECT UserID, userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE UserType = @UserType";
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber, HashedCredentials.username, HashedCredentials.password FROM Lab3.dbo.Users INNER JOIN AUTH.dbo.HashedCredentials ON Users.UserID = HashedCredentials.UserID WHERE Users.UserType = @UserType ORDER BY Users.UserID;" ;
                 cmd.Parameters.AddWithValue("@UserType", UserType.Value);
             }
             
 
             else if (!string.IsNullOrEmpty(SearchQuery))
             {
-                cmd.CommandText = "SELECT UserID, userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users WHERE firstName LIKE @SearchQuery OR lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR phoneNumber LIKE @SearchQuery";
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber, HashedCredentials.username, HashedCredentials.password FROM Lab3.dbo.Users INNER JOIN AUTH.dbo.HashedCredentials ON Users.UserID = HashedCredentials.UserID WHERE Users.firstName LIKE @SearchQuery OR Users.lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR Users.phoneNumber LIKE @SearchQuery ORDER BY Users.UserID;";
                 cmd.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
             }
             else
             {
-                cmd.CommandText = "SELECT UserID, userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, email, phoneNumber FROM Users";
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber , HashedCredentials.username, HashedCredentials.password FROM Lab3.dbo.Users INNER JOIN AUTH.dbo.HashedCredentials ON Users.UserID = HashedCredentials.UserID ORDER BY Users.UserID;";
             }
 
             SqlDataReader reader = cmd.ExecuteReader();
@@ -88,7 +88,10 @@ namespace Lab1484.Pages
                     /*LastName = reader.GetString(2),*/
 
                     Email = reader.GetString(3),
-                    Phone = reader.IsDBNull(4) ? "" : reader.GetString(4)
+                    Phone = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    Username = reader.GetString(5),
+                    Password = reader.GetString(6)
+
                 });
             }
 
@@ -105,12 +108,20 @@ namespace Lab1484.Pages
         {
             [BindProperty]
             public int UserID { get; set; }
+            [BindProperty]
             public string UserTypeName { get; set; }
+            [BindProperty]
             public string UsersName { get; set; }
 
             /*public string LastName { get; set; }*/
+            [BindProperty]
             public string Email { get; set; }
+            [BindProperty]
             public string Phone { get; set; }
+            [BindProperty]
+            public string Username { get; set;}
+            [BindProperty]
+            public string Password { get; set; }
         }
 
 
