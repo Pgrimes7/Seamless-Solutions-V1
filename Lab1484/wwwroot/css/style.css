@@ -8,23 +8,35 @@
     color: #B599CE;
     border-radius: 100px;
 }
-.button {
-    background-color: #B599CE;
-    color: #333333;
-    border-radius: 100px;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
+
+.btn-primary {
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: #333333;
+    --bs-btn-bg: #B599CE;
+    --bs-btn-border-color: #B599CE;
+    --bs-btn-hover-color: #333333;
+    --bs-btn-hover-bg: #DACCE6;
+    --bs-btn-hover-border-color: #B599CE;
+    --bs-btn-focus-shadow-rgb: 218, 204, 230;
+    --bs-btn-active-color: #333333;
+    --bs-btn-active-bg: #B599CE;
+    --bs-btn-active-border-color: #B599CE;
 }
-.btn-success {
-    background-color: #B599CE !important; /* Change this to your desired color */
-    color: #333333 !important; /* Change this to your desired text color */
-    border-radius: 100px; /* Optional: keep the same border-radius */
-    border: none; /* Optional: keep the same border style */
-    padding: 10px 20px; /* Optional: keep the same padding */
-    cursor: pointer; /* Optional: keep the same cursor style */
+
+.btn-secondary {
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: #CBB677;
+    --bs-btn-bg: #FFFFFF;
+    --bs-btn-border-color: #CBB677;
+    --bs-btn-hover-color: #FFFFFF;
+    --bs-btn-hover-bg: #CBB677;
+    --bs-btn-hover-border-color: #CBB677;
+    --bs-btn-focus-shadow-rgb: 244, 239, 225;
+    --bs-btn-active-color: #FFFFFF;
+    --bs-btn-active-bg: #CBB677;
+    --bs-btn-active-border-color: #CBB677;
 }
-.btn.btn-secondary {
-    background-color: #CBB677;
-    color: #333333;
+
+.grantstatus {
+    background-color: #D2EBF5;
 }
