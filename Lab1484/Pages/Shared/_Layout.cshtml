@@ -96,6 +96,10 @@
                             <div class="input-group rounded mb-4">
                                 <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                             </div>
+                            @{
+                                var currentPage = Context.Request.Path;
+                            }
+
 
                             <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                                     
@@ -107,42 +111,49 @@
                                         </a>
                                     </li>*@
 
-                                    <li class="nav-item nav-active">
+                                <li class="nav-item @(_ViewImports.IsActive("/Dashboard", currentPage))">
                                         <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle">
                                             <i class="fa-solid fa-border-all"></i>
                                             <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                    <li id="nav-grantsandprojects" class="nav-item">
                                     <a asp-page="/GrantsAndProjects" class=" nav-link link-body-emphasis px-0 align-middle">
                                         <i class="fa-solid fa-file"></i>
                                         <span class="ms-1 d-none d-sm-inline">Grants and Projects</span>
                                     </a> 
                                     </li>
-                                    <li class="nav-item">
+                                <li id="nav-tasks"  class="nav-item">
                                         <a asp-page="/Tasks" class="nav-link link-body-emphasis px-0 align-middle">
                                             <i class="fa-solid fa-list-check"></i>
                                             <span class="ms-1 d-none d-sm-inline">Tasks</span>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                <li id="nav-users" class="nav-item">
                                         <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle">
                                             <i class="fa-solid fa-users"></i>
                                             <span class="ms-1 d-none d-sm-inline">All Users</span>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                <li id="nav-updatePermission" class="nav-item">
                                         <a asp-page="/UpdatePermission" class="nav-link link-body-emphasis px-0 align-middle">
                                             <i class="fa-solid fa-user-gear"></i>
                                             <span class="ms-1 d-none d-sm-inline">Permission Update</span>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                <li id="nav-messages" class="nav-item">
                                         <a asp-page="/Messages" class="nav-link link-body-emphasis px-0 align-middle">
                                             <i class="fa-solid fa-bell"></i>
                                             <span class="ms-1 d-none d-sm-inline">Messages</span>
                                         </a>
                                     </li>
+                                <li id="nav-archive" class="nav-item">
+                                        <a asp-page="/Archive" class="nav-link link-body-emphasis px-0 align-middle">
+                                           <i class="fa-solid fa-box-archive"></i>
+                                           <span class="ms-1 d-none d-sm-inline">Grant Archive</span>
+                                         </a>
+                                     </li>
+
                                     <div>
                                         <hr>
                                     </div>
@@ -207,10 +218,22 @@
                                                     <li><hr class="dropdown-divider"></li>*@
                                             <li><a class="dropdown-item" asp-page="/Logout">Sign out</a></li>
                                         </ul>
+                                <script>
+                                    document.querySelectorAll('.nav-item a').forEach(link => {
+                                        link.addEventListener('click', function(event) {
+                                            event.preventDefault();
+                                            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('nav-active'));
+                                            this.parentElement.classList.add('nav-active');
+                                            // Here you can add code to load the new page content dynamically if needed
+                                            console.log('Navigating to:', this.getAttribute('data-page'));
+                                        });
+                                    });
+                                </script>
                                     </div>
                             </div>
                         </div>
                         }
+                
         
    
        <div class="col py-3">

@@ -59,7 +59,7 @@ public class AdminSearchModel : PageModel
 
         if (string.IsNullOrEmpty(TypeFilter) || TypeFilter == "Grant")
         {
-            SqlDataReader reader = DBClass.GrantReader();
+            SqlDataReader reader = DBClass.GrantReader(null);
             while (reader.Read())
             {
                 SearchResults.Add(new SearchResult
