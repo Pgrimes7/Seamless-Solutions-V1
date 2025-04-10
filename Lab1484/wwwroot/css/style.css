@@ -28,3 +28,21 @@
     background-color: #CBB677;
     color: #333333;
 }
+
+.btn-primary {
+    --bs-btn-font-weight: 600;
+    --bs-btn-color: #333333;
+    --bs-btn-bg: #B599CE;
+    --bs-btn-border-color: #B599CE;
+    --bs-btn-hover-color: #333333;
+    --bs-btn-hover-bg: #DACCE6;
+    --bs-btn-hover-border-color: #B599CE;
+    --bs-btn-focus-shadow-rgb: 218, 204, 230;
+    --bs-btn-active-color: #333333;
+    --bs-btn-active-bg: #B599CE;
+    --bs-btn-active-border-color: #B599CE;
+}
+
+.grantstatus {
+    background-color: #D2EBF5;
+}
