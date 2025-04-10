@@ -9,6 +9,8 @@ namespace Lab1484.Pages
 {
     public class DashBoardModel : PageModel
     {
+        [BindProperty(SupportsGet = true)]
+        public string? SearchQuery { get; set; }
         [BindProperty] public int SelectedProject { get; set; }
         public string SelectMessage { get; set; }
 
@@ -65,7 +67,7 @@ namespace Lab1484.Pages
                 });
             }
 
-            SqlDataReader grantReader = DBClass.GrantReader();
+            SqlDataReader grantReader = DBClass.GrantReader(SearchQuery);
             while (grantReader.Read())
             {
                 GrantList.Add(new Grant
@@ -81,7 +83,7 @@ namespace Lab1484.Pages
                     grantStatus = grantReader["grantStatus"].ToString()
                 });
             }
-
+            
             DBClass.Lab3DBConnection.Close();
 
             var statusOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)

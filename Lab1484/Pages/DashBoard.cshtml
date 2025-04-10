@@ -121,8 +121,8 @@
                             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
                                 <h2>All Grants</h2>
                                 <div class="btn-toolbar mb-2 mb-md-0">
-                                    <form class="d-flex" role="search">
-                                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                    <form class="d-flex" method="get" asp-page="/Dashboard" role="search">
+                                        <input class="form-control me-2" type="search" Name="SearchQuery" placeholder="Search" aria-label="Search">
                                         <button class="btn btn-outline-success me-2" type="submit">Search</button>
                                     </form>
                                     <button type="button" class="btn btn-outline-secondary me-2">

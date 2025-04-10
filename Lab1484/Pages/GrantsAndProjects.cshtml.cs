@@ -52,7 +52,7 @@ namespace Lab1484.Pages
                 });
             }
 
-            SqlDataReader grantReader = DBClass.GrantReader();
+            SqlDataReader grantReader = DBClass.GrantReader(null);
             while (grantReader.Read())
             {
                 GrantList.Add(new Grant

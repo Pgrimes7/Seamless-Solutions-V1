@@ -144,20 +144,37 @@ namespace Lab1484.Pages.DB
         }
 
 
-        public static SqlDataReader GrantReader()//reads grant table in sql
+        public static SqlDataReader GrantReader(string? SearchQuery)//reads grant table in sql
         {
             SqlCommand cmdGrantRead = new SqlCommand();
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
+
             cmdGrantRead.Connection = Lab3DBConnection;
             cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
-                "from Grants " +
-                "join Users ON Users.UserID = Grants.FacultyLeadID; ";
-            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
 
+
+            if (!string.IsNullOrEmpty(SearchQuery))
+            {
+                cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
+                    "from Grants " +
+                    "join Users ON Users.UserID = Grants.FacultyLeadID " +
+                    "where grantName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR amount LIKE @SearchQuery OR dueDate LIKE @SearchQuery OR grantStatus LIKE @SearchQuery OR businessName LIKE @SearchQuery OR category LIKE @SearchQuery; ";
+                
+                cmdGrantRead.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
+
+            }
+
+            else
+            {
+                cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
+                    "from Grants " +
+                    "join Users ON Users.UserID = Grants.FacultyLeadID; ";
+            }
+
+            cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
             SqlDataReader tempReader = cmdGrantRead.ExecuteReader();
 
             return tempReader;
