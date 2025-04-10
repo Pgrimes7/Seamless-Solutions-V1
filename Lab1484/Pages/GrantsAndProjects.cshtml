@@ -164,20 +164,25 @@
                                                                 <input type="text" class="form-control" id="assigneeName-1" name="assigneeName[]" placeholder="Name (First and Last)">
                                                                 <label for="assigneeName-1">Name (First & Last)</label>
                                                             </div>
-                                                            <div class="form-floating mb-4">
-                                                                <input type="email" class=form-control id="assigneeEmail-1" name="assigneeEmail[]" placeholder="Email">
-                                                                <label for="assigneeEmail-1">Email</label>
-                                                            </div>
-                                                            <button type="button" class="btn btn-sm btn-outline-danger remove-assignee-btn" onclick="removeAssignee(this)">Remove Assignee</button>
-                                                            <button type="button" id="addAssigneeBtn" class="btn btn-sm btn-outline-secondary">Add Another Assignee</button>
                                                         </div>
                                                     </div>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <select asp-for="newGrant.grantStatus" class="form-select" id="floatingStatus" aria-label="Grant Status">
+                                                                <option value="Potential">Potential</option>
+                                                                <option value="Funded">Funded</option>
+                                                                <option value="Active">Active</option>
+                                                                <option value="Rejected">Rejected</option>
+                                                                <option value="Archived">Archived</option>
+                                                            </select>
+                                                            <label for="floatingStatus">Grant Status</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary">Add Grant</button>
+                                                    </div>
                                                 </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-primary">Add Grant</button>
-                                            </div>
                                         </div> <!--close modal content-->
                                     </div> <!--close modal dialog-->
                                 </div> <!--close modal-->
@@ -335,7 +340,7 @@
                                                 </td>
                                                 <td>@prod.DateDue.ToShortDateString()</td>
                                                 <td><span class="@statusClass">@prod.ProjectStatus</span></td>
-                                                <td>Orgnaization Name</td>
+                                                <td>Organization Name</td>
                                                 <td>
                                                     <form method="post" asp-page="/ProjectNotes">
                                                         <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
