@@ -190,7 +190,7 @@ namespace Lab1484.Pages
                 .ThenBy(g => g.businessName)
                 .ToList();
 
-            return Page();
+            return RedirectToPage("/UpdatePermission");
         }
     }
 }
