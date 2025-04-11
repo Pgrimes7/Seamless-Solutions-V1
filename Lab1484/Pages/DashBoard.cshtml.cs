@@ -192,5 +192,11 @@ namespace Lab1484.Pages
 
             return RedirectToPage("/UpdatePermission");
         }
+
+        public JsonResult OnGetGrantStatusData()
+        {
+            int[] grantCounts = DBClass.GetGrantStatusCounts();
+            return new JsonResult(grantCounts);
+        }
     }
 }

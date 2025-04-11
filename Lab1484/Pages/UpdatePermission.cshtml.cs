@@ -47,6 +47,22 @@ namespace Lab1484.Pages
 
         }
 
+        //Adding OnPost to capture the tempdata value after creating a new grant
+        //public IActionResult OnPost()
+        //{
+        //    //Check to see if the user is logged in
+        //    string currentUser = HttpContext.Session.GetString("username");
+        //    //Redirect them if they aren't
+        //    if (string.IsNullOrEmpty(currentUser))
+        //    {
+        //        return RedirectToPage("/Login");
+        //    }
+
+        //    HttpContext.Session.SetInt32("GrantID", grantId);
+
+        //    return RedirectToPage("/UpdatePermission");
+        //}
+
         public IActionResult OnGet()
         {
 

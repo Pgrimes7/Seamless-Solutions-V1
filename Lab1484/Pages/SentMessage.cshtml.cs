@@ -14,6 +14,7 @@ namespace Lab1484.Pages
         public DateTime SentDate { get; set; }
         public bool IsRead { get; set; }
         public int UnreadMessagesCount { get; set; }
+
         public List<MessagesModel> Messages { get; set; } = new List<MessagesModel>();
 
         public IActionResult OnGet()

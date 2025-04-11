@@ -30,6 +30,9 @@ namespace Lab1484.Pages
         [BindProperty]
         public Project newProject { get; set; } = new Project();
 
+        [BindProperty]
+        public int grantId { get; set; }
+
         public GrantsAndProjectsModel()
         {
             ProjectList = new List<Project>();
@@ -313,7 +316,9 @@ namespace Lab1484.Pages
                 .ThenBy(g => g.businessName)
                 .ToList();
 
-            TempData["grantId"] = newGrant.GrantID;
+            grantId = DBClass.GetLastGrantID();
+
+            HttpContext.Session.SetInt32("GrantID", grantId);
 
             return RedirectToPage("/UpdatePermission", new { handler = "" });
         }

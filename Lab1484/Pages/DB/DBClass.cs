@@ -322,6 +322,25 @@ namespace Lab1484.Pages.DB
             return newProjectID;
         }
 
+        public static int GetLastGrantID()
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "SELECT MAX(GrantID) FROM Grants;";
+            SqlCommand cmdGrantRead = new SqlCommand();
+            cmdGrantRead.Connection = Lab3DBConnection;
+            cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdGrantRead.CommandText = sqlQuery;
+            cmdGrantRead.Connection.Open();
+            // ExecuteScalar() returns back data type Object
+            // Use a typecast to convert this to an int.
+            // Method returns first column of first row.
+            int rowCount = (int)cmdGrantRead.ExecuteScalar();
+            return rowCount;
+        }
+
         public static void InsertEmployeeProject(int ProjectID, int EmployeeID)
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
@@ -545,33 +564,42 @@ namespace Lab1484.Pages.DB
         public static List<MessagesModel> GetUserSentMessages(string sender)
         {
             List<MessagesModel> messages = new List<MessagesModel>();
-            string query = "SELECT * FROM Messages WHERE Sender = @Sender ORDER BY TimeStamp DESC";
+
+            string query = @"
+        SELECT MessageId, Sender, Receiver, Content, Timestamp AS SentDate, IsRead 
+        FROM Messages 
+        WHERE Sender = @Sender 
+        ORDER BY Timestamp DESC"; // Order by the real database Timestamp
 
             using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Sender", sender);
-
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    // Populate the messages list with instances of MessageData
-                    MessagesModel message = new MessagesModel
+                    cmd.Parameters.AddWithValue("@Sender", sender);
+
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        MessageId = (int)reader["MessageId"],
-                        Sender = reader["Sender"].ToString(),
-                        Receiver = reader["Receiver"].ToString(),
-                        Content = reader["Content"].ToString(),
-                        SentDate = (DateTime)reader["Timestamp"],
-                        IsRead = (int)reader["IsRead"]
-                    };
-                    messages.Add(message); // Add the message instance to the list
+                        while (reader.Read())
+                        {
+                            MessagesModel message = new MessagesModel
+                            {
+                                MessageId = reader["MessageId"] != DBNull.Value ? (int)reader["MessageId"] : 0,
+                                Sender = reader["Sender"]?.ToString(),
+                                Receiver = reader["Receiver"]?.ToString(),
+                                Content = reader["Content"]?.ToString(),
+                                SentDate = reader["SentDate"] != DBNull.Value ? (DateTime)reader["SentDate"] : DateTime.MinValue,
+                                IsRead = reader["IsRead"] != DBNull.Value ? Convert.ToInt32(reader["IsRead"]) : 0
+                            };
+                            messages.Add(message);
+                        }
+                    }
                 }
             }
-            return messages; // Return the list of messages
+            return messages;
         }
+
+
 
         public static SqlDataReader MessageReader()
         {
@@ -1129,6 +1157,54 @@ namespace Lab1484.Pages.DB
                 }
             }
         }
+
+        public static int[] GetGrantStatusCounts()
+        {
+            int[] counts = new int[5]; // Order: Active, Potential, Funded, Archived, Rejected
+
+            
+            if (Lab3DBConnection.State == ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            string query = "SELECT grantStatus, COUNT(*) AS Count FROM Grants GROUP BY grantStatus";
+
+            using (SqlCommand cmd = new SqlCommand(query, Lab3DBConnection))
+            {
+                Lab3DBConnection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string status = reader["grantStatus"].ToString();
+                        int count = Convert.ToInt32(reader["Count"]);
+
+                        switch (status)
+                        {
+                            case "Active":
+                                counts[0] = count;
+                                break;
+                            case "Potential":
+                                counts[1] = count;
+                                break;
+                            case "Funded":
+                                counts[2] = count;
+                                break;
+                            case "Archived":
+                                counts[3] = count;
+                                break;
+                            case "Rejected":
+                                counts[4] = count;
+                                break;
+                        }
+                    }
+                }
+            }
+            return counts;
+        }
+
 
 
     }
