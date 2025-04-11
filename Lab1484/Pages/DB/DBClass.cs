@@ -743,10 +743,10 @@ namespace Lab1484.Pages.DB
 
             cmdUserUpdate.Parameters.AddWithValue("@UserID", p.UserID);
             cmdUserUpdate.Parameters.AddWithValue("@UserType", p.UserType);
-            cmdUserUpdate.Parameters.AddWithValue("@firstName", p.FirstName);
-            cmdUserUpdate.Parameters.AddWithValue("@lastName", p.LastName);
-            cmdUserUpdate.Parameters.AddWithValue("@email", p.Email);
-            cmdUserUpdate.Parameters.AddWithValue("@phoneNumber", p.Phone);
+            cmdUserUpdate.Parameters.AddWithValue("@FirstName", p.FirstName);
+            cmdUserUpdate.Parameters.AddWithValue("@LastName", p.LastName);
+            cmdUserUpdate.Parameters.AddWithValue("@Email", p.Email);
+            cmdUserUpdate.Parameters.AddWithValue("@Phone", p.Phone);
 
             cmdUserUpdate.Connection.Open();
 
