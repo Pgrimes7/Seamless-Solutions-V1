@@ -1158,6 +1158,54 @@ namespace Lab1484.Pages.DB
             }
         }
 
+        public static int[] GetGrantStatusCounts()
+        {
+            int[] counts = new int[5]; // Order: Active, Potential, Funded, Archived, Rejected
+
+            
+            if (Lab3DBConnection.State == ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            string query = "SELECT grantStatus, COUNT(*) AS Count FROM Grants GROUP BY grantStatus";
+
+            using (SqlCommand cmd = new SqlCommand(query, Lab3DBConnection))
+            {
+                Lab3DBConnection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string status = reader["grantStatus"].ToString();
+                        int count = Convert.ToInt32(reader["Count"]);
+
+                        switch (status)
+                        {
+                            case "Active":
+                                counts[0] = count;
+                                break;
+                            case "Potential":
+                                counts[1] = count;
+                                break;
+                            case "Funded":
+                                counts[2] = count;
+                                break;
+                            case "Archived":
+                                counts[3] = count;
+                                break;
+                            case "Rejected":
+                                counts[4] = count;
+                                break;
+                        }
+                    }
+                }
+            }
+            return counts;
+        }
+
+
 
     }
 }
