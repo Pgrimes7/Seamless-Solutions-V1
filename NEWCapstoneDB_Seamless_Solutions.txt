@@ -115,6 +115,39 @@ CREATE TABLE Grant_User (
 	SensitiveInfoPermission INT
 );
 
+CREATE TABLE Reports (
+    ReportID INT IDENTITY (1,1) PRIMARY KEY NOT NULL,
+    ReportDate DATE,
+    ReportName VARCHAR(50)
+);
+
+CREATE TABLE ReportSubjects (
+    SubjectID INT IDENTITY(1,1) PRIMARY KEY,
+    ReportID INT,
+    SubjectTitle VARCHAR(255),
+    SubjectText VARCHAR(MAX),
+    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID)
+);
+
+CREATE TABLE ReportGrants (
+    ReportGrantID INT IDENTITY(1,1) PRIMARY KEY,
+    ReportID INT,
+    GrantID INT,
+    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
+    FOREIGN KEY (GrantID) REFERENCES Grants(GrantID)
+);
+
+CREATE TABLE ReportProjects (
+    ReportProjectID INT IDENTITY(1,1) PRIMARY KEY,
+    ReportID INT,
+    ProjectID INT,
+    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
+    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+);
+
+
+
+
 --Users Inserts
 INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES
 (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
