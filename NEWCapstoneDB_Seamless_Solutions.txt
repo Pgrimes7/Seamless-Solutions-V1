@@ -153,17 +153,18 @@ INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES
 (0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
 (1, 'Ben', 'Gorber', 'Grant.Gorber@example.com', '234-567-8901'),
 (2, 'Charlie', 'Brown', 'charlie.brown@example.com', '345-678-9012'),
-(3, 'Bob', 'Jordan', 'Bowow@example.com', '456-789-0123'),
+(3, 'Bob', 'Jordan', 'bojo@example.com', '456-789-0123'),
 (0, 'Lucas', 'Langley', 'Langley@example.com', '123-456-7890'),
 (1, 'Johnson', 'Brant', 'BrantJ@example.com', '234-567-8901'),
 (2, 'Blaire', 'Gomber', 'BlaireGomber@example.com', '345-678-9012'),
 (3, 'Magnus', 'Yang', 'YangMagnus@example.com', '456-789-0123'),
-(0, 'admin', 'test', 'admintest@example.com', '777-888-0000');
+(0, 'admin', 'test', 'admintest@example.com', '777-888-0000'),
+(0, 'Emily', 'Carter', 'carter.emily@example.com', '555-465-7954');
 
 --Project Inserts
 INSERT INTO Project (ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, ProjectName) VALUES
-(1, 'In Progress', '2025-01-01', '2000-10-10', '2025-12-31', 'Cancer Research'),
-(2, 'Completed', '2024-01-01', '2024-12-31', '2024-12-31', 'Children In Stem');
+(1, 'In Progress', '2025-01-01', '2000-10-10', '2025-11-01', 'LENA'),
+(2, 'Completed', '2024-01-01', '2024-12-31', '2025-04-24', 'Coaching Framework');
 
 --EmployeeProject Inserts
 INSERT INTO EmployeeProject (ProjectID, EmployeeID) VALUES
@@ -173,9 +174,9 @@ INSERT INTO EmployeeProject (ProjectID, EmployeeID) VALUES
 
 --Tasks Inserts
 INSERT INTO Tasks (ProjectID, taskDescription, dueDate) VALUES
-(1, 'Complete Biosketch form ', '2025-12-31'),
-(1, 'Assign PI ', '2025-12-31'),
-(2, 'Meet with faculty', '2025-12-31');
+(1, 'Complete form submission', '2025-11-15'),
+(1, 'Assign PI', '2025-04-19'),
+(2, 'Meet with client', '2025-05-14');
 
 -- Insert Notes
 INSERT INTO Notes (ProjectID, noteBody) VALUES
@@ -186,7 +187,7 @@ INSERT INTO Notes (ProjectID, noteBody) VALUES
 --BusinessPartner Inserts
 INSERT INTO BusinessPartner (RepresentativeID, firstName, lastName, orgType, businessType, statusFlag) VALUES
 (3, 'Frank', 'James', 'Non-Profit', 'Research', 'Active'),
-(4, 'Bob', 'Jordan', 'For-Profit', 'Technology', 'Inactive');
+(4, 'Bob', 'Jordan', 'For-Profit', 'Learning', 'Inactive');
 
 --MeetingMinutes Inserts
 INSERT INTO MeetingMinutes (BusinessPartnerID, minutesBody) VALUES
@@ -195,8 +196,10 @@ INSERT INTO MeetingMinutes (BusinessPartnerID, minutesBody) VALUES
 
 --Grants Inserts
 INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName, category, submissionDate, awardDate, grantStatus, amount, dueDate, grantName) VALUES
-(1, 1, 'Research Fund', 'State', '2025-01-15', '2025-02-15', 'Archived', 50000.00, '2025-12-31', 'Federal Biosketch'),
-(2, 2, 'Tech Expansion', 'Foundation', '2025-03-01', '2025-04-01', 'Potential', 75000.00, '2025-12-31', 'State Technology');
+(1, 1, 'Learning Agency', 'Foundation', '2025-01-15', '2025-02-15', 'Active', 50000.00, '2025-07-30', 'The Learning Agency'),
+(2, 2, 'Federal Agency', 'Federal', '2025-03-01', '2025-04-01', 'Active', 75000.00, '2025-10-15', 'National Science Foundation'),
+(1, 1, 'Division of Public Safety', 'State', '2024-03-01', '2024-06-05', 'Archived', 65000.00, '2024-09-06', 'School Safety Grant');
+
 
 --FacultyGrant Inserts
 INSERT INTO FacultyGrant (GrantID, FacultyID) VALUES
@@ -211,37 +214,4 @@ INSERT INTO Messages (Sender, Receiver, Content, IsRead) VALUES
 ('gomberbu', 'smithto', 'Could we look at this later?', 0),
 ('manbos', 'brownch', 'Reminder of the upcoming due date of the project!', 1),
 ('brownch', 'manbos', 'Thank you!', 0),
-('jordanbow', 'brantjo', 'I have a question I would like to talk with you about.', 1),
-('brantjo', 'jordanbow', 'When would you be available to discuss?', 0),
 ('yangmag', 'gorbergr', 'Are we still able to meet about this tomorrow?', 0);
-
---Grants Due Date Updates
-UPDATE Grants
-SET dueDate = '2025-07-30'
-WHERE GrantID = 1;
-
-UPDATE Grants
-SET dueDate = '2025-10-15'
-WHERE GrantID = 2;
-
---Project Due Date Updates
-UPDATE Project
-SET dueDate = '2025-11-01'
-WHERE ProjectID = 1;
-
-UPDATE Project
-SET dueDate = '2025-04-24'
-WHERE ProjectID = 2;
-
---Task Due Date Updates
-UPDATE Tasks
-SET dueDate = '2025-11-15'
-WHERE TaskID = 1;
-
-UPDATE Tasks
-SET dueDate = '2025-04-19'
-WHERE TaskID = 2;
-
-UPDATE Tasks
-SET dueDate = '2025-05-14'
-WHERE TaskID = 3;

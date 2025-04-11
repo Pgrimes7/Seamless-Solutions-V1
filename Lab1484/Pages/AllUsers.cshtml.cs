@@ -46,24 +46,31 @@ namespace Lab1484.Pages
             }
 
             cmd.Connection = DBClass.Lab3DBConnection;
-            cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+            //Uncomment if working locally
+            //cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+            cmd.Connection.ConnectionString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+            "Database=Lab3;" +
+            "User Id=capstoneadmin;" +
+            "Password=Seamless123!@#;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=True;";
             cmd.Connection.Open();
 
             if (UserType.HasValue)
             {
-                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber, HashedCredentials.username, HashedCredentials.password FROM Lab3.dbo.Users INNER JOIN AUTH.dbo.HashedCredentials ON Users.UserID = HashedCredentials.UserID WHERE Users.UserType = @UserType ORDER BY Users.UserID;" ;
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber FROM Lab3.dbo.Users WHERE Users.UserType = @UserType ORDER BY Users.UserID;" ;
                 cmd.Parameters.AddWithValue("@UserType", UserType.Value);
             }
             
 
             else if (!string.IsNullOrEmpty(SearchQuery))
             {
-                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber, HashedCredentials.username, HashedCredentials.password FROM Lab3.dbo.Users INNER JOIN AUTH.dbo.HashedCredentials ON Users.UserID = HashedCredentials.UserID WHERE Users.firstName LIKE @SearchQuery OR Users.lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR Users.phoneNumber LIKE @SearchQuery ORDER BY Users.UserID;";
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber FROM Lab3.dbo.Users WHERE Users.firstName LIKE @SearchQuery OR Users.lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR Users.phoneNumber LIKE @SearchQuery ORDER BY Users.UserID;";
                 cmd.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
             }
             else
             {
-                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber , HashedCredentials.username, HashedCredentials.password FROM Lab3.dbo.Users INNER JOIN AUTH.dbo.HashedCredentials ON Users.UserID = HashedCredentials.UserID ORDER BY Users.UserID;";
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber FROM Lab3.dbo.Users ORDER BY Users.UserID;";
             }
 
             SqlDataReader reader = cmd.ExecuteReader();
@@ -92,8 +99,6 @@ namespace Lab1484.Pages
 
                     Email = reader.GetString(3),
                     Phone = reader.IsDBNull(4) ? "" : reader.GetString(4),
-                    Username = reader.GetString(5),
-                    Password = reader.GetString(6)
 
                 });
             }

@@ -1,0 +1,6 @@
+Database shit
+
+user - capstoneadmin
+pass - Seamless123!@#
+
+Site - https://seamlesssolutionsspring2025capstone.azurewebsites.net
