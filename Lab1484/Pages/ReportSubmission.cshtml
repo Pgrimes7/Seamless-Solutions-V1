@@ -1,10 +1,66 @@
-﻿	@page
+﻿@page
 @model Lab1484.Pages.ReportSubmissionModel
 @{
+    ViewData["Title"] = "Create Report";
+}
 
+<h2>Create Report</h2>
 
+<form method="post">
+    <div class="form-group">
+        <label for="reportName">Report Name</label>
+        <input type="text" class="form-control" id="reportName" name="ReportName" required />
+    </div>
+    <div class="form-group">
+        <label for="reportDate">Report Date</label>
+        <input type="date" class="form-control" id="reportDate" name="ReportDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+    </div>
+    <div class="form-group">
+        <label for="grantIds">Grants</label>
+        <select class="form-control" id="grantIds" name="GrantIDs" multiple required>
+            @foreach (var grant in Model.GrantList)
+            {
+                <option value="@grant.GrantID">@grant.grantName</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="projectIds">Projects</label>
+        <select class="form-control" id="projectIds" name="ProjectIDs" multiple required>
+            @foreach (var project in Model.ProjectList)
+            {
+                <option value="@project.ProjectID">@project.ProjectName</option>
+            }
+        </select>
+    </div>
+    <div id="subjectsContainer">
+        <div class="form-group">
+            <label for="subjectTitle">Subject</label>
+            <input type="text" class="form-control" id="subjectTitle" name="SubjectTitle[]" required />
+        </div>
+        <div class="form-group">
+            <label for="subjectText">Text</label>
+            <textarea class="form-control" id="subjectText" name="SubjectText[]" rows="3" required></textarea>
+        </div>
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="addSubject()">Add More</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 
-
-
-
+@section Scripts {
+    <script>
+        function addSubject() {
+            var container = document.getElementById('subjectsContainer');
+            var newSubject = `
+                <div class="form-group">
+                    <label for="subjectTitle">Subject</label>
+                    <input type="text" class="form-control" name="SubjectTitle[]" required />
+                </div>
+                <div class="form-group">
+                    <label for="subjectText">Text</label>
+                    <textarea class="form-control" name="SubjectText[]" rows="3" required></textarea>
+                </div>`;
+            container.insertAdjacentHTML('beforeend', newSubject);
+        }
+    </script>
 }
