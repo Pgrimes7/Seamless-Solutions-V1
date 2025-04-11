@@ -564,33 +564,42 @@ namespace Lab1484.Pages.DB
         public static List<MessagesModel> GetUserSentMessages(string sender)
         {
             List<MessagesModel> messages = new List<MessagesModel>();
-            string query = "SELECT * FROM Messages WHERE Sender = @Sender ORDER BY TimeStamp DESC";
+
+            string query = @"
+        SELECT MessageId, Sender, Receiver, Content, Timestamp AS SentDate, IsRead 
+        FROM Messages 
+        WHERE Sender = @Sender 
+        ORDER BY Timestamp DESC"; // Order by the real database Timestamp
 
             using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Sender", sender);
-
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    // Populate the messages list with instances of MessageData
-                    MessagesModel message = new MessagesModel
+                    cmd.Parameters.AddWithValue("@Sender", sender);
+
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        MessageId = (int)reader["MessageId"],
-                        Sender = reader["Sender"].ToString(),
-                        Receiver = reader["Receiver"].ToString(),
-                        Content = reader["Content"].ToString(),
-                        SentDate = (DateTime)reader["Timestamp"],
-                        IsRead = (int)reader["IsRead"]
-                    };
-                    messages.Add(message); // Add the message instance to the list
+                        while (reader.Read())
+                        {
+                            MessagesModel message = new MessagesModel
+                            {
+                                MessageId = reader["MessageId"] != DBNull.Value ? (int)reader["MessageId"] : 0,
+                                Sender = reader["Sender"]?.ToString(),
+                                Receiver = reader["Receiver"]?.ToString(),
+                                Content = reader["Content"]?.ToString(),
+                                SentDate = reader["SentDate"] != DBNull.Value ? (DateTime)reader["SentDate"] : DateTime.MinValue,
+                                IsRead = reader["IsRead"] != DBNull.Value ? Convert.ToInt32(reader["IsRead"]) : 0
+                            };
+                            messages.Add(message);
+                        }
+                    }
                 }
             }
-            return messages; // Return the list of messages
+            return messages;
         }
+
+
 
         public static SqlDataReader MessageReader()
         {

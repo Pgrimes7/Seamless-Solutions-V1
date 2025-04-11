@@ -1,4 +1,5 @@
 using System.IO;
+using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,14 @@ namespace Lab1484.Pages
         public DateTime SentDate { get; set; }
         public int IsRead { get; set; }
         public int UnreadMessagesCount { get; set; }
+
+        public string currentUser { get; set; }
+
         public List<MessagesModel> Messages { get; set; } = new List<MessagesModel>();
 
         public IActionResult OnGet()
         {
+
             //Check to see if the user is logged in
             string currentUser = HttpContext.Session.GetString("username");
             //Redirect them if they aren't
@@ -35,5 +40,6 @@ namespace Lab1484.Pages
 
             return Page();
         }
+
     }
 }
