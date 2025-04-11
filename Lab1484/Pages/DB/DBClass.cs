@@ -322,6 +322,25 @@ namespace Lab1484.Pages.DB
             return newProjectID;
         }
 
+        public static int GetLastGrantID()
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "SELECT MAX(GrantID) FROM Grants;";
+            SqlCommand cmdGrantRead = new SqlCommand();
+            cmdGrantRead.Connection = Lab3DBConnection;
+            cmdGrantRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdGrantRead.CommandText = sqlQuery;
+            cmdGrantRead.Connection.Open();
+            // ExecuteScalar() returns back data type Object
+            // Use a typecast to convert this to an int.
+            // Method returns first column of first row.
+            int rowCount = (int)cmdGrantRead.ExecuteScalar();
+            return rowCount;
+        }
+
         public static void InsertEmployeeProject(int ProjectID, int EmployeeID)
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
