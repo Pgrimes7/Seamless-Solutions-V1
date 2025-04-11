@@ -76,7 +76,10 @@ namespace Lab1484.Pages
                 if (type == 0) role = "Admin";
                 else if (type == 1) role = "Faculty";
                 else if (type == 2) role = "Staff";
-                else if (type == 3) role = "Student";
+                else if (type == 3) role = "Representative";
+                else if (type == 4) role = "Student";
+                else if (type == 5) role = "Project Manager";
+                else if (type == 6) role = "JMU Office Staff";
                 else role = "Unknown";
 
                 Users.Add(new UserDisplay

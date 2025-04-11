@@ -973,8 +973,10 @@ namespace Lab1484.Pages.DB
             SqlCommand cmdGrantRead = new SqlCommand();
             cmdGrantRead.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
             cmdGrantRead.Connection = new SqlConnection(Lab3DBConnString);
-            cmdGrantRead.CommandText = "Select * from Grants join Grant_User ON Grants.GrantID = Grant_User.GrantID " +
-                                       "where Grant_User.UserID = @UserID;";
+            cmdGrantRead.CommandText = "select Grants.*, CONCAT(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail" +
+                " from Grants JOIN Grant_User ON Grants.GrantID = Grant_User.GrantID " +
+                "join Users ON Users.UserID = Grants.FacultyLeadID " +
+                "where Grant_User.userID = @UserID;";
 
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
 
