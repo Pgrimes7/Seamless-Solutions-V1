@@ -8,8 +8,7 @@ namespace Lab1484.Pages
 {
     public class GrantsAndProjectsModel : PageModel
     {
-        [BindProperty(SupportsGet = true)]
-        public string? SearchQuery { get; set; }
+
         [BindProperty] public int SelectedProject { get; set; }
         public string SelectMessage { get; set; }
 
@@ -82,7 +81,7 @@ namespace Lab1484.Pages
                 });
             }
 
-            SqlDataReader grantReader = DBClass.GrantReader(SearchQuery);
+            SqlDataReader grantReader = DBClass.GrantReader(null);
             while (grantReader.Read())
             {
                 GrantList.Add(new Grant
