@@ -47,7 +47,7 @@ namespace Lab1484.Pages
 
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet(int? grantId)
         {
             //Check to see if the user is logged in
             string currentUser = HttpContext.Session.GetString("username");
@@ -57,23 +57,82 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Login");
             }
 
-            SqlDataReader grantReader = DBClass.GrantReader(null);
-            while (grantReader.Read())
-            {
-                GrantList.Add(new Grant
-                {
-                    grantName = grantReader["grantName"].ToString(),
-                    GrantID = (int)grantReader["GrantID"],
-                    businessName = grantReader["businessName"].ToString(),
-                    amount = Double.Parse(grantReader["amount"].ToString()),
-                    category = grantReader["category"].ToString(),
-                    dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
-                    facultyName = grantReader["FacultyLead"].ToString(),
-                    grantStatus = grantReader["grantStatus"].ToString()
-                });
-                SelectedGrantName = grantReader["grantName"].ToString();
+           
 
+            if (grantId.HasValue)
+            {
+                SelectedGrantId = grantId.Value;
+                // Load data based on SelectedGrantId
+                SqlDataReader userReader = DBClass.Grant_UserReader(SelectedGrantId);
+                UserList.Clear();
+                NonGrantUserList.Clear();
+
+                using (SqlDataReader grantReader = DBClass.SingleGrantReader(SelectedGrantId))
+                {
+                    while (grantReader.Read())
+                    {
+                        GrantList.Add(new Grant
+                        {
+                            grantName = grantReader["grantName"].ToString(),
+                            GrantID = (int)grantReader["GrantID"],
+                            businessName = grantReader["businessName"].ToString(),
+                            amount = Double.Parse(grantReader["amount"].ToString()),
+                            category = grantReader["category"].ToString(),
+                            dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                            facultyName = grantReader["FacultyLead"].ToString(),
+                            grantStatus = grantReader["grantStatus"].ToString()
+                        });
+                        SelectedGrantName = grantReader["grantName"].ToString();
+                    }
+                }
+
+                while (userReader.Read())
+                {
+                    UserList.Add(new User
+                    {
+                        userID = Int32.Parse(userReader["UserID"].ToString()),
+                        firstName = userReader["FirstName"].ToString(),
+                        lastName = userReader["LastName"].ToString(),
+                        email = userReader["Email"].ToString(),
+                        phone = userReader["PhoneNumber"].ToString(),
+                    });
+                }
+
+                using (SqlDataReader grantNonUserList = DBClass.readNonGrant_User(SelectedGrantId))
+                {
+                    while (grantNonUserList.Read())
+                    {
+                        NonGrantUserList.Add(new User
+                        {
+                            userID = Int32.Parse(grantNonUserList["UserID"].ToString()),
+                            firstName = grantNonUserList["FirstName"].ToString(),
+                            lastName = grantNonUserList["LastName"].ToString(),
+                            email = grantNonUserList["Email"].ToString(),
+                            phone = grantNonUserList["PhoneNumber"].ToString(),
+                        });
+                    }
+                }
             }
+            else
+            {
+                // Load default data if no grant is selected
+                SqlDataReader grantReader = DBClass.GrantReader(null);
+                while (grantReader.Read())
+                {
+                    GrantList.Add(new Grant
+                    {
+                        grantName = grantReader["grantName"].ToString(),
+                        GrantID = (int)grantReader["GrantID"],
+                        businessName = grantReader["businessName"].ToString(),
+                        amount = Double.Parse(grantReader["amount"].ToString()),
+                        category = grantReader["category"].ToString(),
+                        dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                        facultyName = grantReader["FacultyLead"].ToString(),
+                        grantStatus = grantReader["grantStatus"].ToString()
+                    });
+                }
+            }
+        
 
             return Page();
         }
@@ -83,7 +142,7 @@ namespace Lab1484.Pages
             SelectedGrantId = grantId;
             SqlDataReader userReader = DBClass.Grant_UserReader(grantId);
             UserList.Clear();
-            GrantList.Clear();
+            //GrantList.Clear();
             NonGrantUserList.Clear();
 
             using (SqlDataReader grantReader = DBClass.SingleGrantReader(grantId))
@@ -150,7 +209,7 @@ namespace Lab1484.Pages
 
             // Update the database with the new permission values
             DBClass.updatePermission(grantUser);
-            return RedirectToPage("/UpdatePermission");
+            return RedirectToPage(new { grantId });
         }
 
         public IActionResult OnPostAddUser(int UserID, int GrantID)
@@ -161,13 +220,18 @@ namespace Lab1484.Pages
             GrantID = grantId;
             DBClass.addGrantUser(GrantID, UserID);
 
-            return RedirectToPage("/UpdatePermission");
+            return RedirectToPage(new { grantId });//pass the grantId to the page so it can be used in the OnGet method
+            //this means page reloads without losing the grantId and grant previously selected after add user!
+
+
+
+
 
 
 
         }
 
-        
-         
+
+
     }
 }
