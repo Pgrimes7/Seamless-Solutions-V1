@@ -731,7 +731,9 @@ namespace Lab1484.Pages.DB
             {
                 Lab3DBConnection.Close();
             }
-            
+
+
+
             string userUpdatetQuery = @"
              UPDATE Users
              SET userType = @UserType, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @Phone
@@ -749,9 +751,11 @@ namespace Lab1484.Pages.DB
             cmdUserUpdate.Parameters.AddWithValue("@Phone", p.Phone);
 
             cmdUserUpdate.Connection.Open();
-
             cmdUserUpdate.ExecuteNonQuery();
             cmdUserUpdate.Connection.Close();
+
+            
+
 
             /*int userID = Convert.ToInt32(cmdUserUpdate.ExecuteScalar());*/
 
