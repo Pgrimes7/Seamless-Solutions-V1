@@ -23,20 +23,28 @@ namespace Lab1484.Pages
 
         public IActionResult OnGet()
         {
+            currentUser = HttpContext.Session.GetString("username");
 
-            //Check to see if the user is logged in
-            string currentUser = HttpContext.Session.GetString("username");
-            //Redirect them if they aren't
             if (string.IsNullOrEmpty(currentUser))
             {
                 return RedirectToPage("/Login");
             }
 
-            //Get and display unread messages
             UnreadMessagesCount = DBClass.GetUnreadMessagesCount(currentUser);
 
-            // Load messages for the user
-            Messages = DBClass.GetUserMessages(currentUser);
+            // ?? FIX THIS TO CALL GetReceivedMessages() not all messages
+            Messages = DBClass.GetReceivedMessages(currentUser);
+
+            return Page();
+        }
+        public IActionResult OnPostMarkAsRead(int messageId)
+        {
+            DBClass.MarkMessageAsRead(messageId);
+
+            // Refresh counts after marking as read
+            currentUser = HttpContext.Session.GetString("username");
+            UnreadMessagesCount = DBClass.GetUnreadMessagesCount(currentUser);
+            Messages = DBClass.GetReceivedMessages(currentUser);
 
             return Page();
         }

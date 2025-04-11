@@ -57,12 +57,20 @@
                 @foreach (var message in Model.Messages.Where(m => m.Receiver == Model.currentUser))
                 {
                     <tr>
-                        <td>@message.Sender</td>
+                        <td>
+                            <form method="post" asp-page-handler="MarkAsRead">
+                                <input type="hidden" name="messageId" value="@message.MessageId" />
+                                <button type="submit" style="background:none;border:none;padding:0;color:#450084;cursor:pointer;">
+                                    @message.Sender
+                                </button>
+                            </form>
+                        </td>
                         <td>@message.Content</td>
                         <td>@message.SentDate.ToString("g")</td>
                     </tr>
                 }
             </tbody>
+
         </table>
     </main>
 </body>
