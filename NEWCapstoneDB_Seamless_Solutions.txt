@@ -181,3 +181,34 @@ INSERT INTO Messages (Sender, Receiver, Content, IsRead) VALUES
 ('jordanbow', 'brantjo', 'I have a question I would like to talk with you about.', 1),
 ('brantjo', 'jordanbow', 'When would you be available to discuss?', 0),
 ('yangmag', 'gorbergr', 'Are we still able to meet about this tomorrow?', 0);
+
+--Grants Due Date Updates
+UPDATE Grants
+SET dueDate = '2025-07-30'
+WHERE GrantID = 1;
+
+UPDATE Grants
+SET dueDate = '2025-10-15'
+WHERE GrantID = 2;
+
+--Project Due Date Updates
+UPDATE Project
+SET dueDate = '2025-11-01'
+WHERE ProjectID = 1;
+
+UPDATE Project
+SET dueDate = '2025-04-24'
+WHERE ProjectID = 2;
+
+--Task Due Date Updates
+UPDATE Tasks
+SET dueDate = '2025-11-15'
+WHERE TaskID = 1;
+
+UPDATE Tasks
+SET dueDate = '2025-04-19'
+WHERE TaskID = 2;
+
+UPDATE Tasks
+SET dueDate = '2025-05-14'
+WHERE TaskID = 3;
