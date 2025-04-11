@@ -9,10 +9,20 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Lab1484.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom-styles.css" asp-append-version="true" /> <!-- Custom CSS file -->
+
     <style>
         body {
             background-color: #F8F9FA;
         }
+
+        .nav-item .nav-link.active {
+            background-color: #B599CE;
+            color: #B599CE;
+            border-radius: 100px;
+        }
+        
+        
     </style>
 
     <meta charset="utf-8">
@@ -40,7 +50,10 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
+
 <body>
+    <link href="style.css" rel="stylesheet">
+
     @*<header>*@
     @{
         string currentUser = Context.Session.GetString("username");
@@ -93,6 +106,10 @@
                     <div class="sidebar-col col-auto col-md-3 col-xl-2 inline-flex flex-column align-items-start px-sm-2 px-0 mt-2">
                         <div class="d-flex flex-column align-items-center vh-100 align-items-sm-start px-4 pt-3 border-end border-light-subtle">
                             <img class="logo align-self-stretch" src="~/lib/NewFolder/JMU Care-purple.png" alt="jmu care logo">
+                            <!--search bar-->
+                            <div class="input-group rounded mb-4">
+                                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                            </div>
 
                             <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                                 <li class="nav-item">
@@ -175,6 +192,10 @@
             <p class="text-center text-body-secondary">© 2025 JMU Care, Inc</p>
         </footer>
     </main>
+
+    <style>
+           
+    </style>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

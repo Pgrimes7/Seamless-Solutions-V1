@@ -9,6 +9,20 @@
     border-radius: 100px;
 }
 
+.nav-item .nav-link.active {
+    background-color: #B599CE;
+    color: #B599CE;
+    border-radius: 100px;
+}
+
+    .nav-item .nav-link.active:hover,
+    .nav-item .nav-link.active:focus {
+        background-color: #DACCE6;
+        color: #B599CE;
+        border-radius: 100px;
+    }
+
+
 .btn-primary {
     --bs-btn-font-weight: 600;
     --bs-btn-color: #333333;
