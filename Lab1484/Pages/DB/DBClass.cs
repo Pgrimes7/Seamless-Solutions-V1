@@ -502,6 +502,60 @@ namespace Lab1484.Pages.DB
         }
 
         //Messages methods:
+        public static List<MessagesModel> GetReceivedMessages(string receiver)
+        {
+            List<MessagesModel> messages = new List<MessagesModel>();
+
+            string query = @"
+        SELECT MessageId, Sender, Receiver, Content, Timestamp AS SentDate, IsRead
+        FROM Messages
+        WHERE Receiver = @Receiver
+        ORDER BY Timestamp DESC";
+
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Receiver", receiver);
+
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            MessagesModel message = new MessagesModel
+                            {
+                                MessageId = (int)reader["MessageId"],
+                                Sender = reader["Sender"].ToString(),
+                                Receiver = reader["Receiver"].ToString(),
+                                Content = reader["Content"].ToString(),
+                                SentDate = (DateTime)reader["SentDate"],
+                                //IsRead = (int)reader["IsRead"]
+                            };
+                            messages.Add(message);
+                        }
+                    }
+                }
+            }
+            return messages;
+        }
+
+        public static void MarkMessageAsRead(int messageId)
+        {
+            string query = "UPDATE Messages SET IsRead = 1 WHERE MessageId = @MessageId";
+
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MessageId", messageId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
         // Method to get the count of unread messages for the current user
         public static int GetUnreadMessagesCount(string receiver)
         {
@@ -553,7 +607,7 @@ namespace Lab1484.Pages.DB
                         Receiver = reader["Receiver"].ToString(),
                         Content = reader["Content"].ToString(),
                         SentDate = (DateTime)reader["Timestamp"],
-                        IsRead = (int)reader["IsRead"]
+                       // IsRead = (int)reader["IsRead"]
                     };
                     messages.Add(message); // Add the message instance to the list
                 }
