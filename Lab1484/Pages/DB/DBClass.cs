@@ -553,7 +553,7 @@ namespace Lab1484.Pages.DB
                         Receiver = reader["Receiver"].ToString(),
                         Content = reader["Content"].ToString(),
                         SentDate = (DateTime)reader["Timestamp"],
-                        IsRead = (int)reader["IsRead"]
+                        //IsRead = (int)reader["IsRead"]
                     };
                     messages.Add(message); // Add the message instance to the list
                 }
