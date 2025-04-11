@@ -3,100 +3,157 @@
 @{
     ViewData["Title"] = "Create Report";
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Report</title>
+    <link href="~/css/style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h2>Create Report</h2>
 
-<h2>Create Report</h2>
-
-<form method="post">
-    <div class="form-group">
-        <label for="reportName">Report Name</label>
-        <input type="text" class="form-control" id="reportName" name="ReportName" required />
-    </div>
-    <div class="form-group">
-        <label for="reportDate">Report Date</label>
-        <input type="date" class="form-control" id="reportDate" name="ReportDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
-    </div>
-    <div class="form-group">
-        <label for="grantIds">Grants</label>
-        <select class="form-control" id="grantIds" name="GrantIDs" multiple required>
-            @foreach (var grant in Model.GrantList)
-            {
-                <option value="@grant.GrantID">@grant.grantName</option>
-            }
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="projectIds">Projects</label>
-        <select class="form-control" id="projectIds" name="ProjectIDs" multiple required>
-            @foreach (var project in Model.ProjectList)
-            {
-                <option value="@project.ProjectID">@project.ProjectName</option>
-            }
-        </select>
-    </div>
-    <div id="subjectsContainer">
-        <!-- Subjects will be added here dynamically -->
-    </div>
-    <button type="button" class="btn btn-secondary" onclick="addSubject()">Add More</button>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-<!-- Modal Template -->
-<div class="modal fade" id="subjectModalTemplate" tabindex="-1" aria-labelledby="subjectModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="subjectModalLabel">Subject Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <form method="post">
+        <div class="form-group">
+            <label for="reportName">Report Name</label>
+            <input type="text" class="form-control" id="reportName" name="ReportName" required />
+        </div>
+        <div class="form-group">
+            <label for="reportDate">Report Date</label>
+            <input type="date" class="form-control" id="reportDate" name="ReportDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+        </div>
+        <div class="form-group">
+            <label for="grantIds">Grants</label>
+            <div id="grantCheckboxesContainer">
+                @foreach (var grant in Model.GrantList)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="GrantIDs" value="@grant.GrantID" id="grantCheckbox@grant.GrantID">
+                        <label class="form-check-label" for="grantCheckbox@grant.GrantID">
+                            @grant.grantName
+                        </label>
+                    </div>
+                }
             </div>
-            <div class="modal-body">
-                <label for="subjectTitle" class="form-label">Subject Title</label>
-                <input type="text" class="form-control" id="subjectTitle" name="SubjectTitle[]" required />
-                <label for="subjectText" class="form-label">Text</label>
-                <textarea class="form-control" id="subjectText" name="SubjectText[]" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="projectIds">Projects</label>
+            <div id="projectCheckboxesContainer">
+                @foreach (var project in Model.ProjectList)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="ProjectIDs" value="@project.ProjectID" id="projectCheckbox@project.ProjectID">
+                        <label class="form-check-label" for="projectCheckbox@project.ProjectID">
+                            @project.ProjectName
+                        </label>
+                    </div>
+                }
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        <div id="subjectsContainer">
+            <!-- Subjects will be added here dynamically -->
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="addSubject()">Add More</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-success" onclick="printToPDF()">Print to PDF</button>
+    </form>
+
+    <!-- Modal Template -->
+    <div class="modal fade" id="subjectModalTemplate" tabindex="-1" aria-labelledby="subjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="subjectModalLabel">Subject Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="subjectTitle" class="form-label">Subject Title</label>
+                    <input type="text" class="form-control" id="subjectTitle" name="SubjectTitle[]" required />
+                    <label for="subjectText" class="form-label">Text</label>
+                    <textarea class="form-control" id="subjectText" name="SubjectText[]" rows="3" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@section Scripts {
-    <script>
-        let subjectCount = 0;
+    @section Scripts {
+        <script>
+            let subjectCount = 0;
 
-        function addSubject() {
-            subjectCount++;
-            const container = document.getElementById('subjectsContainer');
-            const newSubject = `
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Subject ${subjectCount}</h5>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#subjectModal${subjectCount}">
-                            Edit Subject
-                        </button>
-                    </div>
-                </div>
-                <div class="modal fade" id="subjectModal${subjectCount}" tabindex="-1" aria-labelledby="subjectModalLabel${subjectCount}" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="subjectModalLabel${subjectCount}">Subject ${subjectCount} Details</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <label for="subjectTitle${subjectCount}" class="form-label">Subject Title</label>
-                                <input type="text" class="form-control" id="subjectTitle${subjectCount}" name="SubjectTitle[]" required />
-                                <label for="subjectText${subjectCount}" class="form-label">Text</label>
-                                <textarea class="form-control" id="subjectText${subjectCount}" name="SubjectText[]" rows="3" required></textarea>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
+            function addSubject() {
+                subjectCount++;
+                const container = document.getElementById('subjectsContainer');
+                const newSubject = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title" id="cardTitle${subjectCount}">Subject ${subjectCount}</h5>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#subjectModal${subjectCount}"> Edit Subject</button>
                         </div>
                     </div>
-                </div>`;
-            container.insertAdjacentHTML('beforeend', newSubject);
-        }
-    </script>
-}
+                    <div class="modal fade" id="subjectModal${subjectCount}" tabindex="-1" aria-labelledby="subjectModalLabel${subjectCount}" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="subjectModalLabel${subjectCount}">Subject ${subjectCount} Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label for="subjectTitle${subjectCount}" class="form-label">Subject Title</label>
+                                    <input type="text" class="form-control" id="subjectTitle${subjectCount}" name="SubjectTitle[]" required oninput="updateCardTitle(${subjectCount})" />
+                                    <label for="subjectText${subjectCount}" class="form-label">Text</label>
+                                    <textarea class="form-control" id="subjectText${subjectCount}" name="SubjectText[]" rows="3" required></textarea>
+                                                           <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', newSubject);
+            }
+
+            function updateCardTitle(subjectCount) {
+                const titleInput = document.getElementById(`subjectTitle${subjectCount}`);
+                const cardTitle = document.getElementById(`cardTitle${subjectCount}`);
+                cardTitle.textContent = titleInput.value || `Subject ${subjectCount}`;
+            }
+
+            function printToPDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.text("Report Name: " + document.getElementById('reportName').value, 10, 10);
+                doc.text("Report Date: " + document.getElementById('reportDate').value, 10, 20);
+
+                let yOffset = 30;
+                doc.text("Grants:", 10, yOffset);
+                document.querySelectorAll('#grantCheckboxesContainer .form-check-input:checked').forEach((checkbox, index) => {
+                    yOffset += 10;
+                    doc.text((index + 1) + ". " + checkbox.nextElementSibling.textContent, 10, yOffset);
+                });
+
+                yOffset += 10;
+                doc.text("Projects:", 10, yOffset);
+                document.querySelectorAll('#projectCheckboxesContainer .form-check-input:checked').forEach((checkbox, index) => {
+                    yOffset += 10;
+                    doc.text((index + 1) + ". " + checkbox.nextElementSibling.textContent, 10, yOffset);
+                });
+
+                yOffset += 10;
+                doc.text("Subjects:", 10, yOffset);
+                document.querySelectorAll('#subjectsContainer .card').forEach((card, index) => {
+                    yOffset += 10;
+                    const subjectTitle = card.querySelector('.card-title').textContent;
+                    doc.text((index + 1) + ". " + subjectTitle, 10, yOffset);
+                });
+
+                doc.save('report.pdf');
+            }
+        </script>
+    }
+</body>
+</html>
