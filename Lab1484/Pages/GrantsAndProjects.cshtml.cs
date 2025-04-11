@@ -313,7 +313,9 @@ namespace Lab1484.Pages
                 .ThenBy(g => g.businessName)
                 .ToList();
 
-            return RedirectToPage("/UpdatePermission");
+            TempData["grantId"] = newGrant.GrantID;
+
+            return RedirectToPage("/UpdatePermission", new { handler = "" });
         }
 
         public IActionResult OnPostInsertProject()
