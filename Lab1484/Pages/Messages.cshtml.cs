@@ -13,7 +13,7 @@ namespace Lab1484.Pages
         public string Receiver { get; set; }
         public string Content { get; set; }
         public DateTime SentDate { get; set; }
-        public bool IsRead { get; set; }
+        public int IsRead { get; set; }
         public int UnreadMessagesCount { get; set; }
         public List<MessagesModel> Messages { get; set; } = new List<MessagesModel>();
 
