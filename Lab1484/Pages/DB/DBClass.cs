@@ -76,7 +76,7 @@ namespace Lab1484.Pages.DB
             cmdSingleProjectRead.Connection.Close();
         }
 
-        
+
 
         //Update Project
         public static void UpdateProject(Project p)
@@ -162,7 +162,7 @@ namespace Lab1484.Pages.DB
                     "from Grants " +
                     "join Users ON Users.UserID = Grants.FacultyLeadID " +
                     "where grantName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR amount LIKE @SearchQuery OR dueDate LIKE @SearchQuery OR grantStatus LIKE @SearchQuery OR businessName LIKE @SearchQuery OR category LIKE @SearchQuery; ";
-                
+
                 cmdGrantRead.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
 
             }
@@ -180,7 +180,7 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
 
-      
+
 
 
         public static SqlDataReader AdminReader()//reads admin table
@@ -731,7 +731,7 @@ namespace Lab1484.Pages.DB
             {
                 Lab3DBConnection.Close();
             }
-            
+
             string userUpdatetQuery = @"
              UPDATE Users
              SET userType = @UserType, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @Phone
@@ -943,7 +943,7 @@ namespace Lab1484.Pages.DB
 
         public static SqlDataReader Grant_UserReader(int GrantID)//reads grant user table in sql that is associated with grant value passed
         {
-            
+
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
@@ -1002,7 +1002,7 @@ namespace Lab1484.Pages.DB
                 "LEFT JOIN Grant_User ON Users.UserID = Grant_User.UserID" +
                 " AND Grant_User.GrantID = @GrantID " +
                 "WHERE Grant_User.UserID IS NULL;";
-         
+
 
 
             cmdDisplayUsers.Connection.Open(); // Open connection here, close in Model!
@@ -1060,7 +1060,74 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
 
+        public static void InsertReport(Report report, List<int> grantIDs, List<int> projectIDs, List<ReportSubject> subjects)
+        {
+            
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            //unsure if work will come back to this
+            using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Insert Report
+                        string insertReportQuery = "INSERT INTO Reports (ReportDate, ReportName) OUTPUT INSERTED.ReportID VALUES (@ReportDate, @ReportName);";
+                        SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
+                        cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.ReportDate);
+                        cmdInsertReport.Parameters.AddWithValue("@ReportName", report.ReportName);
+                        int reportID = (int)cmdInsertReport.ExecuteScalar();
+
+                        // Insert ReportGrants
+                        string insertReportGrantQuery = "INSERT INTO ReportGrants (ReportID, GrantID) VALUES (@ReportID, @GrantID);";
+                        foreach (int grantID in grantIDs)
+                        {
+                            SqlCommand cmdInsertReportGrant = new SqlCommand(insertReportGrantQuery, connection, transaction);
+                            cmdInsertReportGrant.Parameters.AddWithValue("@ReportID", reportID);
+                            cmdInsertReportGrant.Parameters.AddWithValue("@GrantID", grantID);
+                            cmdInsertReportGrant.ExecuteNonQuery();
+                        }
+
+                        // Insert ReportProjects
+                        string insertReportProjectQuery = "INSERT INTO ReportProjects (ReportID, ProjectID) VALUES (@ReportID, @ProjectID);";
+                        foreach (int projectID in projectIDs)
+                        {
+                            SqlCommand cmdInsertReportProject = new SqlCommand(insertReportProjectQuery, connection, transaction);
+                            cmdInsertReportProject.Parameters.AddWithValue("@ReportID", reportID);
+                            cmdInsertReportProject.Parameters.AddWithValue("@ProjectID", projectID);
+                            cmdInsertReportProject.ExecuteNonQuery();
+                        }
+
+                        // Insert ReportSubjects
+                        string insertReportSubjectQuery = "INSERT INTO ReportSubjects (ReportID, SubjectTitle, SubjectText) VALUES (@ReportID, @SubjectTitle, @SubjectText);";
+                        foreach (var subject in subjects)
+                        {
+                            SqlCommand cmdInsertReportSubject = new SqlCommand(insertReportSubjectQuery, connection, transaction);
+                            cmdInsertReportSubject.Parameters.AddWithValue("@ReportID", reportID);
+                            cmdInsertReportSubject.Parameters.AddWithValue("@SubjectTitle", subject.SubjectTitle);
+                            cmdInsertReportSubject.Parameters.AddWithValue("@SubjectText", subject.SubjectText);
+                            cmdInsertReportSubject.ExecuteNonQuery();
+                        }
+
+                        // Commit transaction
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Rollback transaction if any error occurs
+                        transaction.Rollback();
+                        throw new Exception("Error inserting report information: " + ex.Message);
+                    }
+                }
+            }
+        }
 
 
     }
 }
+
