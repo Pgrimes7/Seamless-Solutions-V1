@@ -1078,11 +1078,13 @@ namespace Lab1484.Pages.DB
                     try
                     {
                         // Insert Report
+
                         string insertReportQuery = "INSERT INTO Reports (ReportDate, ReportName) OUTPUT INSERTED.ReportID VALUES (@ReportDate, @ReportName);";
                         SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
                         cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.ReportDate);
                         cmdInsertReport.Parameters.AddWithValue("@ReportName", report.ReportName);
                         int reportID = (int)cmdInsertReport.ExecuteScalar();
+
 
                         // Insert ReportGrants
                         string insertReportGrantQuery = "INSERT INTO ReportGrants (ReportID, GrantID) VALUES (@ReportID, @GrantID);";
