@@ -34,7 +34,8 @@ namespace Lab1484.Pages
                     TaskID = Int32.Parse(taskReader["TaskID"].ToString()),
                     ProjectID = Int32.Parse(taskReader["ProjectID"].ToString()),
                     taskDescription = taskReader["taskDescription"].ToString(),
-                    ProjectName = taskReader["ProjectName"].ToString()
+                    ProjectName = taskReader["ProjectName"].ToString(),
+                    dueDate = taskReader.GetDateTime(taskReader.GetOrdinal("dueDate"))
                 });
             }
 
