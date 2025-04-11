@@ -130,7 +130,7 @@ namespace Lab1484.Pages.DB
                     Lab3DBConnection.Close();
                 }
 
-                string sqlQuery = "INSERT INTO Tasks (ProjectID, taskDescription) VALUES (@ProjectID, @taskDescription);";
+                string sqlQuery = "INSERT INTO Tasks (ProjectID, taskDescription, dueDate) VALUES (@ProjectID, @taskDescription, @dueDate);";
 
                 SqlCommand cmdTaskInsert = new SqlCommand();
                 cmdTaskInsert.Connection = Lab3DBConnection;
@@ -138,6 +138,7 @@ namespace Lab1484.Pages.DB
                 cmdTaskInsert.CommandText = sqlQuery;
                 cmdTaskInsert.Parameters.AddWithValue("@ProjectID", t.ProjectID);
                 cmdTaskInsert.Parameters.AddWithValue("@taskDescription", t.taskDescription);
+                cmdTaskInsert.Parameters.AddWithValue("@dueDate", t.dueDate);
                 cmdTaskInsert.Connection.Open();
                 cmdTaskInsert.ExecuteNonQuery();
             }
@@ -1059,6 +1060,7 @@ namespace Lab1484.Pages.DB
 
             return tempReader;
         }
+
 
 
     }

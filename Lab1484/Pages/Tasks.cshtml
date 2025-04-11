@@ -64,13 +64,21 @@
                             <form method="post">
                                 <div class="modal-body">
                                         <div class="row mb-4">
-                                            <div class="col">
-                                            <label asp-for="NewTask.ProjectID" class="form-label">Associated Project</label>
-                                                <select asp-for="NewTask.ProjectID" class="form-select" aria-label="Default select example">
-                                                    @foreach (var proj in Model.projects) {
-                                                        <option value="@proj.ProjectID">@proj.ProjectName</option>
-                                                    }
-                                                </select>
+                                            <div class="col-sm-6">
+                                                <div class="form-floating">
+                                                    <select asp-for="NewTask.ProjectID" id="floatingProj" class="form-select" aria-label="Default select example">
+                                                        @foreach (var proj in Model.projects) {
+                                                            <option value="@proj.ProjectID">@proj.ProjectName</option>
+                                                        }
+                                                    </select>
+                                                    <label for="floatingProj" class="form-label">Associated Project</label>
+                                                </div>
+                                            </div>
+										    <div class="col-sm-6">
+                                                <div class="form-floating">
+                                                    <input asp-for="NewTask.dueDate" type="date" class="form-control" id="floatingDate" placeholder="Due Date">
+                                                    <label for="floatingDate">Due Date</label>
+                                                </div>
                                             </div>
                                         </div>
                                         <hr>
@@ -100,6 +108,7 @@
                         <thead class="bg-light">
 							<tr>
 								<th scope="col">Related Project</th>
+                                <th scope="col">Due Date</th>
 								<th scope="col">Description</th>
 							</tr>
 						</thead>
@@ -108,6 +117,7 @@
 							{
 								<tr>
 									<td>@task.ProjectName</td>
+                                    <td>@(task.dueDate.HasValue ? task.dueDate.Value.ToShortDateString() : "N/A")</td>
 									<td>@task.taskDescription</td>
 								</tr>
 							}
