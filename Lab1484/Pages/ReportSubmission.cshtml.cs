@@ -97,7 +97,7 @@ namespace Lab1484.Pages
 
             DBClass.InsertReport(report, GrantIDs, ProjectIDs, subjects);
 
-            return RedirectToPage("Success");
+            return RedirectToPage("/ReportSubmission");
         }
 
     }
