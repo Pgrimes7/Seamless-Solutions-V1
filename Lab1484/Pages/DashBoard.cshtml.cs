@@ -18,6 +18,13 @@ namespace Lab1484.Pages
         public List<Grant> GrantList { get; set; }
         public List<ProjTask> TaskList { get; set; } = new List<ProjTask>();
 
+        [BindProperty]
+        public Grant newGrant { get; set; } = new Grant();
+
+        public List<User> AdminList { get; set; } = new List<User>();
+
+        public List<User> PartnerList { get; set; } = new List<User>();
+
 
         public DashBoardModel()
         {
@@ -51,6 +58,27 @@ namespace Lab1484.Pages
                 });
             }
 
+            SqlDataReader adminReader = DBClass.AdminReader();
+            while (adminReader.Read())
+            {
+                AdminList.Add(new User
+                {
+                    userID = Int32.Parse(adminReader["UserID"].ToString()),
+                    firstName = adminReader["firstName"].ToString(),
+                    lastName = adminReader["lastName"].ToString()
+                });
+            }
+
+            SqlDataReader partnerReader = DBClass.BusinessPartnerReader();
+            while (partnerReader.Read())
+            {
+                PartnerList.Add(new User
+                {
+                    userID = Int32.Parse(partnerReader["BusinessPartnerID"].ToString()),
+                    firstName = partnerReader["firstName"].ToString(),
+                    lastName = partnerReader["lastName"].ToString()
+                });
+            }
 
             SqlDataReader projectReader = DBClass.ProjectReader();
             while (projectReader.Read())
@@ -84,6 +112,68 @@ namespace Lab1484.Pages
                 });
             }
             
+            DBClass.Lab3DBConnection.Close();
+
+            var statusOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "In Progress", 1 },
+                { "Opportunity", 2 },
+                { "Pending", 3 },
+                { "Approved", 4 },
+                { "Rejected", 5 }
+            };
+
+            GrantList = GrantList
+                .OrderBy(g => statusOrder.ContainsKey(g.grantStatus) ? statusOrder[g.grantStatus] : int.MaxValue)
+                .ThenBy(g => g.businessName)
+                .ToList();
+
+            return Page();
+        }
+
+        public IActionResult OnPostInsertGrant()
+        {
+            DBClass.InsertGrant(newGrant);
+
+            SqlDataReader adminReader = DBClass.AdminReader();
+            while (adminReader.Read())
+            {
+                AdminList.Add(new User
+                {
+                    userID = Int32.Parse(adminReader["UserID"].ToString()),
+                    firstName = adminReader["firstName"].ToString(),
+                    lastName = adminReader["lastName"].ToString()
+                });
+            }
+
+            SqlDataReader partnerReader = DBClass.BusinessPartnerReader();
+            while (partnerReader.Read())
+            {
+                PartnerList.Add(new User
+                {
+                    userID = Int32.Parse(partnerReader["BusinessPartnerID"].ToString()),
+                    firstName = partnerReader["firstName"].ToString(),
+                    lastName = partnerReader["lastName"].ToString()
+                });
+            }
+
+            SqlDataReader grantReader = DBClass.GrantReader(null);
+            while (grantReader.Read())
+            {
+                GrantList.Add(new Grant
+                {
+                    GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
+                    businessName = grantReader["businessName"].ToString(),
+                    amount = Double.Parse(grantReader["amount"].ToString()),
+                    category = grantReader["category"].ToString(),
+                    dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                    facultyName = grantReader["FacultyLead"].ToString(),
+                    facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
+                    grantStatus = grantReader["grantStatus"].ToString(),
+                    grantName = grantReader["grantName"].ToString()
+                });
+            }
+
             DBClass.Lab3DBConnection.Close();
 
             var statusOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
