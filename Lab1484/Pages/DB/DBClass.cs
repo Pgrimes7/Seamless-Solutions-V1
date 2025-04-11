@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Runtime.InteropServices;
 using Lab1484.Pages.DataClasses;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration.UserSecrets;
@@ -22,13 +23,27 @@ namespace Lab1484.Pages.DB
         public static SqlConnection AUTHDBConnection = new SqlConnection();
 
 
-        // Connection String - How to find and connect to DB
+        // Connection String - How to find and connect to DB - Uncomment when making local changes
         private static readonly String? Lab3DBConnString =
             "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-        // A second connection String
+        //private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        //    "Database=Lab3;" +
+        //    "User Id=capstoneadmin;" +
+        //    "Password=Seamless123!@#;" +
+        //    "Encrypt=True;" +
+        //    "TrustServerCertificate=True;";
+
+
+        // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
         private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+        //private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        //    "Database=AUTH;" +
+        //    "User Id=capstoneadmin;" +
+        //    "Password=Seamless123!@#;" +
+        //    "Encrypt=True;" +
+        //    "TrustServerCertificate=True;";
 
         //Connection Methods:
 
