@@ -113,10 +113,11 @@
                             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 ">
                                 <h2>All Grants</h2>
                                 <div class="btn-toolbar mb-2 mb-md-0">
-                                    <form class="d-flex" role="search">
-                                        <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search">
+                                    <form class="d-flex" method="get" asp-page="/Dashboard" role="search">
+                                        <input class="form-control me-2 rounded-pill" type="search" name="SearchQuery" placeholder="Search" aria-label="Search">
                                         <button class="btn btn-secondary me-2 rounded-pill" type="submit">Search</button>
                                     </form>
+                                    <button class="btn btn-secondary me-2 rounded-pill" type="submit" name="SearchQuery" value="">Clear</button>
                                     <button type="button" class="btn btn-secondary me-2 rounded-pill">
                                         <i class="fa-solid fa-filter"></i>
                                     </button>
@@ -290,57 +291,138 @@
     <!-- FullCalendar initialization script -->
     <
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                height: 500,
-                eventDisplay: 'block', 
-                eventDidMount: function (info) {
-                    info.el.setAttribute('title', info.event.title);
-                    info.el.style.whiteSpace = "normal";
-                    info.el.style.overflow = "visible";
-                },
-                events: [
-        @foreach (var grant in Model.GrantList)
-        {
-            <text>{
-                            title: "@grant.grantName (Grant)",
-                            start: "@grant.dueDate.ToString("yyyy-MM-dd")",
-                            color: "#4B0082"
-                                    }, </text>
-        }
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 500,
+            eventDisplay: 'block', 
+            eventDidMount: function (info) {
+                info.el.setAttribute('title', info.event.title);
+                info.el.style.whiteSpace = "normal";
+                info.el.style.overflow = "visible";
+            },
+            events: [
+                @foreach (var grant in Model.GrantList)
+                {
+                    <text>{
+                        title: "@grant.grantName ",
+                        start: "@grant.dueDate.ToString("yyyy-MM-dd")",
+                        extendedProps: {
+                            type: "Grant",
+                            amount: "@grant.amount.ToString("C")",
+                            dueDate: "@grant.dueDate.ToShortDateString()",
+                            category: "@grant.category",
+                            status: "@grant.grantStatus"
+                        },
+                        color: "#4B0082"
+                    },</text>
+                }
 
-        @foreach (var project in Model.ProjectList)
-        {
-            if (project.DateDue != DateTime.MinValue)
-            {
-                <text>{
-                                title: "@project.ProjectName (Project)",
-                                start: "@project.DateDue.ToString("yyyy-MM-dd")",
-                                color: "#800080"
-                                            }, </text>
+                @foreach (var project in Model.ProjectList)
+                {
+                    if (project.DateDue != DateTime.MinValue)
+                    {
+                        <text>{
+                            title: "@project.ProjectName ",
+                            start: "@project.DateDue.ToString("yyyy-MM-dd")",
+                            extendedProps: {
+                                type: "Project",
+                                dueDate: "@project.DateDue.ToShortDateString()",
+                                status: "@project.ProjectStatus",
+                            },
+                            color: "#800080"
+                        },</text>
+                    }
+                }
+
+                @foreach (var task in Model.TaskList)
+                {
+                    if (task.dueDate.HasValue)
+                    {
+                        <text>{
+                            title: "@task.taskDescription ",
+                            start: "@task.dueDate.Value.ToString("yyyy-MM-dd")",
+                            extendedProps: {
+                                type: "Task",
+                                dueDate: "@task.dueDate.Value.ToShortDateString()",
+                                description: "@task.taskDescription",
+                                relatedProject: "@task.ProjectName",
+                                relatedProjectID: "@task.ProjectID" 
+                            },
+                            color: "#BA55D3"
+                        },</text>
+                    }
+                }
+            ],
+            eventClick: function (info) {
+                var event = info.event;
+                var details = '';
+
+                if (event.extendedProps.type === "Grant" || event.extendedProps.type === "Project") {
+                    details = `
+                        <b>Type:</b> ${event.extendedProps.type}<br/>
+                        <b>Title:</b> ${event.title}<br/>
+                        <b>Status:</b> ${event.extendedProps.status}<br/>
+                        <b>Due Date:</b> ${event.extendedProps.dueDate}<br/>
+                        ${event.extendedProps.amount ? `<b>Amount:</b> ${event.extendedProps.amount}<br/>` : ''}
+                        ${event.extendedProps.category ? `<b>Category:</b> ${event.extendedProps.category}<br/>` : ''}
+                    `;
+                }
+                else if (event.extendedProps.type === "Task") {
+                    var relatedProjectLink = '';
+                    if (event.extendedProps.relatedProject && event.extendedProps.relatedProjectID) {
+                        relatedProjectLink = `<b>Related Project:</b> <a href="/UpdateProject?id=${event.extendedProps.relatedProjectID}" class="link-primary">${event.extendedProps.relatedProject}</a><br/>`;
+                    }
+
+                    details = `
+                        <b>Type:</b> Task<br/>
+                        <b>Description:</b> ${event.extendedProps.description}<br/>
+                        <b>Due Date:</b> ${event.extendedProps.dueDate}<br/>
+                        ${relatedProjectLink}
+                    `;
+                }
+
+                showCalendarModal(details);
+                info.jsEvent.preventDefault(); // prevent browser from following links
             }
-        }
-
-        @foreach (var task in Model.TaskList)
-        {
-            if (task.dueDate.HasValue)
-            {
-                <text>{
-                                title: "@task.taskDescription (Task)",
-                                start: "@task.dueDate.Value.ToString("yyyy-MM-dd")",
-                                color: "#BA55D3"
-                                            }, </text>
-            }
-        }
-                            ]
-            });
-
-            calendar.render();
         });
-    </script>
+
+        calendar.render();
+    });
+
+    function showCalendarModal(content) {
+        var modalHtml = `
+            <div class="modal fade" id="calendarEventModal" tabindex="-1" aria-labelledby="calendarEventModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="calendarEventModalLabel">Event Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ${content}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.querySelectorAll('#calendarEventModal').forEach(el => el.remove());
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        var modal = new bootstrap.Modal(document.getElementById('calendarEventModal'));
+        modal.show();
+    }
+</script>
+
+
+
 
 
 </body>
