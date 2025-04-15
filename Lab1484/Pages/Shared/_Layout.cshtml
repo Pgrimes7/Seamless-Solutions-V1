@@ -192,6 +192,20 @@
                             </ul>
                             <div class="dropup pb-4">
                                 <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+
+                                @{
+                                    if (retrievedUserID != 11)
+                                    {
+                                        <img src="https://github.com/mdo.png" alt="username" width="30" height="30" class="rounded-circle">
+                                        <span class="d-none d-sm-inline mx-2">@currentUser</span>
+                                    }
+                                    else{
+                                            <img src="https://raw.githubusercontent.com/Pgrimes7/Seamless-Solutions-V1/refs/heads/master/emilypicture.png?token=GHSAT0AAAAAAC7GFWEC7X76EGRAQPKSBXYSZ76YQNA" alt="username" width="30" height="30" class="rounded-circle">
+                                        <span class="d-none d-sm-inline mx-2">@currentUser</span>
+
+                                    }
+                                  }
+=======
                                     <img src="https://jmuedu.sharepoint.com/sites/484CapstoneTeam/Shared%20Documents/General/emily%20picture.png?csf=1&web=1&e=fig8vo&CID=bf79a580-6dc5-41d6-a577-8343e6304d35" alt="username" width="30" height="30" class="rounded-circle">
                                     <span class="d-none d-sm-inline mx-2">@currentUser</span>
 >>>>>>> fb43d2ce56bf2ef3f19156bffbcec16ca7728d6f
