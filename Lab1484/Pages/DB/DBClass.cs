@@ -24,8 +24,8 @@ namespace Lab1484.Pages.DB
 
 
         // Connection String - How to find and connect to DB - Uncomment when making local changes
-        //private static readonly String? Lab3DBConnString =
-        //    "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+        /* private static readonly String? Lab3DBConnString =
+            "Server=LocalHost;Database=Lab3;Trusted_Connection=True"; */
 
         private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=Lab3;" +
