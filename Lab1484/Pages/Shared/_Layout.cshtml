@@ -1,5 +1,5 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-
+@using Lab1484.Pages.DB
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,16 +13,16 @@
 
     <style>
         body {
-            background-color: #F8F9FA;
+        background-color: #F8F9FA;
         }
 
         .nav-item .nav-link.active {
-            background-color: #333333;
-            color: #B599CE;
-            border-radius: 100px;
+        background-color: #333333;
+        color: #B599CE;
+        border-radius: 100px;
         }
-        
-        
+
+
     </style>
 
     <meta charset="utf-8">
@@ -58,6 +58,17 @@
     @{
         string currentUser = Context.Session.GetString("username");
         string currentPath = HttpContextAccessor.HttpContext.Request.Path;
+        string currentUserID = Context.Session.GetString("userID");
+		int retrievedUserID = 0;
+        if (string.IsNullOrEmpty(currentUserID))
+		{
+			retrievedUserID = 0;
+		}
+		else
+		{
+            retrievedUserID = Int32.Parse(currentUserID);
+
+		}
     }
     @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
              <div class="container-fluid">
@@ -169,8 +180,19 @@
                             </ul>
                             <div class="dropup pb-4">
                                 <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="https://github.com/mdo.png" alt="username" width="30" height="30" class="rounded-circle">
-                                    <span class="d-none d-sm-inline mx-2">@currentUser</span>
+
+                                @{
+                                    if (retrievedUserID != 1)
+                                    {
+                                        <img src="https://github.com/mdo.png" alt="username" width="30" height="30" class="rounded-circle">
+                                        <span class="d-none d-sm-inline mx-2">@currentUser</span>
+                                    }
+                                    else{
+                                            <img src="https://raw.githubusercontent.com/Pgrimes7/Seamless-Solutions-V1/refs/heads/master/emilypicture.png?token=GHSAT0AAAAAAC7GFWEC7X76EGRAQPKSBXYSZ76YQNA" alt="username" width="30" height="30" class="rounded-circle">
+                                        <span class="d-none d-sm-inline mx-2">@currentUser</span>
+
+                                    }
+                                  }
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                                     <li><a class="dropdown-item" asp-page="/Logout">Sign out</a></li>

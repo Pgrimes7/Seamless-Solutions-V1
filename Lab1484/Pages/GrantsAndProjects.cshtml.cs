@@ -51,6 +51,7 @@ namespace Lab1484.Pages
 
             int currentUserID = int.Parse(currentUserIDString);
 
+
             if (string.IsNullOrEmpty(currentUser))
             {
                 return RedirectToPage("/Login");

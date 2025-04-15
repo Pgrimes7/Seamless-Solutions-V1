@@ -4,6 +4,8 @@ using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http.Extensions;
+using System.Diagnostics.Eventing.Reader;
+using Microsoft.AspNetCore.Http;
 
 namespace Lab1484.Pages
 {
@@ -40,6 +42,10 @@ namespace Lab1484.Pages
         public IActionResult OnGet()
         {
             string currentUser = HttpContext.Session.GetString("username");
+            string currentUserIDString = HttpContext.Session.GetString("userID");
+
+
+            int currentUserID = int.Parse(currentUserIDString);
             if (string.IsNullOrEmpty(currentUser))
             {
                 return RedirectToPage("/Login");
@@ -94,23 +100,46 @@ namespace Lab1484.Pages
                     ProjectStatus = projectReader["ProjectStatus"].ToString()
                 });
             }
-
-            SqlDataReader grantReader = DBClass.GrantReader(SearchQuery);
-            while (grantReader.Read())
+            if (DBClass.checkUserType(HttpContext) != 0)
             {
-                GrantList.Add(new Grant
+                SqlDataReader grantReader = DBClass.User_GrantReader(currentUserID);
+                while (grantReader.Read())
                 {
-                    GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
-                    grantName = grantReader["grantName"].ToString(),
-                    businessName = grantReader["businessName"].ToString(),
-                    amount = Double.Parse(grantReader["amount"].ToString()),
-                    category = grantReader["category"].ToString(),
-                    dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
-                    facultyName = grantReader["FacultyLead"].ToString(),
-                    facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
-                    grantStatus = grantReader["grantStatus"].ToString()
-                });
+                    GrantList.Add(new Grant
+                    {
+                        GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
+                        grantName = grantReader["grantName"].ToString(),
+                        businessName = grantReader["businessName"].ToString(),
+                        amount = Double.Parse(grantReader["amount"].ToString()),
+                        category = grantReader["category"].ToString(),
+                        dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                        facultyName = grantReader["FacultyLead"].ToString(),
+                        facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
+                        grantStatus = grantReader["grantStatus"].ToString()
+                    });
+                }
+
             }
+            else
+            {
+                SqlDataReader grantReader = DBClass.GrantReader(null);
+                while (grantReader.Read())
+                {
+                    GrantList.Add(new Grant
+                    {
+                        GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
+                        businessName = grantReader["businessName"].ToString(),
+                        amount = Double.Parse(grantReader["amount"].ToString()),
+                        category = grantReader["category"].ToString(),
+                        dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                        facultyName = grantReader["FacultyLead"].ToString(),
+                        facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
+                        grantStatus = grantReader["grantStatus"].ToString(),
+                        grantName = grantReader["grantName"].ToString()
+                    });
+                }
+            }
+
             
             DBClass.Lab3DBConnection.Close();
 
