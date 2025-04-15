@@ -162,24 +162,24 @@
                                                         <div class="row mb-4">
                                                             <div class="col-sm-6">
                                                                 <div class="form-floating">
-                                                                    <select asp-for="newGrant.FacultyLeadID" class="form-select" id="floatingAdmin" aria-label="Project Admin">
+                                                                    <select asp-for="newGrant.FacultyLeadID" class="form-select" id="floatingAdmin" aria-label="Principal Investigator">
                                                                         @foreach (var admin in Model.AdminList)
                                                                         {
                                                                             <option value="@admin.userID"> @admin.firstName @admin.lastName </option>
                                                                         });
                                                                     </select>
-                                                                    <label for="floatingAdmin">Project Admin</label>
+                                                                    <label for="floatingAdmin">Principal Investigator</label>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-floating">
-                                                                    <select asp-for="newGrant.BusinessPartnerID" class="form-select" id="floatingPartner" aria-label="Business Partner">
+                                                                    <select asp-for="newGrant.BusinessPartnerID" class="form-select" id="floatingPartner" aria-label="External Partner">
                                                                         @foreach (var partner in Model.PartnerList)
                                                                         {
                                                                             <option value="@partner.userID"> @partner.firstName @partner.lastName </option>
                                                                         });
                                                                     </select>
-                                                                    <label for="floatingPartner">Business Partner</label>
+                                                                    <label for="floatingPartner">External Partner</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -232,7 +232,7 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th>Grant Name</th>
-                                       <th>Primary Investigator</th>
+                                       <th>Principal Investigator</th>
                                         <th>Amount</th>
                                         <th>Due date</th>
                                         <th>Status</th>
