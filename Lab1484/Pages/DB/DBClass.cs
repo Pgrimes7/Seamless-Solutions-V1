@@ -855,35 +855,15 @@ namespace Lab1484.Pages.DB
 
             cmdUserUpdate.Parameters.AddWithValue("@UserID", p.UserID);
             cmdUserUpdate.Parameters.AddWithValue("@UserType", p.UserType);
-            cmdUserUpdate.Parameters.AddWithValue("@firstName", p.FirstName);
-            cmdUserUpdate.Parameters.AddWithValue("@lastName", p.LastName);
-            cmdUserUpdate.Parameters.AddWithValue("@email", p.Email);
-            cmdUserUpdate.Parameters.AddWithValue("@phoneNumber", p.Phone);
+            cmdUserUpdate.Parameters.AddWithValue("@FirstName", p.FirstName);
+            cmdUserUpdate.Parameters.AddWithValue("@LastName", p.LastName);
+            cmdUserUpdate.Parameters.AddWithValue("@Email", p.Email);
+            cmdUserUpdate.Parameters.AddWithValue("@Phone", p.Phone);
 
             cmdUserUpdate.Connection.Open();
 
             cmdUserUpdate.ExecuteNonQuery();
             cmdUserUpdate.Connection.Close();
-
-            /*int userID = Convert.ToInt32(cmdUserUpdate.ExecuteScalar());*/
-
-            /**string updatedHashedCredsQuery = @"
-            UPDATE HashedCredentials
-            Set Username = @Username, Password = @Password
-            WHERE UserID = @UserID;";
-
-            SqlCommand cmdUpdatedHashed = new SqlCommand();
-            cmdUpdatedHashed.Connection = new SqlConnection(AuthConnString);
-            cmdUpdatedHashed.CommandText = updatedHashedCredsQuery;
-            cmdUpdatedHashed.Parameters.AddWithValue("@Username", p.Username);
-            cmdUpdatedHashed.Parameters.AddWithValue("@UserID", p.UserID);
-            cmdUpdatedHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.Password));
-            cmdUpdatedHashed.Connection.Open();**/
-
-            /*cmdUpdatedHashed.ExecuteNonQuery();*/
-            /**cmdUpdatedHashed.Connection.Open();
-            cmdUpdatedHashed.ExecuteNonQuery();
-            cmdUpdatedHashed.Connection.Close();**/
 
         }
 
