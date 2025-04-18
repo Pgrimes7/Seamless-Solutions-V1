@@ -939,6 +939,7 @@ namespace Lab1484.Pages.DB
             }
             string findUserType = "getUserType"; // Stored procedure to find userType given userID from login method
 
+            using (SqlConnection Lab3DBConnection = new SqlConnection(Lab3DBConnString))
             using (SqlCommand cmdCheckUser = new SqlCommand())
             {
                 cmdCheckUser.Connection = Lab3DBConnection;

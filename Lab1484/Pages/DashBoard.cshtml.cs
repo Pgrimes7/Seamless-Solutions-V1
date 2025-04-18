@@ -122,7 +122,7 @@ namespace Lab1484.Pages
             }
             else
             {
-                SqlDataReader grantReader = DBClass.GrantReader(null);
+                SqlDataReader grantReader = DBClass.GrantReader(SearchQuery);
                 while (grantReader.Read())
                 {
                     GrantList.Add(new Grant
@@ -138,6 +138,7 @@ namespace Lab1484.Pages
                         grantName = grantReader["grantName"].ToString()
                     });
                 }
+                grantReader.Close();
             }
 
             
