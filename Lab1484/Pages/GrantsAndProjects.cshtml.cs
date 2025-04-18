@@ -10,7 +10,10 @@ namespace Lab1484.Pages
     {
         [BindProperty(SupportsGet = true)]
         public string? SearchQuery { get; set; }
-     
+
+        [BindProperty(SupportsGet = true)]
+        public string? ProjectSearchQuery { get; set; }
+
         [BindProperty] public int SelectedProject { get; set; }
         public string SelectMessage { get; set; }
 
@@ -63,21 +66,21 @@ namespace Lab1484.Pages
             if (DBClass.checkUserType(HttpContext) != 0)
             {
 
-                SqlDataReader projectReader = DBClass.ProjectReader();
-                while (projectReader.Read())
-                {
-                    ProjectList.Add(new Project
+                    SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);
+                    while (projectReader.Read())
                     {
-                        ProjectID = Int32.Parse(projectReader["ProjectID"].ToString()),
-                        ProjectName = projectReader["ProjectName"].ToString(),
-                        DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")),
-                        DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
-                        DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
-                        AdminName = projectReader["AdminName"].ToString(),
-                        AdminEmail = projectReader["AdminEmail"].ToString(),
-                        ProjectStatus = projectReader["ProjectStatus"].ToString()
-                    });
-                }
+                        ProjectList.Add(new Project
+                        {
+                            ProjectID = Int32.Parse(projectReader["ProjectID"].ToString()),
+                            ProjectName = projectReader["ProjectName"].ToString(),
+                            DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")),
+                            DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
+                            DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
+                            AdminName = projectReader["AdminName"].ToString(),
+                            AdminEmail = projectReader["AdminEmail"].ToString(),
+                            ProjectStatus = projectReader["ProjectStatus"].ToString()
+                        });
+                    }
 
                 SqlDataReader adminReader = DBClass.AdminReader();
                 while (adminReader.Read())
@@ -148,21 +151,21 @@ namespace Lab1484.Pages
 
             else
             {
-                SqlDataReader projectReader = DBClass.ProjectReader();
-                while (projectReader.Read())
-                {
-                    ProjectList.Add(new Project
+                    SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);
+                    while (projectReader.Read())
                     {
-                        ProjectID = Int32.Parse(projectReader["ProjectID"].ToString()),
-                        ProjectName = projectReader["ProjectName"].ToString(),
-                        DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")),
-                        DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
-                        DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
-                        AdminName = projectReader["AdminName"].ToString(),
-                        AdminEmail = projectReader["AdminEmail"].ToString(),
-                        ProjectStatus = projectReader["ProjectStatus"].ToString()
-                    });
-                }
+                        ProjectList.Add(new Project
+                        {
+                            ProjectID = Int32.Parse(projectReader["ProjectID"].ToString()),
+                            ProjectName = projectReader["ProjectName"].ToString(),
+                            DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")),
+                            DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
+                            DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
+                            AdminName = projectReader["AdminName"].ToString(),
+                            AdminEmail = projectReader["AdminEmail"].ToString(),
+                            ProjectStatus = projectReader["ProjectStatus"].ToString()
+                        });
+                    }
 
                 SqlDataReader adminReader = DBClass.AdminReader();
                 while (adminReader.Read())
@@ -197,22 +200,23 @@ namespace Lab1484.Pages
                     });
                 }
 
-                SqlDataReader grantReader = DBClass.GrantReader(SearchQuery);
-                while (grantReader.Read())
-                {
-                    GrantList.Add(new Grant
+                
+                    SqlDataReader grantReader = DBClass.GrantReader(SearchQuery);
+                    while (grantReader.Read())
                     {
-                        GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
-                        businessName = grantReader["businessName"].ToString(),
-                        amount = Double.Parse(grantReader["amount"].ToString()),
-                        category = grantReader["category"].ToString(),
-                        dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
-                        facultyName = grantReader["FacultyLead"].ToString(),
-                        facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
-                        grantStatus = grantReader["grantStatus"].ToString(),
-                        grantName = grantReader["grantName"].ToString()
-                    });
-                }
+                        GrantList.Add(new Grant
+                        {
+                            GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
+                            businessName = grantReader["businessName"].ToString(),
+                            amount = Double.Parse(grantReader["amount"].ToString()),
+                            category = grantReader["category"].ToString(),
+                            dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                            facultyName = grantReader["FacultyLead"].ToString(),
+                            facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
+                            grantStatus = grantReader["grantStatus"].ToString(),
+                            grantName = grantReader["grantName"].ToString()
+                        });
+                    }
 
                 DBClass.Lab3DBConnection.Close();
 
@@ -237,7 +241,7 @@ namespace Lab1484.Pages
         {
             DBClass.InsertGrant(newGrant);
 
-            SqlDataReader projectReader = DBClass.ProjectReader();
+            SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);
             while (projectReader.Read())
             {
                 ProjectList.Add(new Project
@@ -338,7 +342,7 @@ namespace Lab1484.Pages
                 DBClass.InsertEmployeeProject(newProjectID, employeeID);
             }
 
-            SqlDataReader projectReader = DBClass.ProjectReader();
+            SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);
             while (projectReader.Read())
             {
                 ProjectList.Add(new Project

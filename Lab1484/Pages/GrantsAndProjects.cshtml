@@ -98,7 +98,7 @@
                         <!--grants tab-->
                         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                             <div class="btn-toolbar my-2 mb-md-0">
-                                <form class="d-flex" method="get" asp-page="/GrantsAndProjects" role="search">
+                                <form class="d-flex" method="get" asp-page="/GrantsAndProjects" asp-route-tab="grants" role="search">
                                     <input class="form-control me-2 rounded-pill" type="search" name="SearchQuery" placeholder="Search" aria-label="Search">
                                     <button class="btn btn-secondary me-2 rounded-pill" type="submit">Search</button>
                                     <button class="btn btn-secondary me-2 rounded-pill" type="submit" name="SearchQuery" value="">Clear</button>
@@ -315,8 +315,9 @@
                         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                             <div class="btn-toolbar my-2 mb-md-0">
                                 <form class="d-flex" role="search">
-                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                    <input class="form-control me-2" method="get" asp-page="/GrantsAndProjects" asp-route-tab="projects" type="search" name="ProjectSearchQuery" placeholder="Search" aria-label="Search">
                                     <button class="btn btn-secondary me-2 rounded-pill" type="submit">Search</button>
+                                    <button class="btn btn-secondary me-2 rounded-pill" type="submit" name="ProjectSearchQuery" value="">Clear</button>
                                 </form>
                                 <button type="button" class="btn btn-secondary me-2 rounded-pill">
                                     <i class="fa-solid fa-filter"></i>

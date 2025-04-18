@@ -86,7 +86,7 @@ namespace Lab1484.Pages
                 });
             }
 
-            SqlDataReader projectReader = DBClass.ProjectReader();
+            SqlDataReader projectReader = DBClass.ProjectReader(null);
             while (projectReader.Read())
             {
                 ProjectList.Add(new Project
