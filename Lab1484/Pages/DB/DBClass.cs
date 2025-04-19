@@ -24,27 +24,27 @@ namespace Lab1484.Pages.DB
 
 
         // Connection String - How to find and connect to DB - Uncomment when making local changes
-        /* private static readonly String? Lab3DBConnString =
-            "Server=LocalHost;Database=Lab3;Trusted_Connection=True"; */
+         private static readonly String? Lab3DBConnString =
+            "Server=LocalHost;Database=Lab3;Trusted_Connection=True"; 
 
-        private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        /*private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=Lab3;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";
+            "TrustServerCertificate=True;";*/
 
 
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
-        //private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+        private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
         
-        private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+       /* private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=AUTH;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";
+            "TrustServerCertificate=True;";*/
 
         //Connection Methods:
 
@@ -834,21 +834,21 @@ namespace Lab1484.Pages.DB
                 Lab3DBConnection.Close();
             }
 
-            string userUpdatetQuery = @"
+            string userUpdatedQuery = @"
              UPDATE Users
              SET userType = @UserType, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @Phone
              WHERE UserID = @UserID;";
 
             SqlCommand cmdUserUpdate = new SqlCommand();
             cmdUserUpdate.Connection = Lab3DBConnection;
-            cmdUserUpdate.CommandText = userUpdatetQuery;
+            cmdUserUpdate.CommandText = userUpdatedQuery;
 
             cmdUserUpdate.Parameters.AddWithValue("@UserID", p.UserID);
             cmdUserUpdate.Parameters.AddWithValue("@UserType", p.UserType);
-            cmdUserUpdate.Parameters.AddWithValue("@firstName", p.FirstName);
-            cmdUserUpdate.Parameters.AddWithValue("@lastName", p.LastName);
-            cmdUserUpdate.Parameters.AddWithValue("@email", p.Email);
-            cmdUserUpdate.Parameters.AddWithValue("@phoneNumber", p.Phone);
+            cmdUserUpdate.Parameters.AddWithValue("@FirstName", p.FirstName);
+            cmdUserUpdate.Parameters.AddWithValue("@LastName", p.LastName);
+            cmdUserUpdate.Parameters.AddWithValue("@Email", p.Email);
+            cmdUserUpdate.Parameters.AddWithValue("@Phone", p.Phone);
 
             cmdUserUpdate.Connection.Open();
 

@@ -185,11 +185,11 @@
                                     <td>
                                         <!--edit button-->
                                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editUser"
-                                                onclick="populateEditForm(@user.UserID, '@user.UserTypeName', '@user.UsersName', '@user.Email', '@user.Phone', '@user.Username', '@user.Password')">
+                                                onclick="populateEditForm('@user.UserID', '@user.UserTypeName', '@user.UsersName', '@user.Email', '@user.Phone', '@user.Username', '@user.Password')">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
 
-                                        <!--edit modal-->
+                                        <!-- user edit modal-->
                                         <form method="post" asp-page-handler="UpdateUser" class="form-floating">
                                             <div class="modal fade" id="editUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
@@ -200,7 +200,7 @@
                                                         </div>
                                                         <div class="modal-body">
 
-                                                            <input type="hidden" id="editUserID" asp-for="UpdateUser.UserID"/>
+                                                            <input type="hidden" id="editUserID"  asp-for="UpdateUser.UserID"/>
                                                                 <div class="row mb-4">
                                                                     <div class="col">
                                                                         <select asp-for="UpdateUser.UserType"class="form-select" aria-label="Default select example">

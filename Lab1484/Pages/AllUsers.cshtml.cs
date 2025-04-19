@@ -47,13 +47,13 @@ namespace Lab1484.Pages
 
             cmd.Connection = DBClass.Lab3DBConnection;
             //Uncomment if working locally
-            //cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
-            cmd.Connection.ConnectionString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+            cmd.Connection.ConnectionString = "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+            /*cmd.Connection.ConnectionString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=Lab3;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";
+            "TrustServerCertificate=True;";*/
             cmd.Connection.Open();
 
             if (UserType.HasValue)
@@ -149,10 +149,9 @@ namespace Lab1484.Pages
 
         public IActionResult OnPostUpdateUser()
         {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/AllUsers");
-            }
+
+
+
 
             DBClass.UpdateHashedUser(UpdateUser);
             DBClass.Lab3DBConnection.Close();
