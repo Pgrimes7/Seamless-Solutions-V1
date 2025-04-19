@@ -86,7 +86,7 @@ namespace Lab1484.Pages
                 });
             }
 
-            SqlDataReader projectReader = DBClass.ProjectReader();
+            SqlDataReader projectReader = DBClass.ProjectReader(null);
             while (projectReader.Read())
             {
                 ProjectList.Add(new Project
@@ -122,7 +122,7 @@ namespace Lab1484.Pages
             }
             else
             {
-                SqlDataReader grantReader = DBClass.GrantReader(null);
+                SqlDataReader grantReader = DBClass.GrantReader(SearchQuery);
                 while (grantReader.Read())
                 {
                     GrantList.Add(new Grant
@@ -138,6 +138,7 @@ namespace Lab1484.Pages
                         grantName = grantReader["grantName"].ToString()
                     });
                 }
+                grantReader.Close();
             }
 
             

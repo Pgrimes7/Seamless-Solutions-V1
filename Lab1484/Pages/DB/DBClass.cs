@@ -49,7 +49,7 @@ namespace Lab1484.Pages.DB
         //Connection Methods:
 
         //Basic Project Reader
-        public static SqlDataReader ProjectReader()
+        public static SqlDataReader ProjectReader(string? ProjectSearchQuery)
         {
             SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
@@ -58,7 +58,17 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Users.email AS AdminEmail " +
+
+            if (!string.IsNullOrEmpty(ProjectSearchQuery))
+            {
+                cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Users.email AS AdminEmail " +
+                    "from Project " +
+                    "join Users ON Users.UserID = Project.ProjectAdminID " +
+                    "where projectName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR projectStatus LIKE @SearchQuery; ";
+                cmdProjectRead.Parameters.AddWithValue("@SearchQuery", "%" + ProjectSearchQuery + "%");
+            }
+            else
+                cmdProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Users.email AS AdminEmail " +
                 "from Project " +
                 "join Users ON Users.UserID = Project.ProjectAdminID; ";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
@@ -855,26 +865,6 @@ namespace Lab1484.Pages.DB
             cmdUserUpdate.ExecuteNonQuery();
             cmdUserUpdate.Connection.Close();
 
-            /*int userID = Convert.ToInt32(cmdUserUpdate.ExecuteScalar());*/
-
-            /**string updatedHashedCredsQuery = @"
-            UPDATE HashedCredentials
-            Set Username = @Username, Password = @Password
-            WHERE UserID = @UserID;";
-
-            SqlCommand cmdUpdatedHashed = new SqlCommand();
-            cmdUpdatedHashed.Connection = new SqlConnection(AuthConnString);
-            cmdUpdatedHashed.CommandText = updatedHashedCredsQuery;
-            cmdUpdatedHashed.Parameters.AddWithValue("@Username", p.Username);
-            cmdUpdatedHashed.Parameters.AddWithValue("@UserID", p.UserID);
-            cmdUpdatedHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.Password));
-            cmdUpdatedHashed.Connection.Open();**/
-
-            /*cmdUpdatedHashed.ExecuteNonQuery();*/
-            /**cmdUpdatedHashed.Connection.Open();
-            cmdUpdatedHashed.ExecuteNonQuery();
-            cmdUpdatedHashed.Connection.Close();**/
-
         }
 
 
@@ -939,6 +929,7 @@ namespace Lab1484.Pages.DB
             }
             string findUserType = "getUserType"; // Stored procedure to find userType given userID from login method
 
+            using (SqlConnection Lab3DBConnection = new SqlConnection(Lab3DBConnString))
             using (SqlCommand cmdCheckUser = new SqlCommand())
             {
                 cmdCheckUser.Connection = Lab3DBConnection;

@@ -98,9 +98,10 @@
                         <!--grants tab-->
                         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                             <div class="btn-toolbar my-2 mb-md-0">
-                                <form class="d-flex" role="search">
-                                    <input class="form-control me-2 rounded-pill" type="search" placeholder="Search" aria-label="Search">
+                                <form class="d-flex" method="get" asp-page="/GrantsAndProjects" asp-route-tab="grants" role="search">
+                                    <input class="form-control me-2 rounded-pill" type="search" name="SearchQuery" placeholder="Search" aria-label="Search">
                                     <button class="btn btn-secondary me-2 rounded-pill" type="submit">Search</button>
+                                    <button class="btn btn-secondary me-2 rounded-pill" type="submit" name="SearchQuery" value="">Clear</button>
                                 </form>
                                 <button type="button" class="btn btn-secondary me-2 rounded-pill">
                                     <i class="fa-solid fa-filter"></i>
@@ -149,24 +150,24 @@
                                                     <div class="row mb-4">
                                                         <div class="col-sm-6">
                                                             <div class="form-floating">
-                                                                <select asp-for="newGrant.FacultyLeadID" class="form-select" id="floatingAdmin" aria-label="Project Admin">
+                                                                <select asp-for="newGrant.FacultyLeadID" class="form-select" id="floatingAdmin" aria-label="Principal Investigator">
                                                                     @foreach (var admin in Model.AdminList)
                                                                     {
 																		<option value = "@admin.userID" > @admin.firstName @admin.lastName </option>
                                                                     });
                                                                 </select>
-                                                                <label for="floatingAdmin">Project Admin</label>
+                                                                <label for="floatingAdmin">Principal Investigator</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="form-floating">
-                                                                <select asp-for="newGrant.BusinessPartnerID" class="form-select" id="floatingPartner" aria-label="Business Partner">
+                                                                <select asp-for="newGrant.BusinessPartnerID" class="form-select" id="floatingPartner" aria-label="External Partner">
                                                                     @foreach (var partner in Model.PartnerList)
                                                                     {
                                                                         <option value="@partner.userID"> @partner.firstName @partner.lastName </option>
                                                                     });
                                                                 </select>
-                                                                <label for="floatingPartner">Business Partner</label>
+                                                                <label for="floatingPartner">External Partner</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -231,7 +232,7 @@
                                             </th>
                                             <th>
                                                 <button class="sort-button btn btn-sm fw-bold">
-                                                    Primary Investigator
+                                                    Principal Investigator
                                                 </button>
                                             </th>
                                             <th>
@@ -314,8 +315,9 @@
                         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                             <div class="btn-toolbar my-2 mb-md-0">
                                 <form class="d-flex" role="search">
-                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                    <input class="form-control me-2" method="get" asp-page="/GrantsAndProjects" asp-route-tab="projects" type="search" name="ProjectSearchQuery" placeholder="Search" aria-label="Search">
                                     <button class="btn btn-secondary me-2 rounded-pill" type="submit">Search</button>
+                                    <button class="btn btn-secondary me-2 rounded-pill" type="submit" name="ProjectSearchQuery" value="">Clear</button>
                                 </form>
                                 <button type="button" class="btn btn-secondary me-2 rounded-pill">
                                     <i class="fa-solid fa-filter"></i>
@@ -356,13 +358,13 @@
                                                     <div class="row mb-4">
                                                         <div class="col-sm-6">
                                                             <div class="form-floating">
-                                                                <select asp-for="newProject.ProjectAdminID" class="form-select" id="floatingAdmin" aria-label="Primary Investigator">
+                                                                <select asp-for="newProject.ProjectAdminID" class="form-select" id="floatingAdmin" aria-label="Principal Investigator">
                                                                     @foreach (var admin in Model.AdminList)
                                                                     {
                                                                         <option value="@admin.userID"> @admin.firstName @admin.lastName </option>
                                                                     });
                                                                 </select>
-                                                                <label for="floatingAdmin">Primary Investigator</label>
+                                                                <label for="floatingAdmin">Principal Investigator</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">

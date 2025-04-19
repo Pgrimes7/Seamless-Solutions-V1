@@ -40,7 +40,7 @@ namespace Lab1484.Pages
             }
 
             //Read DB Projects into projects list
-            SqlDataReader projReader = DBClass.ProjectReader();
+            SqlDataReader projReader = DBClass.ProjectReader(null);
             while (projReader.Read())
             {
                 projects.Add(new Project

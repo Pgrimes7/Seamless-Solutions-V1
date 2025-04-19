@@ -41,7 +41,7 @@ public class AdminSearchModel : PageModel
 
         if (string.IsNullOrEmpty(TypeFilter) || TypeFilter == "Project")
         {
-            SqlDataReader reader = DBClass.ProjectReader();
+            SqlDataReader reader = DBClass.ProjectReader(null);
             while (reader.Read())
             {
                 SearchResults.Add(new SearchResult
