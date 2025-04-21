@@ -24,27 +24,27 @@ namespace Lab1484.Pages.DB
 
 
         // Connection String - How to find and connect to DB - Uncomment when making local changes
-         private static readonly String? Lab3DBConnString =
-            "Server=LocalHost;Database=Lab3;Trusted_Connection=True"; 
+         //private static readonly String? Lab3DBConnString =
+         //   "Server=LocalHost;Database=Lab3;Trusted_Connection=True"; 
 
-        /*private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=Lab3;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";*/
+            "TrustServerCertificate=True;";
 
 
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
-        private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+        //private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
         
-       /* private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=AUTH;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";*/
+            "TrustServerCertificate=True;";
 
         //Connection Methods:
 
