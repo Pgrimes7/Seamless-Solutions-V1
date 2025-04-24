@@ -56,11 +56,15 @@ namespace Lab1484.Pages
             {
                 TaskList.Add(new ProjTask
                 {
-                    TaskID = Convert.ToInt32(taskReader["TaskID"]),
-                    ProjectID = Convert.ToInt32(taskReader["ProjectID"]),
+                    TaskID = Int32.Parse(taskReader["TaskID"].ToString()),
+                    //GrantID = Int32.Parse(taskReader["GrantID"].ToString()),
+                    ProjectID = Int32.Parse(taskReader["ProjectID"].ToString()),
+                    //UserID = Int32.Parse(taskReader["UserID"].ToString()),
                     taskDescription = taskReader["taskDescription"].ToString(),
-                    dueDate = taskReader["duedate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(taskReader["duedate"]),
-                    ProjectName = taskReader["ProjectName"].ToString()
+                    //EmployeeName = taskReader["EmployeeName"].ToString(),
+                    ProjectName = taskReader["ProjectName"].ToString(),
+                    //grantName = taskReader["grantName"].ToString(),
+                    dueDate = taskReader.GetDateTime(taskReader.GetOrdinal("dueDate"))
                 });
             }
 
