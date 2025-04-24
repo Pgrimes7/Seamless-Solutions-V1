@@ -6,7 +6,11 @@ namespace Lab1484.Pages.DataClasses
     {
         public int TaskID { get; set; }
 
-        public int ProjectID { get; set; }
+        //public int? GrantID { get; set; }
+
+        public int? ProjectID { get; set; }
+
+        //public int UserID { get; set; }
 
         public string? taskDescription { get; set; }
 
@@ -16,5 +20,9 @@ namespace Lab1484.Pages.DataClasses
         public DateTime? dueDate { get; set; }
 
         public string? ProjectName { get; set; }
+
+        //public string? grantName { get; set; }
+
+        //public string? EmployeeName { get; set; }
     }
 }
