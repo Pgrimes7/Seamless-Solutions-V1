@@ -107,6 +107,8 @@
                     <table id="grantTable" class="table align-middle mb-0 bg-white">
                         <thead class="bg-light">
 							<tr>
+								@*<th scope="col">Related User</th>
+                                <th scope="col">Related Grant</th>*@
 								<th scope="col">Related Project</th>
                                 <th scope="col">Due Date</th>
 								<th scope="col">Description</th>
@@ -116,7 +118,9 @@
 							@foreach (var task in Model.tasks)
 							{
 								<tr>
-									<td>@task.ProjectName</td>
+                                    @*<td>@task.EmployeeName</td>*@
+                                    @*<td>@(task.grantName ?? "N/A")</td>*@
+                                    <td>@task.ProjectName</td>
                                     <td>@(task.dueDate.HasValue ? task.dueDate.Value.ToShortDateString() : "N/A")</td>
 									<td>@task.taskDescription</td>
 								</tr>

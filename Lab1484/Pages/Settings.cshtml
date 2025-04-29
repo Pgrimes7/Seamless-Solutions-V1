@@ -1,0 +1,111 @@
+﻿@page
+@model Lab1484.Pages.SettingsModel
+@{
+}
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="YOUR DESCRIPTION HERE">
+    <meta name="author" content="YOUR NAME HERE">
+    <title>Test</title>
+
+    <!-- LOAD BOOTSTRAP CSS - DO NOT DELETE -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- END LOADING BOOTSTRAP CSS -->
+    <!-- Custom styles - add your own CSS to this stylesheet -->
+    <link href="style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+    <!-- DO NOT DELETE -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- DO NOT DELETE -->
+</head>
+
+<body>
+
+    <main>
+
+        <div class="container-fluid">
+            <div class="row flex-nowrap">
+
+                
+
+                <div class="col py-3">
+                    <div class="row">
+                        <h1 class="mb-3">Settings</h1>
+                        <!--row for profile pic-->
+                        <div class="row mb-3">
+                            <div class="d-flex align-items-center">
+                                <img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 100px; height: 100px" class="rounded-circle">
+                                <div class="ms-3">
+                                    <h4 class="fw-bold mb-1">John Doe</h4>
+                                    <h5 class="text-muted mb-0">john.doe@gmail.com</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label for="inputFirst" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="inputFirst" placeholder="John">
+                            </div>
+                            <div class="col-4">
+                                <label for="inputLast" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="inputLast" placeholder="Doe">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label for="inputUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="inputLast" placeholder="doej">
+                            </div>
+                            <div class="col-4">
+                                <label for="inputPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="inputLast" placeholder="Password1234">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label for="inputEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="inputLast" placeholder="johndoe@email.com">
+                            </div>
+                            <div class="col-4">
+                                <label for="inputPhone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="inputLast" placeholder="123-456-7890">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label for="inputPicture" class="form-label">Profile picture:</label>
+                                <input type="file" class="form-control" id="inputPicture" placeholder="Doe" accept="image/*">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update</button>
+
+                        
+                    </div> <!--close main content row-->
+                </div> <!--close main content col-->
+
+            </div> <!--close row-->
+        </div> <!--close container-->
+
+
+
+    </main>
+
+    <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
