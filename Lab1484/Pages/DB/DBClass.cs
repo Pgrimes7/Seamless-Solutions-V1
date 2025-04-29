@@ -1360,16 +1360,18 @@ namespace Lab1484.Pages.DB
 
                     }
                     SqlCommand cmdInsert = new SqlCommand();
-                cmdInsert.Connection = Lab3DBConnection;
-                cmdInsert.Connection.ConnectionString = Lab3DBConnString;
-                cmdInsert.CommandText = ;
-                cmdInsert.Connection.Open();
-                cmdInsert.ExecuteNonQuery();
+                    cmdInsert.Connection = Lab3DBConnection;
+                    cmdInsert.Connection.ConnectionString = Lab3DBConnString;
+                    //cmdInsert.CommandText = ;
+                    cmdInsert.Connection.Open();
+                    cmdInsert.ExecuteNonQuery();
 
 
 
+                }
             }
         }
     }
 }
+
 
