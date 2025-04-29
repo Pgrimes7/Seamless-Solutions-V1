@@ -24,27 +24,27 @@ namespace Lab1484.Pages.DB
 
 
         // Connection String - How to find and connect to DB - Uncomment when making local changes
-         //private static readonly String? Lab3DBConnString =
-         //   "Server=LocalHost;Database=Lab3;Trusted_Connection=True"; 
+         private static readonly String? Lab3DBConnString =
+            "Server=LocalHost;Database=Lab3;Trusted_Connection=True"; 
 
-        private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        /*private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=Lab3;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";
+            "TrustServerCertificate=True;";*/
 
 
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
-        //private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+        private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
         
-        private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        /*private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=AUTH;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";
+            "TrustServerCertificate=True;";*/
 
         //Connection Methods:
 
@@ -1269,7 +1269,73 @@ namespace Lab1484.Pages.DB
             return counts;
         }
 
+        public static SqlDataReader AllReportReader ()
+        {
+            //could modify insert report so it submits the user who submitted it so here it could be displayed too
+            SqlCommand cmdReportRead = new SqlCommand();
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdReportRead.Connection = Lab3DBConnection;
+            cmdReportRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdReportRead.CommandText = "SELECT * from Reports;";
+            cmdReportRead.Connection.Open(); // Open connection here, close in Model!
 
+            SqlDataReader tempReader = cmdReportRead.ExecuteReader();
+
+            return tempReader;
+
+
+
+
+        }
+        public static SqlDataReader SingleReportReader(int reportID)
+        {
+            //could modify insert report so it submits the user who submitted it so here it could be displayed too
+            SqlCommand cmdReportRead = new SqlCommand();
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            cmdReportRead.CommandText = @"
+        SELECT Reports.ReportID,
+            Reports.ReportDate,
+            Reports.ReportName,
+            ReportSubjects.SubjectID,
+            ReportSubjects.SubjectTitle,
+            ReportSubjects.SubjectText,
+            ReportGrants.ReportGrantID,
+            ReportGrants.GrantID,
+            ReportProjects.ReportProjectID,
+            ReportProjects.ProjectID
+        FROM 
+            Reports
+        LEFT JOIN 
+            ReportSubjects ON Reports.ReportID = ReportSubjects.ReportID
+        LEFT JOIN 
+            ReportGrants ON Reports.ReportID = ReportGrants.ReportID
+        LEFT JOIN 
+            ReportProjects ON Reports.ReportID = ReportProjects.ReportID
+        WHERE 
+            Reports.ReportID = @ReportID;";
+
+            cmdReportRead.Parameters.AddWithValue("@ReportID", reportID);
+
+
+            cmdReportRead.Connection = Lab3DBConnection;
+            cmdReportRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdReportRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdReportRead.ExecuteReader();
+
+            return tempReader;
+
+
+
+
+        }
 
     }
 }
