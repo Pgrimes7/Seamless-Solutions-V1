@@ -24,8 +24,8 @@ namespace Lab1484.Pages.DB
 
 
         // Connection String - How to find and connect to DB - Uncomment when making local changes
-         private static readonly String? Lab3DBConnString =
-            "Server=LocalHost;Database=Lab3;Trusted_Connection=True"; 
+        private static readonly String? Lab3DBConnString =
+           "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
         /*private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=Lab3;" +
@@ -38,7 +38,7 @@ namespace Lab1484.Pages.DB
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
         private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
-        
+
         /*private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=AUTH;" +
             "User Id=capstoneadmin;" +
@@ -634,7 +634,7 @@ namespace Lab1484.Pages.DB
                         Content = reader["Content"].ToString(),
                         SentDate = (DateTime)reader["Timestamp"],
 
-                       // IsRead = (int)reader["IsRead"]
+                        // IsRead = (int)reader["IsRead"]
 
                         //IsRead = (int)reader["IsRead"]
                     };
@@ -1155,7 +1155,7 @@ namespace Lab1484.Pages.DB
 
         public static void InsertReport(Report report, List<int> grantIDs, List<int> projectIDs, List<ReportSubject> subjects)
         {
-            
+
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
@@ -1226,7 +1226,7 @@ namespace Lab1484.Pages.DB
         {
             int[] counts = new int[5]; // Order: Active, Potential, Funded, Archived, Rejected
 
-            
+
             if (Lab3DBConnection.State == ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
@@ -1269,7 +1269,7 @@ namespace Lab1484.Pages.DB
             return counts;
         }
 
-        public static SqlDataReader AllReportReader ()
+        public static SqlDataReader AllReportReader()
         {
             //could modify insert report so it submits the user who submitted it so here it could be displayed too
             SqlCommand cmdReportRead = new SqlCommand();
@@ -1337,6 +1337,39 @@ namespace Lab1484.Pages.DB
 
         }
 
+        public static void UploadFile(IFormFile formFile)
+        {
+            {
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+                if (formFile.Length > 0)
+                {
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        formFile.CopyTo(memoryStream);
+                        var fileData = new FileUploads
+                        {
+                            FileName = formFile.FileName,
+                            FileData = memoryStream.ToArray(),
+                            UploadDate = DateTime.Now
+                        };
+
+
+                    }
+                    SqlCommand cmdInsert = new SqlCommand();
+                cmdInsert.Connection = Lab3DBConnection;
+                cmdInsert.Connection.ConnectionString = Lab3DBConnString;
+                cmdInsert.CommandText = ;
+                cmdInsert.Connection.Open();
+                cmdInsert.ExecuteNonQuery();
+
+
+
+            }
+        }
     }
 }
 
