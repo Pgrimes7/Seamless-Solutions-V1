@@ -64,17 +64,18 @@
                             <button class="btn btn-secondary me-2 rounded-pill" type="submit">Search</button>
                         </form>
                     </div>
-                </div>
-
-                <!--row for create user button-->
-                <div class="row row-cols-auto">
-                    <div class="col my-2 mb-md-0">
+                    <div class="col">
                         <button type="submit" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createuserModal">
                             Create
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
                 </div>
+
+                <!--row for create user button-->
+                @*<div class="row row-cols-auto">
+                    
+                </div>*@
 
                 <!--create user modal -->
                 <form method="post" asp-page-handler="CreateUser">
