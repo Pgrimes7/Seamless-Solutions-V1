@@ -8,7 +8,8 @@ CREATE TABLE Users (
 	firstName NVARCHAR(50) NOT NULL,
 	lastName NVARCHAR(50) NOT NULL,
 	email NVARCHAR(50),
-	phoneNumber NVARCHAR(20)
+	phoneNumber NVARCHAR(20),
+	ProfileImageFileName NVARCHAR(255) NULL
 );
 
 --Project Table
@@ -215,3 +216,15 @@ INSERT INTO Messages (Sender, Receiver, Content, IsRead) VALUES
 ('manbos', 'brownch', 'Reminder of the upcoming due date of the project!', 1),
 ('brownch', 'manbos', 'Thank you!', 0),
 ('yangmag', 'gorbergr', 'Are we still able to meet about this tomorrow?', 0);
+
+ALTER TABLE Messages
+ADD SenderID INT,
+    ReceiverID INT;
+
+ALTER TABLE Messages
+ADD CONSTRAINT FK_Sender FOREIGN KEY (SenderID) REFERENCES Users(UserID),
+    CONSTRAINT FK_Receiver FOREIGN KEY (ReceiverID) REFERENCES Users(UserID);
+
+ALTER TABLE Messages
+ADD AttachmentFileName NVARCHAR(255),
+    AttachmentFilePath NVARCHAR(500);
