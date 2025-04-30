@@ -16,6 +16,7 @@ namespace Lab1484.Pages.DataClasses
         [Required(ErrorMessage = "User Type is required.")]
         public int? UserType { get; set; }//in db these are seen as ints 0-3, 0 = admin, 1 = faculty, 2 = staff, 3 = student
         public string FullName => $"{firstName} {lastName}";
+        public string? ProfileImageFileName { get; set; }
     }
 
 
