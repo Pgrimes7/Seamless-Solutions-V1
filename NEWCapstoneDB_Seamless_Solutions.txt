@@ -8,7 +8,8 @@ CREATE TABLE Users (
 	firstName NVARCHAR(50) NOT NULL,
 	lastName NVARCHAR(50) NOT NULL,
 	email NVARCHAR(50),
-	phoneNumber NVARCHAR(20)
+	phoneNumber NVARCHAR(20),
+	ProfileImageFileName NVARCHAR(255) NULL
 );
 
 --Project Table
