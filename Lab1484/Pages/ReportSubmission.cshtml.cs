@@ -20,6 +20,8 @@ namespace Lab1484.Pages
         public List<string> SubjectTitle { get; set; }
         [BindProperty]
         public List<string> SubjectText { get; set; }
+        [BindProperty]
+        public List<Report> ReportList { get; set; }
 
         public List<Grant> GrantList { get; set; }
         public List<Project> ProjectList { get; set; }
@@ -33,6 +35,17 @@ namespace Lab1484.Pages
 
         public async Task OnGetAsync()
         {
+            SqlDataReader reportReader = DBClass.AllReportReader();
+            /*while (reportReader.Read())
+            {
+                ReportList.Add(new Report
+                {
+                 
+
+
+
+                });
+            }*/
             SqlDataReader grantReader = DBClass.GrantReader(null);
             while (grantReader.Read())
             {

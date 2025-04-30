@@ -28,53 +28,138 @@
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    @{
+        Layout = null;
+    }
     <!-- DO NOT DELETE -->
+    <style>
+    body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    }
+
+    .main-container {
+    padding: 0 !important; /* Override padding */
+    }
+
+    .bg-image {
+    background-image: url('/images/login2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    }
+
+
+        .nav-item {
+            padding: 10px;
+            width: 100%;
+        }
+
+        .nav-active {
+            background-color: #DACCE6;
+            color: #B599CE;
+            border-radius: 100px;
+        }
+
+        .nav-item .nav-link.active {
+            background-color: #DACCE6;
+            color: #B599CE;
+            border-radius: 100px;
+        }
+
+            .nav-item .nav-link.active:hover,
+            .nav-item .nav-link.active:focus {
+                background-color: #DACCE6;
+                color: #B599CE;
+                border-radius: 100px;
+            }
+
+
+        .btn-primary {
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: #333333;
+            --bs-btn-bg: #B599CE;
+            --bs-btn-border-color: #B599CE;
+            --bs-btn-hover-color: #333333;
+            --bs-btn-hover-bg: #DACCE6;
+            --bs-btn-hover-border-color: #B599CE;
+            --bs-btn-focus-shadow-rgb: 218, 204, 230;
+            --bs-btn-active-color: #333333;
+            --bs-btn-active-bg: #B599CE;
+            --bs-btn-active-border-color: #B599CE;
+        }
+
+        .btn-secondary {
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: #CBB677;
+            --bs-btn-bg: #FFFFFF;
+            --bs-btn-border-color: #CBB677;
+            --bs-btn-hover-color: #FFFFFF;
+            --bs-btn-hover-bg: #CBB677;
+            --bs-btn-hover-border-color: #CBB677;
+            --bs-btn-focus-shadow-rgb: 244, 239, 225;
+            --bs-btn-active-color: #FFFFFF;
+            --bs-btn-active-bg: #CBB677;
+            --bs-btn-active-border-color: #CBB677;
+        }
+
+        .btn-outline-danger {
+            --bs-btn-font-weight: 600;
+        }
+
+        .grantstatus {
+            background-color: #D2EBF5;
+        }
+    </style>
+
+
 </head>
 
 <body>
-
     <main>
-
-        <!--set up container-->
-        <div class="container col-xl-10 col-xxl-8 px-4 py-5">
-            <!--set up row-->
-            <div class="row align-items-center g-lg-5 py-5">
-                <!--set up column-->
-                <div class="col-md-10 mx-auto col-lg-5">
-                    <!--login form-->
-                    <form method="post" asp-page="LogIn" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
-                        <h2 class="fw-bold lh-1 text-body-emphasis mb-3">Login</h2>
-                        <div class="form-floating mb-3">
-                            <input asp-for="Username" type="text" class="form-control" id="floatingInput" placeholder="Username">
-                            <label for="floatingInput">Username</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                            <label for="floatingPassword">Password</label>
-                        </div>
-                        <div class="checkbox mb-3">
-                            <label>
-                                <input class="form-check-input me-1" type="checkbox" value="remember-me" id="firstCheckbox">
-                                Remember me
-                            </label>
-                        </div>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">Sign in</button>
-                        <a><small class="text-body-secondary">Forgot your password?</small></a>
-                        <hr class="my-4">
-                        <small class="text-body-secondary">Don't have an account?</small>
-                        <a asp-page="/AccountSignUp" class="w-100 btn btn-lg btn-outline-secondary mt-2">Create an account</a>
-                    </form>
-                </div> <!--close col-->
-            </div> <!--close row-->
-        </div> <!--close container-->
-
+        <div class="bg-image">
+            <!--set up container-->
+            <div class="container">
+                <!--set up row-->
+                <div class="row align-items-center g-lg-5 py-5">
+                    <!--set up column-->
+                    <div class="col-md-10 mx-auto col-lg-5">
+                        <!--login form-->
+                        <form method="post" asp-page="LogIn" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+                            <h2 class="fw-bold lh-1 text-body-emphasis mb-3">Login</h2>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Username" type="text" class="form-control" id="floatingInput" placeholder="Username">
+                                <label for="floatingInput">Username</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                <label for="floatingPassword">Password</label>
+                            </div>
+                            <div class="checkbox mb-3">
+                                <label>
+                                    <input class="form-check-input me-1" type="checkbox" value="remember-me" id="firstCheckbox">
+                                    Remember me
+                                </label>
+                            </div>
+                            <button type="submit" class="w-100 btn btn-lg btn-primary">Sign in</button>
+                            <a><small class="text-body-secondary">Forgot your password?</small></a>
+                            <hr class="my-4">
+                            <small class="text-body-secondary">Don't have an account?</small>
+                            <a asp-page="/AccountSignUp" class="w-100 btn btn-lg btn-outline-secondary mt-2">Create an account</a>
+                        </form>
+                    </div> <!--close col-->
+                </div> <!--close row-->
+            </div> <!--close container-->
+        </div> <!--close bg-image-->
     </main>
 
     <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
-
 </body>
-
 </html>
 
 <br />
