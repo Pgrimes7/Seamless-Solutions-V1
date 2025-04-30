@@ -188,7 +188,8 @@ namespace Lab1484.Pages.DB
                 cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
                     "from Grants " +
                     "join Users ON Users.UserID = Grants.FacultyLeadID " +
-                    "where grantName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR amount LIKE @SearchQuery OR dueDate LIKE @SearchQuery OR grantStatus LIKE @SearchQuery OR businessName LIKE @SearchQuery OR category LIKE @SearchQuery; ";
+                    "where grantName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR amount LIKE @SearchQuery OR dueDate LIKE @SearchQuery OR grantStatus LIKE @SearchQuery OR businessName LIKE @SearchQuery OR category LIKE @SearchQuery " +
+                    "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC;";
 
                 cmdGrantRead.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
 
@@ -198,7 +199,8 @@ namespace Lab1484.Pages.DB
             {
                 cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
                     "from Grants " +
-                    "join Users ON Users.UserID = Grants.FacultyLeadID; ";
+                    "join Users ON Users.UserID = Grants.FacultyLeadID " +
+                    "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC; ";
             }
 
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!

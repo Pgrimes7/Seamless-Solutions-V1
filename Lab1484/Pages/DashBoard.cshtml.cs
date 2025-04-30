@@ -150,11 +150,11 @@ namespace Lab1484.Pages
 
             var statusOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
             {
-                { "In Progress", 1 },
-                { "Opportunity", 2 },
-                { "Pending", 3 },
-                { "Approved", 4 },
-                { "Rejected", 5 }
+                { "Active", 1 },
+                { "Funded", 2 },
+                { "Potential", 3 },
+                { "Rejected", 4 },
+                { "Archived", 5 }
             };
 
             GrantList = GrantList
@@ -212,11 +212,11 @@ namespace Lab1484.Pages
 
             var statusOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
             {
-                { "In Progress", 1 },
-                { "Opportunity", 2 },
-                { "Pending", 3 },
-                { "Approved", 4 },
-                { "Rejected", 5 }
+                { "Active", 1 },
+                { "Funded", 2 },
+                { "Potential", 3 },
+                { "Rejected", 4 },
+                { "Archived", 5 }
             };
 
             GrantList = GrantList
@@ -348,11 +348,11 @@ namespace Lab1484.Pages
 
             var statusOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
             {
-                { "In Progress", 1 },
-                { "Opportunity", 2 },
-                { "Pending", 3 },
-                { "Approved", 4 },
-                { "Rejected", 5 }
+                { "Active", 1 },
+                { "Funded", 2 },
+                { "Potential", 3 },
+                { "Rejected", 4 },
+                { "Archived", 5 }
             };
 
             GrantList = GrantList
