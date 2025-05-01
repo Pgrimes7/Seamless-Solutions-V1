@@ -256,6 +256,9 @@ ADD AuthorName varchar(225);
 ALTER TABLE Publishes
 ADD JournalTitle NVARCHAR(255);
 
+ALTER TABLE Publishes
+ADD FileName NVARCHAR(255);
+
 
 
 
