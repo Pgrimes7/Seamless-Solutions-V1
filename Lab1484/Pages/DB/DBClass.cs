@@ -1632,7 +1632,7 @@ namespace Lab1484.Pages.DB
 
 
         //retrieving the user profile picture
-        public static User? GetProfilePictureById(int userId)
+        public static User? GetUserInfoById(int userId)
         {
             User? user = null;
             

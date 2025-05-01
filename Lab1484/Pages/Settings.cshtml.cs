@@ -28,7 +28,7 @@ namespace Lab1484.Pages
             string? currentUserIdStr = HttpContext.Session.GetString("userID");
             if (int.TryParse(currentUserIdStr, out int currentUserId))
             {
-                CurrentUser = DBClass.GetProfilePictureById(currentUserId); 
+                CurrentUser = DBClass.GetUserInfoById(currentUserId); 
 
                 if (!string.IsNullOrEmpty(CurrentUser?.ProfileImageFileName))
                 {
@@ -63,7 +63,7 @@ namespace Lab1484.Pages
 
                 // Update the user's profile image in the database
                 var userId = int.Parse(HttpContext.Session.GetString("userID"));
-                User user = DBClass.GetProfilePictureById(userId);
+                User user = DBClass.GetUserInfoById(userId);
                 if (user != null)
                 {
                     user.ProfileImageFileName = fileName;
@@ -85,7 +85,7 @@ namespace Lab1484.Pages
             if (int.TryParse(currentUserIdStr, out int currentUserId))
             {
                 // Get the current user
-                var user = DBClass.GetProfilePictureById(currentUserId);
+                var user = DBClass.GetUserInfoById(currentUserId);
 
                 // If the user has a custom profile picture
                 if (!string.IsNullOrEmpty(user?.ProfileImageFileName))
