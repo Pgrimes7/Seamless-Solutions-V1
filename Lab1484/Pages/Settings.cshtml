@@ -92,11 +92,14 @@
                         </form>
 
                         
+                        <form method="post" asp-page-handler="UpdateUser" class="form-floating">
+                            <input type="hidden" id="editUserID" asp-for="UpdateUser.UserID" value="@Model.CurrentUser?.userID" />
+                            <input type="hidden" id="editUserType" asp-for="UpdateUser.UserType" value="@Model.CurrentUser?.UserType" />
                         <div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputFirst" class="form-label">First Name</label>
                                 <div class="position-relative">
-                                    <input type="text" class="form-control" id="inputFirst" value="@Model.CurrentUser?.firstName" readonly>
+                                        <input asp-for="UpdateUser.FirstName" type="text" class="form-control" id="inputFirst" value="@Model.CurrentUser?.firstName" readonly>
                                     <span type="button" class="edit-icon" onclick="toggleEdit('inputFirst')">
                                         <i class="fa-solid fa-pencil"></i>
                                     </span>
@@ -105,7 +108,7 @@
                             <div class="col-4">
                                 <label for="inputLast" class="form-label">Last Name</label>
                                 <div class="position-relative">
-                                    <input type="text" class="form-control" id="inputLast" value="@Model.CurrentUser?.lastName" readonly>
+                                        <input asp-for="UpdateUser.LastName" type="text" class="form-control" id="inputLast" value="@Model.CurrentUser?.lastName" readonly>
                                     <span type="button" class="edit-icon" onclick="toggleEdit('inputLast')">
                                         <i class="fa-solid fa-pencil"></i>
                                     </span>
@@ -126,7 +129,7 @@
                             <div class="col-4">
                                 <label for="inputEmail" class="form-label">Email</label>
                                 <div class="position-relative">
-                                    <input type="email" class="form-control" id="inputEmail" value="@Model.CurrentUser?.email" readonly>
+                                        <input asp-for="UpdateUser.Email" type="email" class="form-control" id="inputEmail" value="@Model.CurrentUser?.email" readonly>
                                     <span type="button" class="edit-icon" onclick="toggleEdit('inputEmail')">
                                         <i class="fa-solid fa-pencil"></i>
                                     </span>
@@ -135,7 +138,7 @@
                             <div class="col-4">
                                 <label for="inputPhone" class="form-label">Phone Number</label>
                                 <div class="position-relative">
-                                    <input type="tel" class="form-control" id="inputPhone" value="@Model.CurrentUser?.phone" readonly>
+                                        <input asp-for="UpdateUser.Phone" type="tel" class="form-control" id="inputPhone" value="@Model.CurrentUser?.phone" readonly>
                                     <span type="button" class="edit-icon" onclick="toggleEdit('inputPhone')">
                                         <i class="fa-solid fa-pencil"></i>
                                     </span>
@@ -150,7 +153,7 @@
                         </div>*@
 
                         <button type="submit" class="btn btn-primary">Update</button>
-
+                        </form>
                         
                     </div> <!--close main content row-->
                 </div> <!--close main content col-->

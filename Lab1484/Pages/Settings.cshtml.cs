@@ -8,8 +8,14 @@ namespace Lab1484.Pages
 {
     public class SettingsModel : PageModel
     {
+        [BindProperty]
         public string? ProfileImagePath { get; set; } = "/images/default.png";
+
+        [BindProperty]
         public User? CurrentUser { get; set; } = new User();
+
+        [BindProperty]
+        public UserUpdate UpdateUser { get; set; } = new UserUpdate();
 
         public IActionResult OnGet()
         {
@@ -100,6 +106,18 @@ namespace Lab1484.Pages
 
             // Return error if userId is not found or something goes wrong
             return NotFound();
+        }
+
+        public IActionResult OnPostUpdateUser()
+        {
+
+
+
+
+            DBClass.UpdateHashedUser(UpdateUser);
+            DBClass.Lab3DBConnection.Close();
+
+            return RedirectToPage("/Settings");
         }
 
     }
