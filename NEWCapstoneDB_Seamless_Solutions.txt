@@ -175,7 +175,7 @@ INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES
 (2, 'Blaire', 'Gomber', 'BlaireGomber@example.com', '345-678-9012'),
 (3, 'Magnus', 'Yang', 'YangMagnus@example.com', '456-789-0123'),
 (0, 'admin', 'test', 'admintest@example.com', '777-888-0000'),
-(0, 'Emily', 'Carter', 'carter.emily@example.com', '555-465-7954');
+(0, 'Emily', 'Carter', 'carter.emily@example.com', '555-465-7954', 'emily hi-res.png');
 
 --Project Inserts
 INSERT INTO Project (ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, ProjectName) VALUES
