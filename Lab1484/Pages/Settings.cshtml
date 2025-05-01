@@ -49,9 +49,35 @@
                             <div class="d-flex align-items-center">
                                 <div style="position: relative; width: 100px; height: 100px;">
                                         <img src="@(Model.ProfileImagePath)" alt="" style="width: 100px; height: 100px" class="rounded-circle">
-                                        <label for="fileInput" style="position: absolute;bottom: 0;right: 0;background-color: #ffffffcc;border-radius: 50%;padding: 6px;cursor: pointer;box-shadow: 0 0 4px rgba(0,0,0,0.2);">
-                                            <img src="/icons/edit-icon.png" alt="Edit" style="width: 20px; height: 20px;" />
+
+                                        <label for="fileInput" style="position: absolute; bottom: 0; right: 0; background-color: #ffffffcc;
+                                        border: none; border-radius: 50%; padding: 6px; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.2);
+                                        width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-pencil"></i>
                                         </label>
+
+
+                                        @*<!-- Modal -->
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure you want to delete your profile picture? This action cannot be undone.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <form method="post" enctype="multipart/form-data" asp-page-handler="DeleteProfileImage">
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>*@
+
                                         <input type="file" id="fileInput" name="ProfileImage"
                                                accept=".png,.jpg,.jpeg"
                                                style="display: none;" onchange="this.form.submit()" />
@@ -94,12 +120,12 @@
                                 <input type="tel" class="form-control" id="inputLast" placeholder="123-456-7890">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        @*<div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputPicture" class="form-label">Profile picture:</label>
                                 <input type="file" class="form-control" id="inputPicture" placeholder="Doe" accept="image/*">
                             </div>
-                        </div>
+                        </div>*@
 
                         <button type="submit" class="btn btn-primary">Update</button>
 

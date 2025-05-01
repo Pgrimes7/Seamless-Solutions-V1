@@ -1434,7 +1434,22 @@ namespace Lab1484.Pages.DB
 
             return user;
         }
-        
+
+        public static void AddProfileImage(User user)
+        {
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                string query = "UPDATE Users SET ProfileImageFileName = @ProfileImageFileName WHERE userID = @userID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ProfileImageFileName", user.ProfileImageFileName);
+                cmd.Parameters.AddWithValue("@userID", user.userID);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
 
     }
 }
