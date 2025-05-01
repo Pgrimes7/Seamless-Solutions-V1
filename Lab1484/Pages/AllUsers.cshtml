@@ -179,10 +179,26 @@
                             @foreach (var user in Model.Users)
                             {
                                 <tr>
-                                    <td>@user.UsersName</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @{
+                                                if (string.IsNullOrEmpty(user.ProfileImageFileName))
+                                                {
+                                                    <img src="@Model.ProfileImagePath" alt="" style="width: 45px; height: 45px" class="rounded-circle">
+                                                }
+
+                                                else
+                                                {
+                                                    <img src="/images/@user.ProfileImageFileName" alt="" style="width: 45px; height: 45px" class="rounded-circle">
+                                                }
+                                            }
+                                            @*<img src="@user.ProfileImageFileName" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
+                                            @user.UsersName
+                                        </div>
+                                    </td>
                                     <td>
                                      <div class="d-flex align-items-center">
-                                                    @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
+                                            @*<img src="@Model.ProfileImagePath" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
                                                     <div class="ms-3">
                                                         <p class="text-muted mb-1">@user.Email</p>
                                                         <p class="text-muted mb-0">@user.Phone</p>
