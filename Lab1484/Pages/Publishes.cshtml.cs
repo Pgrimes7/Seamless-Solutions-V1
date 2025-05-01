@@ -52,8 +52,26 @@ namespace Lab1484.Pages
             }
 
             DBClass.InsertPublish(publish);
-            return RedirectToPage();
+
+            // Reload data to refresh the table immediately
+            PublishList = DBClass.GetAllPublishes();
+            Users = new List<User>();
+            using (SqlDataReader reader = DBClass.AllUsersReader())
+            {
+                while (reader.Read())
+                {
+                    Users.Add(new User
+                    {
+                        userID = (int)reader["userID"],
+                        firstName = reader["firstName"].ToString(),
+                        lastName = reader["lastName"].ToString()
+                    });
+                }
+            }
+
+            return Page(); // Stay on the same page and reload model data
         }
+
 
     }
 }

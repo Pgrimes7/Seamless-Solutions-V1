@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Publishing Management";
 }
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous">
@@ -10,6 +11,7 @@
 
 <div class="container mt-5">
     <h2>Journals & Publishing</h2>
+
     <button class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#createModal">New Publishing</button>
 
     <table class="table table-striped">
@@ -19,7 +21,7 @@
                 <th>Requirements</th>
                 <th>Authors</th>
                 <th>Status</th>
-                <th>References</th>
+                <th>Reference Count</th>
             </tr>
         </thead>
         <tbody>
@@ -37,27 +39,27 @@
     </table>
 </div>
 
-<!-- Modal -->
+<!-- Create Publishing Modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post">
+            <form method="post" asp-page-handler="Create" class="form-floating">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createModalLabel">New Publishing</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Due Date</label>
-                        <input type="date" class="form-control" name="DueDate" />
+                        <input type="date" class="form-control" name="DueDate" required />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Requirements</label>
-                        <input type="text" class="form-control" name="Requirements" />
+                        <input type="text" class="form-control" name="Requirements" required />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Authors</label>
-                        <select class="form-select" name="Authors">
+                        <select class="form-select" name="Authors" required>
                             @foreach (var user in Model.Users)
                             {
                                 <option value="@($"{user.firstName} {user.lastName}")">@user.firstName @user.lastName</option>
@@ -66,7 +68,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status</label>
-                        <select class="form-select" name="Status">
+                        <select class="form-select" name="Status" required>
                             @foreach (var status in Model.StatusOptions)
                             {
                                 <option value="@status">@status</option>
@@ -75,6 +77,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-success">Create</button>
                 </div>
             </form>
