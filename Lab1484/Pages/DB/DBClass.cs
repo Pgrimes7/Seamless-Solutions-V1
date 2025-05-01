@@ -1741,6 +1741,18 @@ namespace Lab1484.Pages.DB
                 cmd.ExecuteNonQuery();
             }
         }
+        public static void UpdateReferenceCount(int publishID, int newCount)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = Lab3DBConnection;
+            cmd.CommandText = "UPDATE Publishes SET ReferenceCount = @ref WHERE PublishID = @id";
+            cmd.Parameters.AddWithValue("@ref", newCount);
+            cmd.Parameters.AddWithValue("@id", publishID);
+
+            Lab3DBConnection.Open();
+            cmd.ExecuteNonQuery();
+            Lab3DBConnection.Close();
+        }
 
 
 

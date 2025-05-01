@@ -32,7 +32,14 @@
                     <td>@p.Requirements</td>
                     <td>@p.Authors</td>
                     <td>@p.Status</td>
-                    <td>@p.ReferenceCount</td>
+                    <td>
+                        <form method="post" asp-page-handler="EditReference" class="d-flex">
+                            <input type="hidden" name="PublishID" value="@p.PublishID" />
+                            <input type="number" name="ReferenceCount" value="@p.ReferenceCount"
+                                   class="form-control form-control-sm me-1" style="width:80px;" min="0" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
