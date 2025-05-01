@@ -58,3 +58,12 @@
 .grantstatus {
     background-color: #D2EBF5;
 }
+
+
+.edit-icon {
+    position: absolute;
+    top: 38px; /* adjust based on input height and label */
+    right: 12px;
+    cursor: pointer;
+    color: #6c757d;
+}

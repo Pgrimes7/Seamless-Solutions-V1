@@ -95,11 +95,21 @@
                         <div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputFirst" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="inputFirst" value="@Model.CurrentUser?.firstName">
+                                <div class="position-relative">
+                                    <input type="text" class="form-control" id="inputFirst" value="@Model.CurrentUser?.firstName" readonly>
+                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputFirst')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </span>
+                                </div>
                             </div>
                             <div class="col-4">
                                 <label for="inputLast" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="inputLast" value="@Model.CurrentUser?.lastName">
+                                <div class="position-relative">
+                                    <input type="text" class="form-control" id="inputLast" value="@Model.CurrentUser?.lastName" readonly>
+                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputLast')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         @*<div class="row mb-3">
@@ -115,11 +125,21 @@
                         <div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="inputLast" value="@Model.CurrentUser?.email">
+                                <div class="position-relative">
+                                    <input type="email" class="form-control" id="inputEmail" value="@Model.CurrentUser?.email" readonly>
+                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputEmail')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </span>
+                                </div>
                             </div>
                             <div class="col-4">
                                 <label for="inputPhone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="inputLast" value="@Model.CurrentUser?.phone">
+                                <div class="position-relative">
+                                    <input type="tel" class="form-control" id="inputPhone" value="@Model.CurrentUser?.phone" readonly>
+                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputPhone')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         @*<div class="row mb-3">
@@ -144,6 +164,14 @@
 
     <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+    <script>
+        function toggleEdit(inputId) {
+            const input = document.getElementById(inputId);
+            input.readOnly = false;
+            input.classList.remove("readonly-input");
+            input.focus();
+        }
+    </script>
 
 </body>
 
