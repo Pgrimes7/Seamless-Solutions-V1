@@ -1754,6 +1754,7 @@ namespace Lab1484.Pages.DB
                     Requirements = reader["Requirements"].ToString(),
                     Authors = reader["Authors"].ToString(),
                     Status = reader["Status"].ToString(),
+                    FileName = reader["FileName"].ToString(),
                     ReferenceCount = (int)reader["ReferenceCount"]
                 });
             }
@@ -1763,8 +1764,8 @@ namespace Lab1484.Pages.DB
         public static void InsertPublish(Publish p)
         {
             using SqlConnection conn = new SqlConnection(Lab3DBConnString);
-            string query = @"INSERT INTO Publishes (JournalTitle, DueDate, Requirements, Authors, Status, ReferenceCount)
-                     VALUES (@JournalTitle, @DueDate, @Requirements, @Authors, @Status, @ReferenceCount)";
+            string query = @"INSERT INTO Publishes (JournalTitle, DueDate, Requirements, Authors, Status, ReferenceCount, FileName)
+                     VALUES (@JournalTitle, @DueDate, @Requirements, @Authors, @Status, @ReferenceCount, @FileName)";
             SqlCommand cmd = new(query, conn);
             cmd.Parameters.AddWithValue("@JournalTitle", p.JournalTitle ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@DueDate", p.DueDate ?? (object)DBNull.Value);
@@ -1772,6 +1773,7 @@ namespace Lab1484.Pages.DB
             cmd.Parameters.AddWithValue("@Authors", p.Authors ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@Status", p.Status ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@ReferenceCount", p.ReferenceCount);
+            cmd.Parameters.AddWithValue("@FileName", p.FileName ?? (object)DBNull.Value);
             conn.Open();
             cmd.ExecuteNonQuery();
         }

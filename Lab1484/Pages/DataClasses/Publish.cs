@@ -9,6 +9,7 @@
         public string Status { get; set; }
         public int ReferenceCount { get; set; }
         public string JournalTitle { get; set; }
+        public string FileName { get; set; }
     }
 
 }

@@ -23,6 +23,7 @@
                 <th>Authors</th>
                 <th>Status</th>
                 <th>Reference Count</th>
+                <th>File</th>
             </tr>
         </thead>
         <tbody>
@@ -42,17 +43,25 @@
                             <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
                         </form>
                     </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(p.FileName))
+                        {
+                            <a href="~/uploads/@p.FileName" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                Download
+                            </a>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
 
-<!-- Create Publishing Modal -->
+<!-- publishing modal -->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create" class="form-floating">
+            <form method="post" asp-page-handler="Create" enctype="multipart/form-data" class="form-floating">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createModalLabel">New Publishing</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -71,7 +80,7 @@
                         <input type="text" class="form-control" name="Requirements" required />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Authors</label>
+                        <label class="form-label">Author</label>
                         <select class="form-select" name="Authors" required>
                             @foreach (var user in Model.Users)
                             {
@@ -87,6 +96,10 @@
                                 <option value="@status">@status</option>
                             }
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Upload File</label>
+                        <input type="file" class="form-control" name="UploadFile" />
                     </div>
                 </div>
                 <div class="modal-footer">
