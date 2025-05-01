@@ -34,7 +34,7 @@ namespace Lab1484.Pages
 
         public async Task<IActionResult> OnPostCreate(Publish publish, IFormFile UploadFile)
         {
-            // Set ReferenceCount based on Status
+            
             switch (publish.Status?.ToLower())
             {
                 case "accepted":
