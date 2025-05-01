@@ -33,7 +33,7 @@
             else
             {
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <a class="btn btn-secondary rounded-pill" asp-page="/UpdatePermission">List of Grants</a>
+                    <a class="btn btn-secondary rounded-pill" asp-page="/UpdatePermission">Back <i class="fa-solid fa-arrow-left"></i> </a>
                     <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#addUserModal">Add User</button>
                 </div>
                 <br />
@@ -103,7 +103,7 @@
                         {
                             <tr>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#permissionModal" data-userid="@user.userID" data-grantid="@Model.SelectedGrantId">Update</button>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#permissionModal" data-userid="@user.userID" data-grantid="@Model.SelectedGrantId">Update</button>
                                 </td>
                                 <td>@user.firstName</td>
                                 <td>@user.lastName</td>
@@ -115,7 +115,6 @@
                 </table>
             }
 
-           
 
             <!-- Modal for Updating Permissions -->
             <form method="post" asp-page-handler="UpdatePermission">
@@ -130,7 +129,6 @@
                                 <input type="hidden" id="modalUserId" name="userId" />
                                 <input type="hidden" id="modalGrantId" name="grantId" />
 
-                              
                                 <div class="row">
                                     <div class="col">
                                         <h5 asp-for="PersonName">Person Name</h5>
@@ -152,10 +150,9 @@
                                         </div>
                                     </div>
                                 </div> <!--close row-->
-                                
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-danger rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-outline-danger rounded-pill" data-dismiss="modal">Cancel</button>
                                 <button type="submit" class="btn btn-primary rounded-pill">Save changes</button>
                             </div>
                         </div> <!--close modal content-->
@@ -163,37 +160,41 @@
                 </div> <!--close modal-->
             </form>
 
+
             <!-- Modal for Adding Users -->
-            <form id="addUserForm" method="post" asp-page-handler="AddUser">
-                <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="addUserModalLabel">Add User to Grant</h1>
-                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <input type="hidden" name="grantId" value="@Model.SelectedGrantId" />
-                                <div class="row mb-4">
-                                    <div class="col">
-                                        <select asp-for="userId" class="form-select" aria-label="Select User">
-                                            <option value="" disabled selected>Select User</option>
-                                            @foreach (var user in Model.NonGrantUserList)
-                                            {
-                                                <option value="@user.userID">@user.firstName @user.lastName</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-danger rounded-pill" data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary rounded-pill">Add User</button>
-                            </div>
-                        </div> <!--close modal content-->
-                    </div> <!--close modal dialog-->
-                </div> <!--close modal-->
-            </form>
+            
+<!-- Modal for Adding Users -->
+<form id="addUserForm" method="post" asp-page-handler="AddUser">
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addUserModalLabel">Add User to Grant</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="grantId" value="@Model.SelectedGrantId" />
+                    <div class="row mb-4">
+                        <div class="col">
+                            <select asp-for="userId" class="form-select" aria-label="Select User">
+                                <option value="" disabled selected>Select User</option>
+                                @foreach (var user in Model.NonGrantUserList)
+                                {
+                                    <option value="@user.userID">@user.firstName @user.lastName</option>
+                                }
+										</select>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill">Add User</button>
+                </div>
+            </div> <!--close modal content-->
+        </div> <!--close modal dialog-->
+    </div> <!--close modal-->
+</form>
+
 
         </main>
     </body>

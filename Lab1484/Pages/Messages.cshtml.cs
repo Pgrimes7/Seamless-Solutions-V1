@@ -18,6 +18,9 @@ namespace Lab1484.Pages
         public int UnreadMessagesCount { get; set; }
 
         public string currentUser { get; set; }
+        public string? AttachmentFileName { get; set; }
+        public string? AttachmentFilePath { get; set; }
+
 
         public List<MessagesModel> Messages { get; set; } = new List<MessagesModel>();
 
@@ -33,7 +36,9 @@ namespace Lab1484.Pages
             UnreadMessagesCount = DBClass.GetUnreadMessagesCount(currentUser);
 
             // ?? FIX THIS TO CALL GetReceivedMessages() not all messages
-            Messages = DBClass.GetReceivedMessages(currentUser);
+            Messages = DBClass.GetAllMessagesForUser(currentUser);
+
+
 
             return Page();
         }
