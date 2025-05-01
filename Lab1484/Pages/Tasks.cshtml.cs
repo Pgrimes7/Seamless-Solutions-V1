@@ -76,16 +76,7 @@ namespace Lab1484.Pages
                 }
             }
 
-                //Read DB Projects into projects list
-                SqlDataReader projReader = DBClass.ProjectReader(null);
-            while (projReader.Read())
-            {
-                projects.Add(new Project
-                {
-                    ProjectID = Int32.Parse(projReader["ProjectID"].ToString()),
-                    ProjectName = projReader["ProjectName"].ToString()
-                });
-            }
+           
 
             if (DBClass.checkUserType(HttpContext) == 0)
             {
@@ -124,6 +115,17 @@ namespace Lab1484.Pages
                         GTStatus = grantTaskReader["GTStatus"].ToString()
                     });
                 }
+            }
+
+            //Read DB Projects into projects list
+            SqlDataReader projReader = DBClass.ProjectReader(null);
+            while (projReader.Read())
+            {
+                projects.Add(new Project
+                {
+                    ProjectID = Int32.Parse(projReader["ProjectID"].ToString()),
+                    ProjectName = projReader["ProjectName"].ToString()
+                });
             }
 
             //Read DB Projects into projects list
