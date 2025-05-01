@@ -12,8 +12,17 @@ namespace Lab1484.Pages
 
         public List<Project> projects { get; set; } = new List<Project>();
 
+        public List<User> users { get; set; } = new List<User>();
+
         [BindProperty]
         public ProjTask NewTask { get; set; } = new ProjTask();
+
+        public List<GrantTask> gtasks { get; set; } = new List<GrantTask>();
+
+        public List<Grant> grants { get; set; } = new List<Grant>();
+
+        [BindProperty]
+        public GrantTask NewGrantTask { get; set; } = new GrantTask();
 
         public IActionResult OnGet()
         {
@@ -33,9 +42,12 @@ namespace Lab1484.Pages
                 {
                     TaskID = Int32.Parse(taskReader["TaskID"].ToString()),
                     ProjectID = Int32.Parse(taskReader["ProjectID"].ToString()),
+                    UserID = Int32.Parse(taskReader["UserID"].ToString()),
+                    UserName = taskReader["UserName"].ToString(),
                     taskDescription = taskReader["taskDescription"].ToString(),
                     ProjectName = taskReader["ProjectName"].ToString(),
-                    dueDate = taskReader.GetDateTime(taskReader.GetOrdinal("dueDate"))
+                    dueDate = taskReader.GetDateTime(taskReader.GetOrdinal("dueDate")),
+                    PTStatus = taskReader["PTStatus"].ToString()
                 });
             }
 
@@ -50,6 +62,46 @@ namespace Lab1484.Pages
                 });
             }
 
+            SqlDataReader grantTaskReader = DBClass.GrantTaskReader();
+            while (grantTaskReader.Read())
+            {
+                gtasks.Add(new GrantTask
+                {
+                    GTaskID = Int32.Parse(grantTaskReader["GTaskID"].ToString()),
+                    GrantID = Int32.Parse(grantTaskReader["GrantID"].ToString()),
+                    UserID = Int32.Parse(grantTaskReader["UserID"].ToString()),
+                    UserName = grantTaskReader["UserName"].ToString(),
+                    taskDescription = grantTaskReader["taskDescription"].ToString(),
+                    GrantName = grantTaskReader["grantName"].ToString(),
+                    dueDate = grantTaskReader.GetDateTime(grantTaskReader.GetOrdinal("dueDate")),
+                    GTStatus = grantTaskReader["GTStatus"].ToString()
+                });
+            }
+
+            //Read DB Projects into projects list
+            SqlDataReader grantReader = DBClass.GrantReader(null);
+            while (grantReader.Read())
+            {
+                grants.Add(new Grant
+                {
+                    GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
+                    grantName = grantReader["grantName"].ToString()
+                });
+            }
+
+            //Read DB Users into users list
+            SqlDataReader userReader = DBClass.AllUsersReader();
+            while (userReader.Read())
+            {
+                users.Add(new User
+                {
+                    userID = Int32.Parse(userReader["UserID"].ToString()),
+                    firstName = userReader["firstName"].ToString(),
+                    lastName = userReader["lastName"].ToString()
+                });
+            }
+
+
             return Page();
         }
 
@@ -61,6 +113,38 @@ namespace Lab1484.Pages
             }
 
             return RedirectToPage("/Tasks");
+        }
+
+        public IActionResult OnPostAddGrantTask()
+        {
+            if (!string.IsNullOrWhiteSpace(NewGrantTask.taskDescription))
+            {
+                DBClass.InsertGrantTask(NewGrantTask);
+            }
+            return RedirectToPage("/Tasks");
+        }
+
+        public IActionResult OnPostAddProjTask()
+        {
+            if (!string.IsNullOrWhiteSpace(NewTask.taskDescription))
+            {
+                DBClass.InsertTask(NewTask);
+            }
+            return RedirectToPage("/Tasks", null, null, "profile-tab-pane");
+        }
+
+        public IActionResult OnPostCompleteGrantTask(int GTaskID)
+        {
+            DBClass.GrantTaskComplete(GTaskID);
+
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostCompleteTask(int TaskID)
+        {
+            DBClass.TaskComplete(TaskID);
+
+            return RedirectToPage("/Tasks", null, null, "profile-tab-pane");
         }
     }
 }

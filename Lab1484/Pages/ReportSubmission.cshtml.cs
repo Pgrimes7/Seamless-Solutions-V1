@@ -30,22 +30,31 @@ namespace Lab1484.Pages
         {
             ProjectList = new List<Project>();
             GrantList = new List<Grant>();
+            ReportList = new List<Report>();
         }
        
 
-        public async Task OnGetAsync()
+        public IActionResult OnGet()
         {
+            // Check if the user is logged in
+            string currentUser = HttpContext.Session.GetString("username");
+            // Redirect them if they aren't
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                return RedirectToPage("/Login");
+            }
             SqlDataReader reportReader = DBClass.AllReportReader();
-            /*while (reportReader.Read())
+            while (reportReader.Read())
             {
                 ReportList.Add(new Report
                 {
-                 
+                    ReportName = reportReader["ReportName"].ToString(),
+                    ReportDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate"))
 
 
 
                 });
-            }*/
+            }
             SqlDataReader grantReader = DBClass.GrantReader(null);
             while (grantReader.Read())
             {
@@ -77,7 +86,12 @@ namespace Lab1484.Pages
                     ProjectStatus = projectReader["ProjectStatus"].ToString()
                 });
             }
+
+
+            return Page();
         }
+
+      
 
 
         public async Task<IActionResult> OnPostAsync()

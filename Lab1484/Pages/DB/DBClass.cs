@@ -24,27 +24,27 @@ namespace Lab1484.Pages.DB
 
 
         // Connection String - How to find and connect to DB - Uncomment when making local changes
-        private static readonly String? Lab3DBConnString =
-           "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+        //private static readonly String? Lab3DBConnString =
+        //   "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-        /*private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=Lab3;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";*/
+            "TrustServerCertificate=True;";
 
 
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
-        private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+        //private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
-        /*private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
             "Database=AUTH;" +
             "User Id=capstoneadmin;" +
             "Password=Seamless123!@#;" +
             "Encrypt=True;" +
-            "TrustServerCertificate=True;";*/
+            "TrustServerCertificate=True;";
 
         //Connection Methods:
 
@@ -136,9 +136,11 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectRead.CommandText = "SELECT Tasks.*, Project.ProjectName " +
-                "FROM Tasks " +
-                "JOIN Project ON Project.ProjectID = Tasks.ProjectID;";
+            cmdProjectRead.CommandText = "SELECT ProjTasks.*, Project.ProjectName, CONCAT(Users.FirstName, ' ', Users.LastName) AS 'UserName' " +
+                "FROM ProjTasks " +
+                "JOIN Project ON Project.ProjectID = ProjTasks.ProjectID " +
+                "JOIN Users ON Users.UserID = ProjTasks.UserID " +
+                "ORDER BY CASE WHEN PTStatus = 'Incomplete' THEN 1 WHEN PTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
@@ -156,18 +158,101 @@ namespace Lab1484.Pages.DB
                     Lab3DBConnection.Close();
                 }
 
-                string sqlQuery = "INSERT INTO Tasks (ProjectID, taskDescription, dueDate) VALUES (@ProjectID, @taskDescription, @dueDate);";
+                string sqlQuery = "INSERT INTO ProjTasks (ProjectID, UserID, taskDescription, dueDate) VALUES (@ProjectID, @UserID, @taskDescription, @dueDate);";
 
                 SqlCommand cmdTaskInsert = new SqlCommand();
                 cmdTaskInsert.Connection = Lab3DBConnection;
                 cmdTaskInsert.Connection.ConnectionString = Lab3DBConnString;
                 cmdTaskInsert.CommandText = sqlQuery;
                 cmdTaskInsert.Parameters.AddWithValue("@ProjectID", t.ProjectID);
+                cmdTaskInsert.Parameters.AddWithValue("@UserID", t.UserID);
                 cmdTaskInsert.Parameters.AddWithValue("@taskDescription", t.taskDescription);
                 cmdTaskInsert.Parameters.AddWithValue("@dueDate", t.dueDate);
                 cmdTaskInsert.Connection.Open();
                 cmdTaskInsert.ExecuteNonQuery();
             }
+        }
+
+        public static void TaskComplete(int TaskID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "UPDATE ProjTasks " +
+                "SET PTStatus = 'Complete' " +
+                "WHERE TaskID = @TaskID;";
+            SqlCommand cmdTaskUpdate = new SqlCommand();
+            cmdTaskUpdate.Connection = Lab3DBConnection;
+            cmdTaskUpdate.Connection.ConnectionString = Lab3DBConnString;
+            cmdTaskUpdate.CommandText = sqlQuery;
+            cmdTaskUpdate.Parameters.AddWithValue("@TaskID", TaskID);
+            cmdTaskUpdate.Connection.Open();
+            cmdTaskUpdate.ExecuteNonQuery();
+        }
+
+        public static SqlDataReader GrantTaskReader()
+        {
+            SqlCommand cmdGrantTaskRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdGrantTaskRead.Connection = Lab3DBConnection;
+            cmdGrantTaskRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdGrantTaskRead.CommandText = "SELECT GrantTasks.*, Grants.grantName, CONCAT(Users.FirstName, ' ', Users.LastName) AS 'UserName' " +
+                "FROM GrantTasks " +
+                "JOIN Grants ON Grants.GrantID = GrantTasks.GrantID " +
+                "JOIN Users ON Users.UserID = GrantTasks.UserID " +
+                "ORDER BY CASE WHEN GTStatus = 'Incomplete' THEN 1 WHEN GTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
+            cmdGrantTaskRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdGrantTaskRead.ExecuteReader();
+
+            return tempReader;
+            cmdGrantTaskRead.Connection.Close();
+        }
+
+        //Insert  GrantTask
+        public static void InsertGrantTask(GrantTask g)
+        {
+            {
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+
+                string sqlQuery = "INSERT INTO GrantTasks (GrantID, UserID, taskDescription, dueDate) VALUES (@GrantID, @UserID, @taskDescription, @dueDate);";
+
+                SqlCommand cmdGrantTaskInsert = new SqlCommand();
+                cmdGrantTaskInsert.Connection = Lab3DBConnection;
+                cmdGrantTaskInsert.Connection.ConnectionString = Lab3DBConnString;
+                cmdGrantTaskInsert.CommandText = sqlQuery;
+                cmdGrantTaskInsert.Parameters.AddWithValue("@GrantID", g.GrantID);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@UserID", g.UserID);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@taskDescription", g.taskDescription);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@dueDate", g.dueDate);
+                cmdGrantTaskInsert.Connection.Open();
+                cmdGrantTaskInsert.ExecuteNonQuery();
+            }
+        }
+
+        public static void GrantTaskComplete(int GTaskID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "UPDATE GrantTasks " +
+                "SET GTStatus = 'Complete' " +
+                "WHERE GTaskID = @GTaskID;";
+            SqlCommand cmdGrantTaskUpdate = new SqlCommand();
+            cmdGrantTaskUpdate.Connection = Lab3DBConnection;
+            cmdGrantTaskUpdate.Connection.ConnectionString = Lab3DBConnString;
+            cmdGrantTaskUpdate.CommandText = sqlQuery;
+            cmdGrantTaskUpdate.Parameters.AddWithValue("@GTaskID", GTaskID);
+            cmdGrantTaskUpdate.Connection.Open();
+            cmdGrantTaskUpdate.ExecuteNonQuery();
         }
 
 
@@ -188,7 +273,8 @@ namespace Lab1484.Pages.DB
                 cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
                     "from Grants " +
                     "join Users ON Users.UserID = Grants.FacultyLeadID " +
-                    "where grantName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR amount LIKE @SearchQuery OR dueDate LIKE @SearchQuery OR grantStatus LIKE @SearchQuery OR businessName LIKE @SearchQuery OR category LIKE @SearchQuery; ";
+                    "where grantName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR amount LIKE @SearchQuery OR dueDate LIKE @SearchQuery OR grantStatus LIKE @SearchQuery OR businessName LIKE @SearchQuery OR category LIKE @SearchQuery " +
+                    "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC;";
 
                 cmdGrantRead.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
 
@@ -198,7 +284,8 @@ namespace Lab1484.Pages.DB
             {
                 cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
                     "from Grants " +
-                    "join Users ON Users.UserID = Grants.FacultyLeadID; ";
+                    "join Users ON Users.UserID = Grants.FacultyLeadID " +
+                    "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC; ";
             }
 
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
@@ -551,6 +638,151 @@ namespace Lab1484.Pages.DB
 
             return rowCount;
         }
+        //new
+        public static List<MessagesModel> GetConversationSummaries(string currentUser)
+        {
+            var messages = new List<MessagesModel>();
+
+            string query = @"
+        WITH UserConversations AS (
+            SELECT 
+                CASE 
+                    WHEN Sender = @currentUser THEN Receiver
+                    ELSE Sender
+                END AS OtherUser,
+                MAX(Timestamp) AS LatestTime
+            FROM Messages
+            WHERE Sender = @currentUser OR Receiver = @currentUser
+            GROUP BY CASE 
+                        WHEN Sender = @currentUser THEN Receiver
+                        ELSE Sender
+                     END
+        )
+        SELECT 
+            uc.OtherUser,
+            m.Content AS LastMessage,
+            m.Timestamp AS LatestTime
+        FROM UserConversations uc
+        JOIN Messages m ON 
+            ((m.Sender = @currentUser AND m.Receiver = uc.OtherUser) OR
+             (m.Receiver = @currentUser AND m.Sender = uc.OtherUser))
+            AND m.Timestamp = uc.LatestTime
+        ORDER BY LatestTime DESC;
+    ";
+
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@currentUser", currentUser);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    messages.Add(new MessagesModel
+                    {
+                        Receiver = reader["OtherUser"].ToString(),
+                        Content = reader["LastMessage"].ToString(),
+                        SentDate = (DateTime)reader["LatestTime"]
+                    });
+                }
+            }
+
+            return messages;
+        }
+
+        public static void SendMessage(string sender, string receiver, string content, string? fileName, string? filePath)
+        {
+            string query = @"
+        INSERT INTO Messages (Sender, Receiver, Content, Timestamp, IsRead, AttachmentFileName, AttachmentFilePath)
+        VALUES (@Sender, @Receiver, @Content, GETDATE(), 0, @AttachmentFileName, @AttachmentFilePath)";
+
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Sender", sender);
+                cmd.Parameters.AddWithValue("@Receiver", receiver);
+                cmd.Parameters.AddWithValue("@Content", content);
+                cmd.Parameters.AddWithValue("@AttachmentFileName", (object?)fileName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@AttachmentFilePath", (object?)filePath ?? DBNull.Value);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
+
+        public static List<MessagesModel> GetAllMessagesForUser(string username)
+        {
+            List<MessagesModel> messages = new List<MessagesModel>();
+
+            string query = @"
+        SELECT MessageId, Sender, Receiver, Content, Timestamp AS SentDate, IsRead
+        FROM Messages
+        WHERE Sender = @Username OR Receiver = @Username
+        ORDER BY Timestamp";
+
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Username", username);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    messages.Add(new MessagesModel
+                    {
+                        MessageId = (int)reader["MessageId"],
+                        Sender = reader["Sender"].ToString(),
+                        Receiver = reader["Receiver"].ToString(),
+                        Content = reader["Content"].ToString(),
+                        SentDate = (DateTime)reader["SentDate"],
+                        IsRead = Convert.ToInt32(reader["IsRead"])
+                    });
+                }
+            }
+
+            return messages;
+        }
+
+        public static List<MessagesModel> GetConversationBetween(string user1, string user2)
+        {
+            List<MessagesModel> messages = new List<MessagesModel>();
+
+            string query = @"
+        SELECT MessageId, Sender, Receiver, Content, Timestamp AS SentDate, IsRead
+        FROM Messages
+        WHERE (Sender = @User1 AND Receiver = @User2) OR (Sender = @User2 AND Receiver = @User1)
+        ORDER BY Timestamp ASC";
+
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@User1", user1);
+                cmd.Parameters.AddWithValue("@User2", user2);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    messages.Add(new MessagesModel
+                    {
+                        MessageId = (int)reader["MessageId"],
+                        Sender = reader["Sender"].ToString(),
+                        Receiver = reader["Receiver"].ToString(),
+                        Content = reader["Content"].ToString(),
+                        SentDate = (DateTime)reader["SentDate"],
+                        IsRead = Convert.ToInt32(reader["IsRead"])
+                    });
+                }
+            }
+
+            return messages;
+        }
 
         //Messages methods:
         public static List<MessagesModel> GetReceivedMessages(string receiver)
@@ -726,6 +958,8 @@ namespace Lab1484.Pages.DB
             return tempReader;
             cmdMessageRead.Connection.Close();
         }
+        //end
+        
 
         public static SqlDataReader CredentialsReader()
         {
