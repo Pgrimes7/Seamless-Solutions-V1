@@ -33,13 +33,28 @@ CREATE TABLE EmployeeProject (
 	FOREIGN KEY (EmployeeID) REFERENCES Users(UserID)
 );
 
---Tasks Table
-CREATE TABLE Tasks (
+--Project Tasks Table
+CREATE TABLE ProjTasks (
 	TaskID INT IDENTITY(1,1) PRIMARY KEY,
 	ProjectID INT,
+	UserID INT,
 	taskDescription NVARCHAR(200),
 	dueDate DATE,
-	FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+	PTStatus VARCHAR(20) NOT NULL DEFAULT ('Incomplete'),
+	FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID),
+	FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+--Grant Tasks Table
+CREATE TABLE GrantTasks (
+	GTaskID INT IDENTITY(1,1) PRIMARY KEY,
+	GrantID INT,
+	UserID INT,
+	taskDescription NVARCHAR(200),
+	dueDate DATE,
+	GTStatus VARCHAR(20) NOT NULL DEFAULT ('Incomplete'),
+	FOREIGN KEY (GrantID) REFERENCES Grants(GrantID),
+	FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
 --Notes Table
@@ -174,10 +189,16 @@ INSERT INTO EmployeeProject (ProjectID, EmployeeID) VALUES
 (2, 2);
 
 --Tasks Inserts
-INSERT INTO Tasks (ProjectID, taskDescription, dueDate) VALUES
-(1, 'Complete form submission', '2025-11-15'),
-(1, 'Assign PI', '2025-04-19'),
-(2, 'Meet with client', '2025-05-14');
+INSERT INTO ProjTasks (ProjectID, UserID, taskDescription, dueDate) VALUES
+(1, 2, 'Complete form submission', '2025-11-15'),
+(1, 4, 'Assign PI', '2025-04-19'),
+(2, 8, 'Meet with client', '2025-05-14');
+
+--Grant Tasks Inserts
+INSERT INTO GrantTasks (GrantID, UserID, taskDescription, dueDate) VALUES
+(1, 2, 'Follow up with client', '2025-11-15'),
+(2, 4, 'Review submission', '2025-04-19'),
+(3, 8, 'Go to public safety office', '2025-05-14');
 
 -- Insert Notes
 INSERT INTO Notes (ProjectID, noteBody) VALUES
@@ -227,4 +248,6 @@ ADD CONSTRAINT FK_Sender FOREIGN KEY (SenderID) REFERENCES Users(UserID),
 
 ALTER TABLE Messages
 ADD AttachmentFileName NVARCHAR(255),
-    AttachmentFilePath NVARCHAR(500);
+    AttachmentFilePath NVARCHAR(500)
+;
+
