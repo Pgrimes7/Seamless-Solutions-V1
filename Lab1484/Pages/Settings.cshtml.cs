@@ -46,11 +46,13 @@ namespace Lab1484.Pages
 
         public async Task<IActionResult> OnPostUploadProfileImageAsync(IFormFile ProfileImage)
         {
+            string? userIdString = HttpContext.Session.GetString("userID");
+
             if (ProfileImage != null && ProfileImage.Length > 0)
             {
                 // Generate a unique filename based on the user ID and the original file name
                 string fileExtension = Path.GetExtension(ProfileImage.FileName);
-                string fileName = $"profile_{HttpContext.Session.GetString("userId")}{fileExtension}";
+                string fileName = $"profile_{HttpContext.Session.GetString("userID")}{fileExtension}";
                 string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 
                 // Save the file to wwwroot/images
@@ -60,7 +62,7 @@ namespace Lab1484.Pages
                 }
 
                 // Update the user's profile image in the database
-                var userId = int.Parse(HttpContext.Session.GetString("userId"));
+                var userId = int.Parse(HttpContext.Session.GetString("userID"));
                 User user = DBClass.GetProfilePictureById(userId);
                 if (user != null)
                 {
