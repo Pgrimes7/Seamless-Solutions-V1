@@ -251,3 +251,13 @@ ADD AttachmentFileName NVARCHAR(255),
     AttachmentFilePath NVARCHAR(500)
 ;
 
+CREATE TABLE Publishes (
+    PublishID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    DueDate DATE,
+    Requirements NVARCHAR(MAX), 
+    Authors NVARCHAR(MAX),
+    Status NVARCHAR(50),
+    ReferenceCount INT
+);
+
+

@@ -156,51 +156,66 @@
                         <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                             <div class="btn-toolbar my-2 mb-md-0">
                                 <!--create grant task button trigger modal-->
-                                <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#creategrantModal">
+                                <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createGrantTaskModal">
                                     Create
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div> <!--close btn toolbar-->
                             <!--create task modal -->
-                            <div class="modal fade" id="createtaskModal" tabindex="-1" aria-labelledby="createtaskModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="createGrantTaskModal" tabindex="-1" aria-labelledby="createGrantTaskModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                      <div class="modal-content">
                                          <div class="modal-header">
-                                             <h1 class="modal-title fs-5" id="createtaskModalLabel">Create New Task</h1>
+                                            <h1 class="modal-title fs-5" id="createGrantTaskModalLabel">Assign New Grant Task</h1>
                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                          </div>
-                                         <form method="post">
+                                         <form method="post" asp-page-handler="AddGrantTask">
                                              <div class="modal-body">
-                                                     <div class="row mb-4">
-                                                         <div class="col-sm-6">
-                                                             <div class="form-floating">
-                                                                 <select asp-for="NewTask.ProjectID" id="floatingProj" class="form-select" aria-label="Default select example">
-                                                                     @foreach (var proj in Model.projects) {
-                                                                         <option value="@proj.ProjectID">@proj.ProjectName</option>
-                                                                     }
-                                                                 </select>
-                                                                 <label for="floatingProj" class="form-label">Associated Project</label>
-                                                             </div>
-                                                         </div>
- 										                <div class="col-sm-6">
-                                                             <div class="form-floating">
-                                                                 <input asp-for="NewTask.dueDate" type="date" class="form-control" id="floatingDate" placeholder="Due Date" />                                                     <label for="floatingDate">Due Date</label>
-                                                             </div>
-                                                         </div>
-                                                     </div>
-                                                     <hr>
-                                                     <div class="row">
-                                                         <div class="col">
-                                                         <label asp-for="NewTask.taskDescription" class="form-label">Task Description</label>
-                                                             <div class="form-floating mb-4">
-                                                             <input asp-for="NewTask.taskDescription" type="text" class="form-control" id="floatingTaskDesc" placeholder="Enter Task Description" required
-                                                                    oninvalid="this.setCustomValidity('Please enter a task description')"
-                                                                    oninput="this.setCustomValidity('')">
-                                                                 <label for="floatingTaskDesc">Task Description</label>
-                                                             </input>
-                                                             </div>
-                                                         </div>
-                                                     </div>
+                                                 <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <select asp-for="NewGrantTask.GrantID" id="floatingGrant" class="form-select" aria-label="Default select example">
+                                                                @foreach (var grant in Model.grants) {
+                                                                    <option value="@grant.GrantID">@grant.grantName</option>
+                                                                }
+                                                            </select>
+                                                            <label for="floatingGrant" class="form-label">Associated Grant</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+ 										            <div class="col">
+                                                        <div class="form-floating">
+                                                            <input asp-for="NewGrantTask.dueDate" type="date" class="form-control" id="floatingDate" placeholder="Due Date" />                                                     <label for="floatingDate">Due Date</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col">
+                                                    <div class="form-floating">
+                                                        <select asp-for="NewGrantTask.UserID" id="floatingGrantUser" class="form-select" aria-label="Default select example">
+                                                            @foreach (var user in Model.users)
+                                                            {
+                                                                <option value="@user.userID">@user.firstName @user.lastName</option>
+                                                            }
+                                                        </select>
+                                                        <label for="floatingGrantUser" class="form-label">Associated User</label>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                        <input asp-for="NewGrantTask.taskDescription" type="text" class="form-control" id="floatingGrantTaskDesc" placeholder="Enter Task Description" required
+                                                            oninvalid="this.setCustomValidity('Please enter a task description')"
+                                                            oninput="this.setCustomValidity('')" />
+                                                            <label for="floatingGrantTaskDesc">Task Description</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                              </div>
                                              <div class="modal-footer">
                                                      <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
@@ -215,6 +230,7 @@
                                 <table id="grantTable" class="table align-middle mb-0 bg-white">
                                     <thead class="bg-light">
                                         <tr>
+                                            <th scope="col">Mark Complete</th>
                                             <th scope="col">Related User</th>
                                             <th scope="col">Related Grant</th>
                                             <th scope="col">Description</th>
@@ -226,6 +242,14 @@
                                         @foreach (var gtask in Model.gtasks)
                                         {
                                             <tr>
+                                                <td>
+                                                    <form method="post" asp-page-handler="CompleteGrantTask" asp-route-GTaskID="@gtask.GTaskID">
+                                                        <button type="submit"
+                                                                class="btn btn-sm btn-outline-success">
+                                                            <i class="fa-solid fa-check"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                                 <td>@gtask.UserName</td>
                                                 <td>@gtask.GrantName</td>
                                                 <td>@gtask.taskDescription</td>
@@ -241,16 +265,82 @@
                         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                             <div class="btn-toolbar my-2 mb-md-0">
                                 <!--create project task button trigger modal-->
-                                <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#creategrantModal">
+                                <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createProjectTaskModal">
                                     Create
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
                             </div> <!--close btn toolbar-->
+                            <!--create task modal -->
+                            <div class="modal fade" id="createProjectTaskModal" tabindex="-1" aria-labelledby="createProjectTaskModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="createProjectTaskModal">Assign New Project Task</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="post" asp-page-handler="AddProjTask">
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <select asp-for="NewTask.ProjectID" id="floatingProject" class="form-select" aria-label="Default select example">
+                                                                @foreach (var proj in Model.projects)
+                                                                {
+                                                                    <option value="@proj.ProjectID">@proj.ProjectName</option>
+                                                                }
+                                                            </select>
+                                                            <label for="floatingProject" class="form-label">Associated Project</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <input asp-for="NewTask.dueDate" type="date" class="form-control" id="floatingDate" placeholder="Due Date" />                                                     <label for="floatingDate">Due Date</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <select asp-for="NewTask.UserID" id="floatingProjUser" class="form-select" aria-label="Default select example">
+                                                                @foreach (var user in Model.users)
+                                                                {
+                                                                    <option value="@user.userID">@user.firstName @user.lastName</option>
+                                                                }
+                                                            </select>
+                                                            <label for="floatingProjUser" class="form-label">Associated User</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-floating mb-4">
+                                                            <input asp-for="NewTask.taskDescription" type="text" class="form-control" id="floatingProjTaskDesc" placeholder="Enter Task Description" required
+                                                                   oninvalid="this.setCustomValidity('Please enter a task description')"
+                                                                   oninput="this.setCustomValidity('')" />
+                                                            <label for="floatingProjTaskDesc">Task Description</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Assign Task</button>
+                                            </div>
+                                        </form>
+                                    </div> <!--close modal content-->
+                                </div> <!--close modal dialog-->
+                            </div> <!--close modal-->
                             <!--project task table-->
                             <div class="table-responsive table-bordered rounded small my-2">
                                 <table id="grantTable" class="table align-middle mb-0 bg-white">
                                     <thead class="bg-light">
                                         <tr>
+                                            <th scope="col">Mark Complete</th>
                                             <th scope="col">Related User</th>
                                             <th scope="col">Related Project</th>
                                             <th scope="col">Description</th>
@@ -262,6 +352,14 @@
                                         @foreach (var task in Model.tasks)
                                         {
                                             <tr>
+                                                <td>
+                                                    <form method="post" asp-page-handler="CompleteTask" asp-route-TaskID="@task.TaskID">
+                                                        <button type="submit"
+                                                                class="btn btn-sm btn-outline-success">
+                                                            <i class="fa-solid fa-check"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                                 <td>@task.UserName</td>
                                                 <td>@task.ProjectName</td>
                                                 <td>@task.taskDescription</td>
@@ -287,27 +385,17 @@
     <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
 
     <script>
-        var editModal = document.getElementById('editgrantModal');
-        editModal.addEventListener('show.bs.modal', function (event) {
-          var btn = event.relatedTarget;
-          var modal = this;
-          // grab the data- attributes
-          var id       = btn.getAttribute('data-grant-id');
-          var name     = btn.getAttribute('data-grant-name');
-          var due      = btn.getAttribute('data-grant-duedate');
-          var business = btn.getAttribute('data-grant-business');
-          var category = btn.getAttribute('data-grant-category');
-          var status   = btn.getAttribute('data-grant-status');
-          var amount   = btn.getAttribute('data-grant-amount');
-
-          // populate the inputs
-          modal.querySelector('input[name="newGrant.GrantID"]').value      = id;
-          modal.querySelector('input[name="newGrant.grantName"]').value    = name;
-          modal.querySelector('input[name="newGrant.dueDate"]').value      = due;
-          modal.querySelector('input[name="newGrant.businessName"]').value = business;
-          modal.querySelector('select[name="newGrant.category"]').value    = category;
-          modal.querySelector('select[name="newGrant.grantStatus"]').value = status;
-          modal.querySelector('input[name="newGrant.amount"]').value       = amount;
+        document.addEventListener("DOMContentLoaded", function() {
+          var hash = window.location.hash;
+          if (hash) {
+            var triggerEl = document.querySelector(
+              '#myTab button[data-bs-target="' + hash + '"]'
+            );
+            if (triggerEl) {
+              var tab = new bootstrap.Tab(triggerEl);
+              tab.show();
+            }
+          }
         });
     </script>
 

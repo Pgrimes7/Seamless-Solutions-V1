@@ -49,32 +49,73 @@
                             <div class="d-flex align-items-center">
                                 <div style="position: relative; width: 100px; height: 100px;">
                                         <img src="@(Model.ProfileImagePath)" alt="" style="width: 100px; height: 100px" class="rounded-circle">
-                                        <label for="fileInput" style="position: absolute;bottom: 0;right: 0;background-color: #ffffffcc;border-radius: 50%;padding: 6px;cursor: pointer;box-shadow: 0 0 4px rgba(0,0,0,0.2);">
-                                            <img src="/icons/edit-icon.png" alt="Edit" style="width: 20px; height: 20px;" />
+
+                                        <label for="fileInput" style="position: absolute; bottom: 0; right: 0; background-color: #ffffffcc;
+                                        border: none; border-radius: 50%; padding: 6px; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.2);
+                                        width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-pencil"></i>
                                         </label>
+
+
+                                        @*<!-- Modal -->
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure you want to delete your profile picture? This action cannot be undone.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <form method="post" enctype="multipart/form-data" asp-page-handler="DeleteProfileImage">
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>*@
+
                                         <input type="file" id="fileInput" name="ProfileImage"
                                                accept=".png,.jpg,.jpeg"
                                                style="display: none;" onchange="this.form.submit()" />
                                     </div>
 
                                 <div class="ms-3">
-                                    <h4 class="fw-bold mb-1">John Doe</h4>
-                                    <h5 class="text-muted mb-0">john.doe@gmail.com</h5>
+                                        <h4 class="fw-bold mb-1">@Model.CurrentUser?.firstName @Model.CurrentUser?.lastName</h4>
+                                        <h5 class="text-muted mb-0">@Model.CurrentUser?.email</h5>
                                 </div>
                             </div>
                         </div>
                         </form>
+
+                        
+                        <form method="post" asp-page-handler="UpdateUser" class="form-floating">
+                            <input type="hidden" id="editUserID" asp-for="UpdateUser.UserID" value="@Model.CurrentUser?.userID" />
+                            <input type="hidden" id="editUserType" asp-for="UpdateUser.UserType" value="@Model.CurrentUser?.UserType" />
                         <div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputFirst" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="inputFirst" placeholder="John">
+                                <div class="position-relative">
+                                        <input asp-for="UpdateUser.FirstName" type="text" class="form-control" id="inputFirst" value="@Model.CurrentUser?.firstName" readonly>
+                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputFirst')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </span>
+                                </div>
                             </div>
                             <div class="col-4">
                                 <label for="inputLast" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="inputLast" placeholder="Doe">
+                                <div class="position-relative">
+                                        <input asp-for="UpdateUser.LastName" type="text" class="form-control" id="inputLast" value="@Model.CurrentUser?.lastName" readonly>
+                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputLast')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        @*<div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputUsername" class="form-label">Username</label>
                                 <input type="text" class="form-control" id="inputLast" placeholder="doej">
@@ -83,26 +124,36 @@
                                 <label for="inputPassword" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="inputLast" placeholder="Password1234">
                             </div>
-                        </div>
+                        </div>*@
                         <div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="inputLast" placeholder="johndoe@email.com">
+                                <div class="position-relative">
+                                        <input asp-for="UpdateUser.Email" type="email" class="form-control" id="inputEmail" value="@Model.CurrentUser?.email" readonly>
+                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputEmail')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </span>
+                                </div>
                             </div>
                             <div class="col-4">
                                 <label for="inputPhone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="inputLast" placeholder="123-456-7890">
+                                <div class="position-relative">
+                                        <input asp-for="UpdateUser.Phone" type="tel" class="form-control" id="inputPhone" value="@Model.CurrentUser?.phone" readonly>
+                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputPhone')">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        @*<div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputPicture" class="form-label">Profile picture:</label>
                                 <input type="file" class="form-control" id="inputPicture" placeholder="Doe" accept="image/*">
                             </div>
-                        </div>
+                        </div>*@
 
                         <button type="submit" class="btn btn-primary">Update</button>
-
+                        </form>
                         
                     </div> <!--close main content row-->
                 </div> <!--close main content col-->
@@ -116,6 +167,14 @@
 
     <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+    <script>
+        function toggleEdit(inputId) {
+            const input = document.getElementById(inputId);
+            input.readOnly = false;
+            input.classList.remove("readonly-input");
+            input.focus();
+        }
+    </script>
 
 </body>
 

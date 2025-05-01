@@ -165,6 +165,12 @@
 									</a>
 								</li>
                                 <li class="nav-item">
+                                    <a asp-page="/Publishes" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Publishes", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                                        <i class="fa-solid fa-book-open"></i>
+                                        <span class="ms-1 d-none d-sm-inline">Journals & Publishing</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a asp-page="/Archive" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Archive", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
                                         <i class="fa-solid fa-file-alt"></i>
                                         <span class="ms-1 d-none d-sm-inline">Grant Archive</span>

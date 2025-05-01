@@ -23,28 +23,27 @@ namespace Lab1484.Pages.DB
         public static SqlConnection AUTHDBConnection = new SqlConnection();
 
 
-       // Connection String - How to find and connect to DB - Uncomment when making local changes
-        private static readonly String? Lab3DBConnString =
-           "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+         //Connection String - How to find and connect to DB - Uncomment when making local changes
+        private static readonly String? Lab3DBConnString ="Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-        //private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+       // private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
          //   "Database=Lab3;" +
-          //  "User Id=capstoneadmin;" +
+         //   "User Id=capstoneadmin;" +
          //   "Password=Seamless123!@#;" +
-          //  "Encrypt=True;" +
-          //  "TrustServerCertificate=True;";
+           // "Encrypt=True;" +
+           // "TrustServerCertificate=True;";
 
 
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
         private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
-      //  private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-          //  "Database=AUTH;" +
+        //private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+         //   "Database=AUTH;" +
         //    "User Id=capstoneadmin;" +
-        //    "Password=Seamless123!@#;" +
-        //    "Encrypt=True;" +
-        //    "TrustServerCertificate=True;";
+          //  "Password=Seamless123!@#;" +
+         //   "Encrypt=True;" +
+         //   "TrustServerCertificate=True;";
 
         //Connection Methods:
 
@@ -140,7 +139,7 @@ namespace Lab1484.Pages.DB
                 "FROM ProjTasks " +
                 "JOIN Project ON Project.ProjectID = ProjTasks.ProjectID " +
                 "JOIN Users ON Users.UserID = ProjTasks.UserID " +
-                "ORDER BY ProjTasks.dueDate ASC;";
+                "ORDER BY CASE WHEN PTStatus = 'Incomplete' THEN 1 WHEN PTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
@@ -173,6 +172,24 @@ namespace Lab1484.Pages.DB
             }
         }
 
+        public static void TaskComplete(int TaskID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "UPDATE ProjTasks " +
+                "SET PTStatus = 'Complete' " +
+                "WHERE TaskID = @TaskID;";
+            SqlCommand cmdTaskUpdate = new SqlCommand();
+            cmdTaskUpdate.Connection = Lab3DBConnection;
+            cmdTaskUpdate.Connection.ConnectionString = Lab3DBConnString;
+            cmdTaskUpdate.CommandText = sqlQuery;
+            cmdTaskUpdate.Parameters.AddWithValue("@TaskID", TaskID);
+            cmdTaskUpdate.Connection.Open();
+            cmdTaskUpdate.ExecuteNonQuery();
+        }
+
         public static SqlDataReader GrantTaskReader()
         {
             SqlCommand cmdGrantTaskRead = new SqlCommand();//Make new sqlCommand object
@@ -186,7 +203,7 @@ namespace Lab1484.Pages.DB
                 "FROM GrantTasks " +
                 "JOIN Grants ON Grants.GrantID = GrantTasks.GrantID " +
                 "JOIN Users ON Users.UserID = GrantTasks.UserID " +
-                "ORDER BY GrantTasks.dueDate ASC;";
+                "ORDER BY CASE WHEN GTStatus = 'Incomplete' THEN 1 WHEN GTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
             cmdGrantTaskRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdGrantTaskRead.ExecuteReader();
@@ -195,8 +212,8 @@ namespace Lab1484.Pages.DB
             cmdGrantTaskRead.Connection.Close();
         }
 
-        //Insert Task
-        public static void GrantInsertTask(ProjTask t)
+        //Insert  GrantTask
+        public static void InsertGrantTask(GrantTask g)
         {
             {
                 if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
@@ -210,13 +227,31 @@ namespace Lab1484.Pages.DB
                 cmdGrantTaskInsert.Connection = Lab3DBConnection;
                 cmdGrantTaskInsert.Connection.ConnectionString = Lab3DBConnString;
                 cmdGrantTaskInsert.CommandText = sqlQuery;
-                cmdGrantTaskInsert.Parameters.AddWithValue("@GrantID", t.ProjectID);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@UserID", t.UserID);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@taskDescription", t.taskDescription);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@dueDate", t.dueDate);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@GrantID", g.GrantID);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@UserID", g.UserID);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@taskDescription", g.taskDescription);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@dueDate", g.dueDate);
                 cmdGrantTaskInsert.Connection.Open();
                 cmdGrantTaskInsert.ExecuteNonQuery();
             }
+        }
+
+        public static void GrantTaskComplete(int GTaskID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "UPDATE GrantTasks " +
+                "SET GTStatus = 'Complete' " +
+                "WHERE GTaskID = @GTaskID;";
+            SqlCommand cmdGrantTaskUpdate = new SqlCommand();
+            cmdGrantTaskUpdate.Connection = Lab3DBConnection;
+            cmdGrantTaskUpdate.Connection.ConnectionString = Lab3DBConnString;
+            cmdGrantTaskUpdate.CommandText = sqlQuery;
+            cmdGrantTaskUpdate.Parameters.AddWithValue("@GTaskID", GTaskID);
+            cmdGrantTaskUpdate.Connection.Open();
+            cmdGrantTaskUpdate.ExecuteNonQuery();
         }
 
 
@@ -1589,14 +1624,14 @@ namespace Lab1484.Pages.DB
         }
 
 
-        //retieving the user profile picture
-        public static User? GetProfilePictureById(int userId)
+        //retrieving the user profile picture
+        public static User? GetUserInfoById(int userId)
         {
             User? user = null;
             
             using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
-                string query = @"SELECT userID, firstName, lastName, email, phone, UserType, ProfileImageFileName 
+                string query = @"SELECT userID, firstName, lastName, email, phoneNumber, UserType, ProfileImageFileName 
                          FROM Users WHERE userID = @userID";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -1610,11 +1645,11 @@ namespace Lab1484.Pages.DB
                         {
                             user = new User
                             {
-                                userID = reader.GetInt32(reader.GetOrdinal("userID")),
+                                userID = reader.GetInt32(reader.GetOrdinal("UserID")),
                                 firstName = reader.GetString(reader.GetOrdinal("firstName")),
                                 lastName = reader.GetString(reader.GetOrdinal("lastName")),
                                 email = reader.GetString(reader.GetOrdinal("email")),
-                                phone = reader["phone"] as string,
+                                phone = reader["phoneNumber"] as string,
                                 UserType = reader["UserType"] as int?,
                                 ProfileImageFileName = reader["ProfileImageFileName"] as string
                             };
@@ -1625,7 +1660,64 @@ namespace Lab1484.Pages.DB
 
             return user;
         }
-        
+
+        //Publish
+        public static List<Publish> GetAllPublishes()
+        {
+            List<Publish> list = new();
+            using SqlConnection conn = new SqlConnection(Lab3DBConnString);
+            string query = "SELECT * FROM Publishes";
+            SqlCommand cmd = new(query, conn);
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                list.Add(new Publish
+                {
+                    PublishID = (int)reader["PublishID"],
+                    DueDate = reader["DueDate"] as DateTime?,
+                    Requirements = reader["Requirements"].ToString(),
+                    Authors = reader["Authors"].ToString(),
+                    Status = reader["Status"].ToString(),
+                    ReferenceCount = (int)reader["ReferenceCount"]
+                });
+            }
+            return list;
+        }
+
+        public static void InsertPublish(Publish p)
+        {
+            using SqlConnection conn = new SqlConnection(Lab3DBConnString);
+            string query = @"INSERT INTO Publishes (DueDate, Requirements, Authors, Status, ReferenceCount)
+                     VALUES (@DueDate, @Requirements, @Authors, @Status, @ReferenceCount)";
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@DueDate", p.DueDate ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Requirements", p.Requirements ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Authors", p.Authors ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Status", p.Status ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@ReferenceCount", p.ReferenceCount);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
+
+
+        public static void AddProfileImage(User user)
+        {
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                string query = "UPDATE Users SET ProfileImageFileName = @ProfileImageFileName WHERE userID = @userID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ProfileImageFileName", user.ProfileImageFileName);
+                cmd.Parameters.AddWithValue("@userID", user.userID);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
 
     }
 }
