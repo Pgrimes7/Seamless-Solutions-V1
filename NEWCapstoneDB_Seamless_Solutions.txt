@@ -253,6 +253,9 @@ CREATE TABLE ReportSubjects (
 ALTER TABLE Reports 
 ADD AuthorName varchar(225);
 
+ALTER TABLE Publishes
+ADD JournalTitle NVARCHAR(255);
+
 
 
 

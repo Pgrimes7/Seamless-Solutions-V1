@@ -17,6 +17,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>Journal Title</th>
                 <th>Due Date</th>
                 <th>Requirements</th>
                 <th>Authors</th>
@@ -28,6 +29,7 @@
             @foreach (var p in Model.PublishList)
             {
                 <tr>
+                    <td>@p.JournalTitle</td>
                     <td>@p.DueDate?.ToString("yyyy-MM-dd")</td>
                     <td>@p.Requirements</td>
                     <td>@p.Authors</td>
@@ -56,6 +58,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Journal Title</label>
+                        <input type="text" class="form-control" name="JournalTitle" required />
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Due Date</label>
                         <input type="date" class="form-control" name="DueDate" required />
