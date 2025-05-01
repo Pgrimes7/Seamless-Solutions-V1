@@ -3,180 +3,203 @@
 @{
     ViewData["Title"] = "Create Report";
 }
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Report</title>
-    <link href="~/css/style.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <!-- Head content here -->
 </head>
 <body>
-
-    <h2>REPORTS</h2>
-    <table class="table table-bordered table-responsive table-hover">
-        <thead>
-            <tr>
-                <th>Report Name</th>
-                <th>Report Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var report in Model.ReportList)
-            {
-                <tr>
-                    <td>@report.ReportName</td>
-                    <td>@report.ReportDate</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-
-
-
-    <h2>Create Report</h2>
-
-    <form method="post">
-        <div class="form-group">
-            <label for="reportName">Report Name</label>
-            <input type="text" class="form-control" id="reportName" name="ReportName" required />
-        </div>
-        <div class="form-group">
-            <label for="reportDate">Report Date</label>
-            <input type="date" class="form-control" id="reportDate" name="ReportDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
-        </div>
-        <div class="form-group">
-            <label for="grantIds">Grants</label>
-            <div id="grantCheckboxesContainer">
-                @foreach (var grant in Model.GrantList)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="GrantIDs" value="@grant.GrantID" id="grantCheckbox@grant.GrantID">
-                        <label class="form-check-label" for="grantCheckbox@grant.GrantID">
-                            @grant.grantName
-                        </label>
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="projectIds">Projects</label>
-            <div id="projectCheckboxesContainer">
-                @foreach (var project in Model.ProjectList)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="ProjectIDs" value="@project.ProjectID" id="projectCheckbox@project.ProjectID">
-                        <label class="form-check-label" for="projectCheckbox@project.ProjectID">
-                            @project.ProjectName
-                        </label>
-                    </div>
-                }
-            </div>
-        </div>
-        <div id="subjectsContainer">
-            <!-- Subjects will be added here dynamically -->
-        </div>
-        <button type="button" class="btn btn-secondary rounded-pill" onclick="addSubject()">Add More</button>
-        <button type="submit" class="btn btn-primary rounded-pill">Submit</button>
-        <button type="button" class="btn btn-primary rounded-pill" onclick="printToPDF()">Print to PDF</button>
-    </form>
-
-    <!-- Modal Template -->
-    <div class="modal fade" id="subjectModalTemplate" tabindex="-1" aria-labelledby="subjectModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="subjectModalLabel">Subject Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <label for="subjectTitle" class="form-label">Subject Title</label>
-                    <input type="text" class="form-control" id="subjectTitle" name="SubjectTitle[]" required />
-                    <label for="subjectText" class="form-label">Text</label>
-                    <textarea class="form-control" id="subjectText" name="SubjectText[]" rows="3" required></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @section Scripts {
-        <script>
-            let subjectCount = 0;
-
-            function addSubject() {
-                subjectCount++;
-                const container = document.getElementById('subjectsContainer');
-                const newSubject = `
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title" id="cardTitle${subjectCount}">Subject ${subjectCount}</h5>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#subjectModal${subjectCount}"> Edit Subject</button>
+    <div class="col py-3 mb-3">
+        <h1 class="mb-3">Reports</h1>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Progress</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Performance</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <!-- Progress tab -->
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                <div class="btn-toolbar my-2 mb-md-0">
+                    <div class="row mb-2">
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#progressModal">Create Progress Report</button>
                         </div>
                     </div>
-                    <div class="modal fade" id="subjectModal${subjectCount}" tabindex="-1" aria-labelledby="subjectModalLabel${subjectCount}" aria-hidden="true">
+                    <!-- Create progress report modal -->
+                    <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="subjectModalLabel${subjectCount}">Subject ${subjectCount} Details</h5>
+                                    <h1 class="modal-title fs-5" id="progressModalLabel">Create Progress Report</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <label for="subjectTitle${subjectCount}" class="form-label">Subject Title</label>
-                                    <input type="text" class="form-control" id="subjectTitle${subjectCount}" name="SubjectTitle[]" required oninput="updateCardTitle(${subjectCount})" />
-                                    <label for="subjectText${subjectCount}" class="form-label">Text</label>
-                                    <textarea class="form-control" id="subjectText${subjectCount}" name="SubjectText[]" rows="3" required></textarea>
-                                                           <div class="modal-footer">
+                                    <form method="post" asp-page="/ReportSubmission" class="mt-4">
+                                        <div class="mb-3">
+                                            <label for="reportName" class="form-label">Report Title</label>
+                                            <input type="text" class="form-control" id="reportName" name="ReportName" required />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reportDate" class="form-label">Date</label>
+                                            <input type="date" class="form-control" id="reportDate" name="ReportDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="grantProjectSelect0" class="form-label">Select Grant or Project</label>
+                                            <select class="form-select searchable-select" id="grantProjectSelect0" name="SelectedGrantOrProjectID">
+                                                <option selected>Choose...</option>
+                                                @foreach (var grant in Model.GrantList)
+                                                {
+                                                    <option value="grant-@grant.GrantID">@grant.grantName</option>
+                                                }
+                                                @foreach (var project in Model.ProjectList)
+                                                {
+                                                    <option value="project-@project.ProjectID">@project.ProjectName</option>
+                                                }
+                                            </select>
+                                        </div>
+
+
+                                        <div class="mb-3">
+                                            <label for="reportSubject" class="form-label">Subject</label>
+                                            <input type="text" class="form-control" id="reportSubject" name="SubjectTitle" placeholder="Enter subject" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reportContent" class="form-label">Content</label>
+                                            <textarea class="form-control" id="reportContent" name="SubjectText" rows="4" placeholder="Enter content"></textarea>
+                                        </div>
+                                        <div id="additionalSections"></div>
+                                        <button type="button" class="btn btn-secondary mb-3" id="addSectionButton" onclick="addSection()">Add Section</button>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary">Create Report</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Send message</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <table class="table table-bordered table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Author</th>
+                        </tr>
+                    </thead>
+                   
+                        @foreach (var report in Model.ReportList)
+                        {
+                            <tr>
+                                <td><a href="#">@report.ReportName</a></td>
+                                <td>@report.ReportDate.ToString("MM/dd/yyyy")</td>
+                                <td>Author Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- Performance tab -->
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                <div class="btn-toolbar my-2 mb-md-0">
+                    <div class="row mb-2">
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#performanceModal">Create Performance Report</button>
+                        </div>
+                    </div>
+                    <!-- Create performance report modal -->
+                    <div class="modal fade" id="performanceModal" tabindex="-1" aria-labelledby="performanceModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="performanceModalLabel">Create Performance Report</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="mt-4">
+                                        <div class="mb-3">
+                                            <label for="performanceReportName" class="form-label">Report Name</label>
+                                            <input type="text" class="form-control" id="performanceReportName" placeholder="Enter report name">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="performanceReportDescription" class="form-label">Description</label>
+                                            <textarea class="form-control" id="performanceReportDescription" rows="3" placeholder="Enter report description"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Select Date Range</label>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <label for="performanceStartDate" class="form-label">Start Date</label>
+                                                    <input type="date" class="form-control" id="performanceStartDate">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="performanceEndDate" class="form-label">End Date</label>
+                                                    <input type="date" class="form-control" id="performanceEndDate">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Create Report</button>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
-                    </div>`;
-                container.insertAdjacentHTML('beforeend', newSubject);
-            }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
 
-            function updateCardTitle(subjectCount) {
-                const titleInput = document.getElementById(`subjectTitle${subjectCount}`);
-                const cardTitle = document.getElementById(`cardTitle${subjectCount}`);
-                cardTitle.textContent = titleInput.value || `Subject ${subjectCount}`;
-            }
+@section Scripts {
+    <div id="additionalSections"></div>
+    <button type="button" class="btn btn-secondary mb-3" id="addSectionButton" onclick="addSection()">Add Section</button>
 
-            function printToPDF() {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
+    <script>
+              let sectionCount = 1; // Start from 1 because the first dropdown is static
 
-                doc.text("Report Name: " + document.getElementById('reportName').value, 10, 10);
-                doc.text("Report Date: " + document.getElementById('reportDate').value, 10, 20);
+        function addSection() {
+            const container = document.getElementById('additionalSections');
+            const newSection = `
+                <div class="mb-3">
+                    <label for="grantProjectSelect${sectionCount}" class="form-label">Select Grant or Project</label>
+                    <select class="form-select searchable-select" id="grantProjectSelect${sectionCount}" name="SelectedGrantOrProjectID">
+                        <option selected>Choose...</option>
+        @foreach (var grant in Model.GrantList)
+        {
+                                <option value="grant-@grant.GrantID">@grant.grantName</option>
+        }
+        @foreach (var project in Model.ProjectList)
+        {
+                                <option value="project-@project.ProjectID">@project.ProjectName</option>
+        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="sectionTitle${sectionCount}" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="sectionTitle${sectionCount}" name="SubjectTitle" placeholder="Enter subject" required >
+                </div>
+                <div class="mb-3">
+                    <label for="sectionContent${sectionCount}" class="form-label">Content</label>
+                    <textarea class="form-control" id="sectionContent${sectionCount}" name="SubjectText" rows="4" placeholder="Enter content" required ></textarea>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newSection);
+            sectionCount++; // Increment the section count
+        }
 
-                let yOffset = 30;
-                doc.text("Grants:", 10, yOffset);
-                document.querySelectorAll('#grantCheckboxesContainer .form-check-input:checked').forEach((checkbox, index) => {
-                    yOffset += 10;
-                    doc.text((index + 1) + ". " + checkbox.nextElementSibling.textContent, 10, yOffset);
-                });
+        
+    </script>
 
-                yOffset += 10;
-                doc.text("Projects:", 10, yOffset);
-                document.querySelectorAll('#projectCheckboxesContainer .form-check-input:checked').forEach((checkbox, index) => {
-                    yOffset += 10;
-                    doc.text((index + 1) + ". " + checkbox.nextElementSibling.textContent, 10, yOffset);
-                });
+}
 
-                yOffset += 10;
-                doc.text("Subjects:", 10, yOffset);
-                document.querySelectorAll('#subjectsContainer .card').forEach((card, index) => {
-                    yOffset += 10;
-                    const subjectTitle = card.querySelector('.card-title').textContent;
-                    doc.text((index + 1) + ". " + subjectTitle, 10, yOffset);
-                });
-
-                doc.save('report.pdf');
-            }
-        </script>
-    }
-</body>
-</html>
+        

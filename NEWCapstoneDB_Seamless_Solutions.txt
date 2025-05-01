@@ -137,45 +137,23 @@ CREATE TABLE Reports (
     ReportName VARCHAR(50)
 );
 
-CREATE TABLE ReportSubjects (
-    SubjectID INT IDENTITY(1,1) PRIMARY KEY,
-    ReportID INT,
-    SubjectTitle VARCHAR(255),
-    SubjectText VARCHAR(MAX),
-    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID)
-);
 
-CREATE TABLE ReportGrants (
-    ReportGrantID INT IDENTITY(1,1) PRIMARY KEY,
-    ReportID INT,
-    GrantID INT,
-    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
-    FOREIGN KEY (GrantID) REFERENCES Grants(GrantID)
-);
-
-CREATE TABLE ReportProjects (
-    ReportProjectID INT IDENTITY(1,1) PRIMARY KEY,
-    ReportID INT,
-    ProjectID INT,
-    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
-    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
-);
 
 
 
 
 --Users Inserts
-INSERT INTO Users (userType, firstName, lastName, email, phoneNumber) VALUES
-(0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890'),
-(1, 'Ben', 'Gorber', 'Grant.Gorber@example.com', '234-567-8901'),
-(2, 'Charlie', 'Brown', 'charlie.brown@example.com', '345-678-9012'),
-(3, 'Bob', 'Jordan', 'bojo@example.com', '456-789-0123'),
-(0, 'Lucas', 'Langley', 'Langley@example.com', '123-456-7890'),
-(1, 'Johnson', 'Brant', 'BrantJ@example.com', '234-567-8901'),
-(2, 'Blaire', 'Gomber', 'BlaireGomber@example.com', '345-678-9012'),
-(3, 'Magnus', 'Yang', 'YangMagnus@example.com', '456-789-0123'),
-(0, 'admin', 'test', 'admintest@example.com', '777-888-0000'),
-(0, 'Emily', 'Carter', 'carter.emily@example.com', '555-465-7954');
+INSERT INTO Users (userType, firstName, lastName, email, phoneNumber, ProfileImageFileName) VALUES
+(0, 'Todd', 'Smith', 'Todd.smith@example.com', '123-456-7890', NULL),
+(1, 'Ben', 'Gorber', 'Grant.Gorber@example.com', '234-567-8901', NULL),
+(2, 'Charlie', 'Brown', 'charlie.brown@example.com', '345-678-9012', NULL),
+(3, 'Bob', 'Jordan', 'bojo@example.com', '456-789-0123', NULL),
+(0, 'Lucas', 'Langley', 'Langley@example.com', '123-456-7890', NULL),
+(1, 'Johnson', 'Brant', 'BrantJ@example.com', '234-567-8901', NULL),
+(2, 'Blaire', 'Gomber', 'BlaireGomber@example.com', '345-678-9012', NULL),
+(3, 'Magnus', 'Yang', 'YangMagnus@example.com', '456-789-0123', NULL),
+(0, 'admin', 'test', 'admintest@example.com', '777-888-0000', NULL),
+(0, 'Emily', 'Carter', 'carter.emily@example.com', '555-465-7954', 'emily hi-res.png');
 
 --Project Inserts
 INSERT INTO Project (ProjectAdminID, projectStatus, dateCreated, dateCompleted, dueDate, ProjectName) VALUES
@@ -259,5 +237,25 @@ CREATE TABLE Publishes (
     Status NVARCHAR(50),
     ReferenceCount INT
 );
+
+CREATE TABLE ReportSubjects (
+    SubjectID INT IDENTITY(1,1) PRIMARY KEY,
+    ReportID INT,
+    SubjectTitle VARCHAR(255),
+    SubjectText VARCHAR(MAX),
+    GrantID INT NULL,
+    ProjectID INT NULL,
+    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
+    FOREIGN KEY (GrantID) REFERENCES Grants(GrantID),
+    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+);
+
+ALTER TABLE Reports 
+ADD AuthorName varchar(225);
+
+ALTER TABLE Publishes
+ADD JournalTitle NVARCHAR(255);
+
+
 
 

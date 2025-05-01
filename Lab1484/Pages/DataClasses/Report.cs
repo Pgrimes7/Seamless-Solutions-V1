@@ -12,7 +12,7 @@
         public List<ReportSubject> Subjects { get; set; } = new List<ReportSubject>();
 
         public DateTime ReportDate { get; set; }
-
+        public string? AuthorName { get; set; }
 
         //Could be used to store the file path of the report later
         public string? ReportFilePath { get; set; }

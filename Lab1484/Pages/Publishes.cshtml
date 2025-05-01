@@ -17,6 +17,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>Journal Title</th>
                 <th>Due Date</th>
                 <th>Requirements</th>
                 <th>Authors</th>
@@ -28,11 +29,19 @@
             @foreach (var p in Model.PublishList)
             {
                 <tr>
+                    <td>@p.JournalTitle</td>
                     <td>@p.DueDate?.ToString("yyyy-MM-dd")</td>
                     <td>@p.Requirements</td>
                     <td>@p.Authors</td>
                     <td>@p.Status</td>
-                    <td>@p.ReferenceCount</td>
+                    <td>
+                        <form method="post" asp-page-handler="EditReference" class="d-flex">
+                            <input type="hidden" name="PublishID" value="@p.PublishID" />
+                            <input type="number" name="ReferenceCount" value="@p.ReferenceCount"
+                                   class="form-control form-control-sm me-1" style="width:80px;" min="0" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -49,6 +58,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Journal Title</label>
+                        <input type="text" class="form-control" name="JournalTitle" required />
+                    </div>
                     <div class="mb-3">
                         <label class="form-label">Due Date</label>
                         <input type="date" class="form-control" name="DueDate" required />

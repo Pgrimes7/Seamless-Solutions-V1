@@ -71,7 +71,28 @@ namespace Lab1484.Pages
 
             return Page(); // Stay on the same page and reload model data
         }
+        public IActionResult OnPostEditReference(int PublishID, int ReferenceCount)
+        {
+            DBClass.UpdateReferenceCount(PublishID, ReferenceCount);
 
+            // Reload updated data
+            PublishList = DBClass.GetAllPublishes();
+            Users = new();
+            using (SqlDataReader reader = DBClass.AllUsersReader())
+            {
+                while (reader.Read())
+                {
+                    Users.Add(new User
+                    {
+                        userID = (int)reader["userID"],
+                        firstName = reader["firstName"].ToString(),
+                        lastName = reader["lastName"].ToString()
+                    });
+                }
+            }
+
+            return Page();
+        }
 
     }
 }
