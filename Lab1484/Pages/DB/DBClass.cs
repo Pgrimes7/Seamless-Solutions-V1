@@ -1398,14 +1398,14 @@ namespace Lab1484.Pages.DB
         }
 
 
-        //retieving the user profile picture
+        //retrieving the user profile picture
         public static User? GetProfilePictureById(int userId)
         {
             User? user = null;
             
             using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
-                string query = @"SELECT userID, firstName, lastName, email, phone, UserType, ProfileImageFileName 
+                string query = @"SELECT userID, firstName, lastName, email, phoneNumber, UserType, ProfileImageFileName 
                          FROM Users WHERE userID = @userID";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -1419,11 +1419,11 @@ namespace Lab1484.Pages.DB
                         {
                             user = new User
                             {
-                                userID = reader.GetInt32(reader.GetOrdinal("userID")),
+                                userID = reader.GetInt32(reader.GetOrdinal("UserID")),
                                 firstName = reader.GetString(reader.GetOrdinal("firstName")),
                                 lastName = reader.GetString(reader.GetOrdinal("lastName")),
                                 email = reader.GetString(reader.GetOrdinal("email")),
-                                phone = reader["phone"] as string,
+                                phone = reader["phoneNumber"] as string,
                                 UserType = reader["UserType"] as int?,
                                 ProfileImageFileName = reader["ProfileImageFileName"] as string
                             };

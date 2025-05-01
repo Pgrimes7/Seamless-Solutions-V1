@@ -9,14 +9,21 @@ namespace Lab1484.Pages
     public class SettingsModel : PageModel
     {
         public string? ProfileImagePath { get; set; } = "/images/default.png";
-        public User? CurrentUser { get; set; }
+        public User? CurrentUser { get; set; } = new User();
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            string? currentUserIdStr = HttpContext.Session.GetString("userId");
+            string currentUser = HttpContext.Session.GetString("username");
+            if (string.IsNullOrEmpty(currentUser))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            string? currentUserIdStr = HttpContext.Session.GetString("userID");
             if (int.TryParse(currentUserIdStr, out int currentUserId))
             {
-                var user = DBClass.GetProfilePictureById(currentUserId);
+                CurrentUser = DBClass.GetProfilePictureById(currentUserId); 
+
                 if (!string.IsNullOrEmpty(CurrentUser?.ProfileImageFileName))
                 {
                     string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", CurrentUser.ProfileImageFileName);
@@ -26,7 +33,10 @@ namespace Lab1484.Pages
                     }
                 }
             }
+
+            return Page();
         }
+
 
         public async Task<IActionResult> OnPostUploadProfileImageAsync(IFormFile ProfileImage)
         {
