@@ -138,27 +138,15 @@ CREATE TABLE Reports (
 );
 
 CREATE TABLE ReportSubjects (
-    SubjectID INT IDENTITY(1,1) PRIMARY KEY,
-    ReportID INT,
-    SubjectTitle VARCHAR(255),
-    SubjectText VARCHAR(MAX),
-    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID)
-);
-
-CREATE TABLE ReportGrants (
-    ReportGrantID INT IDENTITY(1,1) PRIMARY KEY,
-    ReportID INT,
-    GrantID INT,
-    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
-    FOREIGN KEY (GrantID) REFERENCES Grants(GrantID)
-);
-
-CREATE TABLE ReportProjects (
-    ReportProjectID INT IDENTITY(1,1) PRIMARY KEY,
-    ReportID INT,
-    ProjectID INT,
-    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
-    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+    SubjectID INT IDENTITY(1,1) PRIMARY KEY,
+    ReportID INT,
+    SubjectTitle VARCHAR(255),
+    SubjectText VARCHAR(MAX),
+    GrantID INT NULL,
+    ProjectID INT NULL,
+    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
+    FOREIGN KEY (GrantID) REFERENCES Grants(GrantID),
+    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
 );
 
 
@@ -259,5 +247,10 @@ CREATE TABLE Publishes (
     Status NVARCHAR(50),
     ReferenceCount INT
 );
+
+ALTER TABLE Reports 
+ADD AuthorName varchar(225);
+
+
 
 
