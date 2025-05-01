@@ -87,11 +87,11 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    
-                                        <div class="row mb-4">
-                                            <div class="col">
+
+                                    <div class="row mb-4">
+                                        <div class="col">
                                             <select asp-for="NewUser.UserType" class="form-select" aria-label="Default select example">
-                                                    <option value="" disabled selected>Select User Type</option>
+                                                <option value="" disabled selected>Select User Type</option>
                                                 <option value="0">Executive Director</option>
                                                 <option value="1">Faculty Affiliate</option>
                                                 <option value="2">Employee</option>
@@ -99,61 +99,69 @@
                                                 <option value="4">Student</option>
                                                 <option value="5">Associate Director</option>
                                                 <option value="6">JMU Office Staff</option>
-                                                </select>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-floating mb-4">
+                                                <input asp-for="NewUser.firstName" type="text" class="form-control" id="firstNameInput" placeholder="First Name">
+                                                <label for="firstNameInput">First Name</label>
                                             </div>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-floating mb-4">
-                                                    <input asp-for="NewUser.firstName" type="text" class="form-control" id="floatingFirstName" placeholder="First Name">
-                                                    <label for="floatingFirstName">First Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-floating mb-4">
-                                                    <input asp-for="NewUser.lastName" type="text" class="form-control" id="floatingLastName" placeholder="Last Name">
-                                                    <label for="floatingLastName">Last Name</label>
-                                                </div>
+                                        <div class="col">
+                                            <div class="form-floating mb-4">
+                                                <input asp-for="NewUser.lastName" type="text" class="form-control" id="lastNameInput" placeholder="Last Name">
+                                                <label for="lastNameInput">Last Name</label>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-floating mb-4">
-                                                    <input asp-for="NewUser.email" type="email" class="form-control" id="floatingEmail" placeholder="john.doe@gmail.com">
-                                                    <label for="floatingEmail">Email</label>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-floating mb-4">
-                                                    <input asp-for="NewUser.phone" type="tel" class="form-control" id="floatingPhoneNumber" placeholder="123-456-7890">
-                                                    <label for="floatingPhoneNumber">Phone Number</label>
-                                                </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-floating mb-4">
+                                                <input asp-for="NewUser.email" type="email" class="form-control" id="emailInput" placeholder="Email">
+                                                <label for="emailInput">Email</label>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-floating mb-4">
-                                                    <input asp-for="NewUser.username" type="text" class="form-control" id="floatingUsername" placeholder="username">
-                                                    <label for="floatingUsername">Username</label>
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-floating mb-4">
-                                                    <input asp-for="NewUser.password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                                                    <label for="floatingPassword">Password</label>
-                                                </div>
+                                        <div class="col">
+                                            <div class="form-floating mb-4">
+                                                <input asp-for="NewUser.phone" type="tel" class="form-control" id="phoneInput" placeholder="Phone Number">
+                                                <label for="phoneInput">Phone Number</label>
                                             </div>
                                         </div>
-                                    
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-floating mb-4">
+                                                <input asp-for="NewUser.username" type="text" class="form-control" id="usernameInput" placeholder="Username">
+                                                <label for="usernameInput">Username</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-floating mb-4">
+                                                <input asp-for="NewUser.password" type="password" class="form-control" id="passwordInput" placeholder="Password">
+                                                <label for="passwordInput">Password</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="populateTestUser()">Populate</button>
+                                    </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
                                     <button type="submit" class="btn btn-primary">Add User</button>
                                 </div>
-                            </div> <!--close modal content-->
-                        </div> <!--close modal dialog-->
-                    </div> <!--close modal-->
+                            </div>
+                        </div>
+                    </div>
                 </form>
                 <!--user table-->
                 <div class="table-responsive table-bordered rounded small my-2">
@@ -311,6 +319,17 @@
             document.querySelector('[name="UpdateUser.UserType"]').value = typeValue;
         }
     </script>
+    <script>
+        function populateTestUser() {
+            document.getElementById("firstNameInput").value = "Mark";
+            document.getElementById("lastNameInput").value = "Ryna";
+            document.getElementById("emailInput").value = "mryna@jmu.edu";
+            document.getElementById("usernameInput").value = "mryna";
+            document.getElementById("passwordInput").value = "12345";
+            document.getElementById("phoneInput").value = "111-222-3333";
+        }
+    </script>
+
 
 
 </body>

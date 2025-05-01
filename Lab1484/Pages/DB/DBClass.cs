@@ -23,16 +23,15 @@ namespace Lab1484.Pages.DB
         public static SqlConnection AUTHDBConnection = new SqlConnection();
 
 
-        // Connection String - How to find and connect to DB - Uncomment when making local changes
-        private static readonly String? Lab3DBConnString =
-           "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+         //Connection String - How to find and connect to DB - Uncomment when making local changes
+        private static readonly String? Lab3DBConnString ="Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-        //private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-        //    "Database=Lab3;" +
-        //    "User Id=capstoneadmin;" +
-        //    "Password=Seamless123!@#;" +
-        //    "Encrypt=True;" +
-        //    "TrustServerCertificate=True;";
+       // private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+         //   "Database=Lab3;" +
+         //   "User Id=capstoneadmin;" +
+         //   "Password=Seamless123!@#;" +
+           // "Encrypt=True;" +
+           // "TrustServerCertificate=True;";
 
 
         // A second connection String - Uncomment when making local changes
@@ -40,11 +39,11 @@ namespace Lab1484.Pages.DB
         private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
         //private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-        //    "Database=AUTH;" +
+         //   "Database=AUTH;" +
         //    "User Id=capstoneadmin;" +
-        //    "Password=Seamless123!@#;" +
-        //    "Encrypt=True;" +
-        //    "TrustServerCertificate=True;";
+          //  "Password=Seamless123!@#;" +
+         //   "Encrypt=True;" +
+         //   "TrustServerCertificate=True;";
 
         //Connection Methods:
 
@@ -1412,15 +1411,14 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
 
+
         public static void InsertReport(Report report, List<int> grantIDs, List<int> projectIDs, List<ReportSubject> subjects)
         {
-
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
 
-            //unsure if work will come back to this
             using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
             {
                 connection.Open();
@@ -1429,42 +1427,48 @@ namespace Lab1484.Pages.DB
                     try
                     {
                         // Insert Report
+                        string insertReportQuery = @"
+                    INSERT INTO Reports (ReportDate, ReportName, AuthorName) 
+                    VALUES (@ReportDate, @ReportName, @AuthorName);
+                    SELECT SCOPE_IDENTITY();";
 
-                        string insertReportQuery = "INSERT INTO Reports (ReportDate, ReportName) OUTPUT INSERTED.ReportID VALUES (@ReportDate, @ReportName);";
                         SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
                         cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.ReportDate);
                         cmdInsertReport.Parameters.AddWithValue("@ReportName", report.ReportName);
-                        int reportID = (int)cmdInsertReport.ExecuteScalar();
+                        Console.WriteLine("AuthorName: " + report.AuthorName);
+                        cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName);
 
+                        Console.WriteLine("Executing SQL Query: " + insertReportQuery);
+                        Console.WriteLine($"Parameters: ReportDate = {report.ReportDate}, ReportName = {report.ReportName}, AuthorName = {report.AuthorName}");
 
-                        // Insert ReportGrants
-                        string insertReportGrantQuery = "INSERT INTO ReportGrants (ReportID, GrantID) VALUES (@ReportID, @GrantID);";
-                        foreach (int grantID in grantIDs)
+                        object result = cmdInsertReport.ExecuteScalar();
+                        if (result == null || result == DBNull.Value)
                         {
-                            SqlCommand cmdInsertReportGrant = new SqlCommand(insertReportGrantQuery, connection, transaction);
-                            cmdInsertReportGrant.Parameters.AddWithValue("@ReportID", reportID);
-                            cmdInsertReportGrant.Parameters.AddWithValue("@GrantID", grantID);
-                            cmdInsertReportGrant.ExecuteNonQuery();
+                            throw new Exception("Failed to retrieve the ReportID after inserting the report.");
                         }
 
-                        // Insert ReportProjects
-                        string insertReportProjectQuery = "INSERT INTO ReportProjects (ReportID, ProjectID) VALUES (@ReportID, @ProjectID);";
-                        foreach (int projectID in projectIDs)
-                        {
-                            SqlCommand cmdInsertReportProject = new SqlCommand(insertReportProjectQuery, connection, transaction);
-                            cmdInsertReportProject.Parameters.AddWithValue("@ReportID", reportID);
-                            cmdInsertReportProject.Parameters.AddWithValue("@ProjectID", projectID);
-                            cmdInsertReportProject.ExecuteNonQuery();
-                        }
+                        // Explicitly convert the result to an int
+                        int reportID = Convert.ToInt32(result);
+                        Console.WriteLine($"Report inserted successfully with ReportID = {reportID}");
 
                         // Insert ReportSubjects
-                        string insertReportSubjectQuery = "INSERT INTO ReportSubjects (ReportID, SubjectTitle, SubjectText) VALUES (@ReportID, @SubjectTitle, @SubjectText);";
+                        string insertReportSubjectQuery = @"
+                    INSERT INTO ReportSubjects (ReportID, SubjectTitle, SubjectText, GrantID, ProjectID) 
+                    VALUES (@ReportID, @SubjectTitle, @SubjectText, @GrantID, @ProjectID);";
+
                         foreach (var subject in subjects)
                         {
+                            Console.WriteLine($"Inserting ReportSubject: ReportID = {reportID}, SubjectTitle = {subject.SubjectTitle}, SubjectText = {subject.SubjectText}, GrantID = {subject.GrantID}, ProjectID = {subject.ProjectID}");
+
                             SqlCommand cmdInsertReportSubject = new SqlCommand(insertReportSubjectQuery, connection, transaction);
                             cmdInsertReportSubject.Parameters.AddWithValue("@ReportID", reportID);
                             cmdInsertReportSubject.Parameters.AddWithValue("@SubjectTitle", subject.SubjectTitle);
                             cmdInsertReportSubject.Parameters.AddWithValue("@SubjectText", subject.SubjectText);
+                            cmdInsertReportSubject.Parameters.AddWithValue("@GrantID", subject.GrantID.HasValue ? (object)subject.GrantID.Value : DBNull.Value);
+                            cmdInsertReportSubject.Parameters.AddWithValue("@ProjectID", subject.ProjectID.HasValue ? (object)subject.ProjectID.Value : DBNull.Value);
+
+                            Console.WriteLine($"SQL Parameters: GrantID = {cmdInsertReportSubject.Parameters["@GrantID"].Value}, ProjectID = {cmdInsertReportSubject.Parameters["@ProjectID"].Value}");
+
                             cmdInsertReportSubject.ExecuteNonQuery();
                         }
 
@@ -1475,11 +1479,18 @@ namespace Lab1484.Pages.DB
                     {
                         // Rollback transaction if any error occurs
                         transaction.Rollback();
-                        throw new Exception("Error inserting report information: " + ex.Message);
+                        Console.WriteLine($"Error inserting report information: {ex.Message}");
+                        throw;
                     }
                 }
             }
         }
+
+
+
+
+
+
 
         public static int[] GetGrantStatusCounts()
         {
@@ -1632,14 +1643,14 @@ namespace Lab1484.Pages.DB
         }
 
 
-        //retieving the user profile picture
-        public static User? GetProfilePictureById(int userId)
+        //retrieving the user profile picture
+        public static User? GetUserInfoById(int userId)
         {
             User? user = null;
-            
+
             using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
-                string query = @"SELECT userID, firstName, lastName, email, phone, UserType, ProfileImageFileName 
+                string query = @"SELECT userID, firstName, lastName, email, phoneNumber, UserType, ProfileImageFileName 
                          FROM Users WHERE userID = @userID";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -1657,10 +1668,15 @@ namespace Lab1484.Pages.DB
                                 firstName = reader.GetString(reader.GetOrdinal("firstName")),
                                 lastName = reader.GetString(reader.GetOrdinal("lastName")),
                                 email = reader.GetString(reader.GetOrdinal("email")),
-                                phone = reader["phone"] as string,
+                                phone = reader["phoneNumber"] as string,
                                 UserType = reader["UserType"] as int?,
                                 ProfileImageFileName = reader["ProfileImageFileName"] as string
                             };
+                            Console.WriteLine($"User retrieved: {user.firstName} {user.lastName}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"No user found with userID: {userId}");
                         }
                     }
                 }
@@ -1668,7 +1684,77 @@ namespace Lab1484.Pages.DB
 
             return user;
         }
-        
+
+
+        //Publish
+        public static List<Publish> GetAllPublishes()
+        {
+            List<Publish> list = new();
+            using SqlConnection conn = new SqlConnection(Lab3DBConnString);
+            string query = "SELECT * FROM Publishes";
+            SqlCommand cmd = new(query, conn);
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                list.Add(new Publish
+                {
+                    PublishID = (int)reader["PublishID"],
+                    DueDate = reader["DueDate"] as DateTime?,
+                    Requirements = reader["Requirements"].ToString(),
+                    Authors = reader["Authors"].ToString(),
+                    Status = reader["Status"].ToString(),
+                    ReferenceCount = (int)reader["ReferenceCount"]
+                });
+            }
+            return list;
+        }
+
+        public static void InsertPublish(Publish p)
+        {
+            using SqlConnection conn = new SqlConnection(Lab3DBConnString);
+            string query = @"INSERT INTO Publishes (DueDate, Requirements, Authors, Status, ReferenceCount)
+                     VALUES (@DueDate, @Requirements, @Authors, @Status, @ReferenceCount)";
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@DueDate", p.DueDate ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Requirements", p.Requirements ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Authors", p.Authors ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Status", p.Status ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@ReferenceCount", p.ReferenceCount);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
+
+
+        public static void AddProfileImage(User user)
+        {
+            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            {
+                string query = "UPDATE Users SET ProfileImageFileName = @ProfileImageFileName WHERE userID = @userID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ProfileImageFileName", user.ProfileImageFileName);
+                cmd.Parameters.AddWithValue("@userID", user.userID);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public static void UpdateReferenceCount(int publishID, int newCount)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = Lab3DBConnection;
+            cmd.CommandText = "UPDATE Publishes SET ReferenceCount = @ref WHERE PublishID = @id";
+            cmd.Parameters.AddWithValue("@ref", newCount);
+            cmd.Parameters.AddWithValue("@id", publishID);
+
+            Lab3DBConnection.Open();
+            cmd.ExecuteNonQuery();
+            Lab3DBConnection.Close();
+        }
+
+
 
     }
 }

@@ -22,20 +22,29 @@ namespace Lab1484.Pages
         public List<string> SubjectText { get; set; }
         [BindProperty]
         public List<Report> ReportList { get; set; }
-
+        [BindProperty]
         public List<Grant> GrantList { get; set; }
+        [BindProperty]
         public List<Project> ProjectList { get; set; }
+        [BindProperty]
+        public List<string> SelectedGrantOrProjectID { get; set; }
+
+        public User CurrentUserID { get; set; }
+
 
         public ReportSubmissionModel()
         {
             ProjectList = new List<Project>();
             GrantList = new List<Grant>();
             ReportList = new List<Report>();
+            SelectedGrantOrProjectID = new List<string>();
+            CurrentUserID = new User();
         }
-       
+
 
         public IActionResult OnGet()
         {
+
             // Check if the user is logged in
             string currentUser = HttpContext.Session.GetString("username");
             // Redirect them if they aren't
@@ -91,41 +100,83 @@ namespace Lab1484.Pages
             return Page();
         }
 
-      
+
+
 
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Debugging: Check if GrantIDs and ProjectIDs are populated
-            if (GrantIDs == null || !GrantIDs.Any())
+            if (SelectedGrantOrProjectID == null || !SelectedGrantOrProjectID.Any())
             {
-                throw new Exception("GrantIDs are not populated.");
+                throw new Exception("No grants or projects were selected.");
             }
-            if (ProjectIDs == null || !ProjectIDs.Any())
+
+            if (CurrentUserID == null)
             {
-                throw new Exception("ProjectIDs are not populated.");
+                throw new Exception("CurrentUserID is null. User information could not be retrieved.");
             }
+
+            int UserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
+            Console.WriteLine($"Debug: UserID from session = {UserID}");
+
+            CurrentUserID = DBClass.GetUserInfoById(UserID);
+
+            string authorName = string.Concat(CurrentUserID.firstName, " ", CurrentUserID.lastName);
+            Console.WriteLine($"Debug: AuthorName = {CurrentUserID.lastName}");
 
             var report = new Report
             {
+                AuthorName = authorName,
                 ReportDate = DateTime.Now,
                 ReportName = ReportName
             };
 
             var subjects = new List<ReportSubject>();
+
             for (int i = 0; i < SubjectTitle.Count; i++)
             {
+                int? grantID = null;
+                int? projectID = null;
+
+                if (i < SelectedGrantOrProjectID.Count)
+                {
+                    var selected = SelectedGrantOrProjectID[i];
+                    if (selected.StartsWith("grant-"))
+                    {
+                        grantID = int.Parse(selected.Replace("grant-", ""));
+                    }
+                    else if (selected.StartsWith("project-"))
+                    {
+                        projectID = int.Parse(selected.Replace("project-", ""));
+                    }
+                    else
+                    {
+                        throw new Exception($"Invalid selection: {selected}");
+                    }
+                }
+
+                Console.WriteLine($"Subject {i}: Title = {SubjectTitle[i]}, GrantID = {grantID}, ProjectID = {projectID}");
+
                 subjects.Add(new ReportSubject
                 {
                     SubjectTitle = SubjectTitle[i],
-                    SubjectText = SubjectText[i]
+                    SubjectText = SubjectText[i],
+                    GrantID = grantID,
+                    ProjectID = projectID
                 });
             }
 
-            DBClass.InsertReport(report, GrantIDs, ProjectIDs, subjects);
+            Console.WriteLine("SelectedGrantOrProjectID values:");
+            foreach (var id in SelectedGrantOrProjectID)
+            {
+                Console.WriteLine(id);
+            }
+
+            DBClass.InsertReport(report, new List<int>(), new List<int>(), subjects);
 
             return RedirectToPage("/ReportSubmission");
         }
+
 
     }
 }

@@ -132,11 +132,11 @@
                         <form method="post" asp-page="LogIn" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
                             <h2 class="fw-bold lh-1 text-body-emphasis mb-3">Login</h2>
                             <div class="form-floating mb-3">
-                                <input asp-for="Username" type="text" class="form-control" id="floatingInput" placeholder="Username">
+                                <input asp-for="Username" type="text" class="form-control" id="floatingInput" placeholder="Username" required>
                                 <label for="floatingInput">Username</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password" required>
                                 <label for="floatingPassword">Password</label>
                             </div>
                             <div class="checkbox mb-3">
