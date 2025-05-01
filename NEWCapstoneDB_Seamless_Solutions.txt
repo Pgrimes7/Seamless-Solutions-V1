@@ -137,17 +137,7 @@ CREATE TABLE Reports (
     ReportName VARCHAR(50)
 );
 
-CREATE TABLE ReportSubjects (
-    SubjectID INT IDENTITY(1,1) PRIMARY KEY,
-    ReportID INT,
-    SubjectTitle VARCHAR(255),
-    SubjectText VARCHAR(MAX),
-    GrantID INT NULL,
-    ProjectID INT NULL,
-    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
-    FOREIGN KEY (GrantID) REFERENCES Grants(GrantID),
-    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
-);
+
 
 
 
@@ -246,6 +236,18 @@ CREATE TABLE Publishes (
     Authors NVARCHAR(MAX),
     Status NVARCHAR(50),
     ReferenceCount INT
+);
+
+CREATE TABLE ReportSubjects (
+    SubjectID INT IDENTITY(1,1) PRIMARY KEY,
+    ReportID INT,
+    SubjectTitle VARCHAR(255),
+    SubjectText VARCHAR(MAX),
+    GrantID INT NULL,
+    ProjectID INT NULL,
+    FOREIGN KEY (ReportID) REFERENCES Reports(ReportID),
+    FOREIGN KEY (GrantID) REFERENCES Grants(GrantID),
+    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
 );
 
 ALTER TABLE Reports 
