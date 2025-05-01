@@ -23,28 +23,28 @@ namespace Lab1484.Pages.DB
         public static SqlConnection AUTHDBConnection = new SqlConnection();
 
 
-       // Connection String - How to find and connect to DB - Uncomment when making local changes
-        private static readonly String? Lab3DBConnString =
-           "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+        // Connection String - How to find and connect to DB - Uncomment when making local changes
+        //private static readonly String? Lab3DBConnString =
+        //   "Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-        //private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-         //   "Database=Lab3;" +
-          //  "User Id=capstoneadmin;" +
-         //   "Password=Seamless123!@#;" +
-          //  "Encrypt=True;" +
-          //  "TrustServerCertificate=True;";
+        private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+            "Database=Lab3;" +
+            "User Id=capstoneadmin;" +
+            "Password=Seamless123!@#;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=True;";
 
 
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
-        private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+        //private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
-      //  private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-          //  "Database=AUTH;" +
-        //    "User Id=capstoneadmin;" +
-        //    "Password=Seamless123!@#;" +
-        //    "Encrypt=True;" +
-        //    "TrustServerCertificate=True;";
+        private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+            "Database=AUTH;" +
+            "User Id=capstoneadmin;" +
+            "Password=Seamless123!@#;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=True;";
 
         //Connection Methods:
 
@@ -140,7 +140,7 @@ namespace Lab1484.Pages.DB
                 "FROM ProjTasks " +
                 "JOIN Project ON Project.ProjectID = ProjTasks.ProjectID " +
                 "JOIN Users ON Users.UserID = ProjTasks.UserID " +
-                "ORDER BY ProjTasks.dueDate ASC;";
+                "ORDER BY CASE WHEN PTStatus = 'Incomplete' THEN 1 WHEN PTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
@@ -173,6 +173,24 @@ namespace Lab1484.Pages.DB
             }
         }
 
+        public static void TaskComplete(int TaskID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "UPDATE ProjTasks " +
+                "SET PTStatus = 'Complete' " +
+                "WHERE TaskID = @TaskID;";
+            SqlCommand cmdTaskUpdate = new SqlCommand();
+            cmdTaskUpdate.Connection = Lab3DBConnection;
+            cmdTaskUpdate.Connection.ConnectionString = Lab3DBConnString;
+            cmdTaskUpdate.CommandText = sqlQuery;
+            cmdTaskUpdate.Parameters.AddWithValue("@TaskID", TaskID);
+            cmdTaskUpdate.Connection.Open();
+            cmdTaskUpdate.ExecuteNonQuery();
+        }
+
         public static SqlDataReader GrantTaskReader()
         {
             SqlCommand cmdGrantTaskRead = new SqlCommand();//Make new sqlCommand object
@@ -186,7 +204,7 @@ namespace Lab1484.Pages.DB
                 "FROM GrantTasks " +
                 "JOIN Grants ON Grants.GrantID = GrantTasks.GrantID " +
                 "JOIN Users ON Users.UserID = GrantTasks.UserID " +
-                "ORDER BY GrantTasks.dueDate ASC;";
+                "ORDER BY CASE WHEN GTStatus = 'Incomplete' THEN 1 WHEN GTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
             cmdGrantTaskRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdGrantTaskRead.ExecuteReader();
@@ -195,8 +213,8 @@ namespace Lab1484.Pages.DB
             cmdGrantTaskRead.Connection.Close();
         }
 
-        //Insert Task
-        public static void GrantInsertTask(ProjTask t)
+        //Insert  GrantTask
+        public static void InsertGrantTask(GrantTask g)
         {
             {
                 if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
@@ -210,13 +228,31 @@ namespace Lab1484.Pages.DB
                 cmdGrantTaskInsert.Connection = Lab3DBConnection;
                 cmdGrantTaskInsert.Connection.ConnectionString = Lab3DBConnString;
                 cmdGrantTaskInsert.CommandText = sqlQuery;
-                cmdGrantTaskInsert.Parameters.AddWithValue("@GrantID", t.ProjectID);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@UserID", t.UserID);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@taskDescription", t.taskDescription);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@dueDate", t.dueDate);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@GrantID", g.GrantID);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@UserID", g.UserID);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@taskDescription", g.taskDescription);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@dueDate", g.dueDate);
                 cmdGrantTaskInsert.Connection.Open();
                 cmdGrantTaskInsert.ExecuteNonQuery();
             }
+        }
+
+        public static void GrantTaskComplete(int GTaskID)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            string sqlQuery = "UPDATE GrantTasks " +
+                "SET GTStatus = 'Complete' " +
+                "WHERE GTaskID = @GTaskID;";
+            SqlCommand cmdGrantTaskUpdate = new SqlCommand();
+            cmdGrantTaskUpdate.Connection = Lab3DBConnection;
+            cmdGrantTaskUpdate.Connection.ConnectionString = Lab3DBConnString;
+            cmdGrantTaskUpdate.CommandText = sqlQuery;
+            cmdGrantTaskUpdate.Parameters.AddWithValue("@GTaskID", GTaskID);
+            cmdGrantTaskUpdate.Connection.Open();
+            cmdGrantTaskUpdate.ExecuteNonQuery();
         }
 
 

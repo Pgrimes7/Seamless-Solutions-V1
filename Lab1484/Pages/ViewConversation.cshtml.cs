@@ -14,6 +14,7 @@ namespace Lab1484.Pages
         public string ReplyMessage { get; set; }
 
         public string CurrentUser { get; set; }
+
         [BindProperty]
         public IFormFile? Attachment { get; set; }
 
