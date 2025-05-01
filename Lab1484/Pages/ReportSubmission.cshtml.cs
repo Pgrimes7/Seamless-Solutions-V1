@@ -45,7 +45,7 @@ namespace Lab1484.Pages
         public IActionResult OnGet()
         {
            int UserID = Convert.ToInt32(HttpContext.Session.GetString("userId"));
-           CurrentUserID = DBClass.GetProfilePictureById(UserID);
+           CurrentUserID = DBClass.GetUserInfoByID(UserID);
             
 
             // Check if the user is logged in
