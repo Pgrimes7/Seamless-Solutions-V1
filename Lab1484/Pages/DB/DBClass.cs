@@ -1376,15 +1376,14 @@ namespace Lab1484.Pages.DB
             return tempReader;
         }
 
+
         public static void InsertReport(Report report, List<int> grantIDs, List<int> projectIDs, List<ReportSubject> subjects)
         {
-
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
 
-            //unsure if work will come back to this
             using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
             {
                 connection.Open();
@@ -1393,44 +1392,33 @@ namespace Lab1484.Pages.DB
                     try
                     {
                         // Insert Report
-
-                        string insertReportQuery = "INSERT INTO Reports (ReportDate, ReportName) OUTPUT INSERTED.ReportID VALUES (@ReportDate, @ReportName);";
+                        string insertReportQuery = "INSERT INTO Reports (ReportDate, ReportName, AuthorName) VALUES (@ReportDate, @ReportName, @AuthorName);";
                         SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
                         cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.ReportDate);
                         cmdInsertReport.Parameters.AddWithValue("@ReportName", report.ReportName);
+                        cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName);
                         int reportID = (int)cmdInsertReport.ExecuteScalar();
 
-
-                        // Insert ReportGrants
-                        string insertReportGrantQuery = "INSERT INTO ReportGrants (ReportID, GrantID) VALUES (@ReportID, @GrantID);";
-                        foreach (int grantID in grantIDs)
-                        {
-                            SqlCommand cmdInsertReportGrant = new SqlCommand(insertReportGrantQuery, connection, transaction);
-                            cmdInsertReportGrant.Parameters.AddWithValue("@ReportID", reportID);
-                            cmdInsertReportGrant.Parameters.AddWithValue("@GrantID", grantID);
-                            cmdInsertReportGrant.ExecuteNonQuery();
-                        }
-
-                        // Insert ReportProjects
-                        string insertReportProjectQuery = "INSERT INTO ReportProjects (ReportID, ProjectID) VALUES (@ReportID, @ProjectID);";
-                        foreach (int projectID in projectIDs)
-                        {
-                            SqlCommand cmdInsertReportProject = new SqlCommand(insertReportProjectQuery, connection, transaction);
-                            cmdInsertReportProject.Parameters.AddWithValue("@ReportID", reportID);
-                            cmdInsertReportProject.Parameters.AddWithValue("@ProjectID", projectID);
-                            cmdInsertReportProject.ExecuteNonQuery();
-                        }
-
                         // Insert ReportSubjects
-                        string insertReportSubjectQuery = "INSERT INTO ReportSubjects (ReportID, SubjectTitle, SubjectText) VALUES (@ReportID, @SubjectTitle, @SubjectText);";
+                        string insertReportSubjectQuery = @"
+    INSERT INTO ReportSubjects (ReportID, SubjectTitle, SubjectText, GrantID, ProjectID) 
+    VALUES (@ReportID, @SubjectTitle, @SubjectText, @GrantID, @ProjectID);";
+
                         foreach (var subject in subjects)
                         {
+                            Console.WriteLine($"Inserting ReportSubject: ReportID = {reportID}, SubjectTitle = {subject.SubjectTitle}, SubjectText = {subject.SubjectText}, GrantID = {subject.GrantID}, ProjectID = {subject.ProjectID}");
+
                             SqlCommand cmdInsertReportSubject = new SqlCommand(insertReportSubjectQuery, connection, transaction);
                             cmdInsertReportSubject.Parameters.AddWithValue("@ReportID", reportID);
                             cmdInsertReportSubject.Parameters.AddWithValue("@SubjectTitle", subject.SubjectTitle);
                             cmdInsertReportSubject.Parameters.AddWithValue("@SubjectText", subject.SubjectText);
+                            cmdInsertReportSubject.Parameters.AddWithValue("@GrantID", subject.GrantID.HasValue ? (object)subject.GrantID.Value : DBNull.Value);
+                            cmdInsertReportSubject.Parameters.AddWithValue("@ProjectID", subject.ProjectID.HasValue ? (object)subject.ProjectID.Value : DBNull.Value);
+                            Console.WriteLine($"SQL Parameters: GrantID = {cmdInsertReportSubject.Parameters["@GrantID"].Value}, ProjectID = {cmdInsertReportSubject.Parameters["@ProjectID"].Value}");
+
                             cmdInsertReportSubject.ExecuteNonQuery();
                         }
+
 
                         // Commit transaction
                         transaction.Commit();
@@ -1444,6 +1432,11 @@ namespace Lab1484.Pages.DB
                 }
             }
         }
+
+
+
+
+
 
         public static int[] GetGrantStatusCounts()
         {
