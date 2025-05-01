@@ -29,7 +29,7 @@ namespace Lab1484.Pages
         [BindProperty]
         public List<string> SelectedGrantOrProjectID { get; set; }
 
-        public User CurrentUserID;
+        public User CurrentUserID { get; set; }
 
 
         public ReportSubmissionModel()
@@ -44,9 +44,6 @@ namespace Lab1484.Pages
 
         public IActionResult OnGet()
         {
-           int UserID = Convert.ToInt32(HttpContext.Session.GetString("userId"));
-           CurrentUserID = DBClass.GetUserInfoByID(UserID);
-            
 
             // Check if the user is logged in
             string currentUser = HttpContext.Session.GetString("username");
@@ -113,15 +110,23 @@ namespace Lab1484.Pages
             {
                 throw new Exception("No grants or projects were selected.");
             }
-            if (CurrentUserID == null || string.IsNullOrEmpty(CurrentUserID.firstName))
+
+            if (CurrentUserID == null)
             {
-                throw new Exception("CurrentUser or firstName is null.");
+                throw new Exception("CurrentUserID is null. User information could not be retrieved.");
             }
+
+            int UserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
+            Console.WriteLine($"Debug: UserID from session = {UserID}");
+
+            CurrentUserID = DBClass.GetUserInfoById(UserID);
+
+            string authorName = string.Concat(CurrentUserID.firstName, " ", CurrentUserID.lastName);
+            Console.WriteLine($"Debug: AuthorName = {CurrentUserID.lastName}");
+
             var report = new Report
             {
-                //add author name to db 
-                
-                AuthorName = string.Concat(CurrentUserID.firstName, " ", CurrentUserID.lastName),
+                AuthorName = authorName,
                 ReportDate = DateTime.Now,
                 ReportName = ReportName
             };
@@ -133,7 +138,6 @@ namespace Lab1484.Pages
                 int? grantID = null;
                 int? projectID = null;
 
-                // Ensure we have a corresponding SelectedGrantOrProjectID for this subject
                 if (i < SelectedGrantOrProjectID.Count)
                 {
                     var selected = SelectedGrantOrProjectID[i];
@@ -150,6 +154,7 @@ namespace Lab1484.Pages
                         throw new Exception($"Invalid selection: {selected}");
                     }
                 }
+
                 Console.WriteLine($"Subject {i}: Title = {SubjectTitle[i]}, GrantID = {grantID}, ProjectID = {projectID}");
 
                 subjects.Add(new ReportSubject
@@ -161,12 +166,12 @@ namespace Lab1484.Pages
                 });
             }
 
-        
-        Console.WriteLine("SelectedGrantOrProjectID values:");
+            Console.WriteLine("SelectedGrantOrProjectID values:");
             foreach (var id in SelectedGrantOrProjectID)
             {
                 Console.WriteLine(id);
             }
+
             DBClass.InsertReport(report, new List<int>(), new List<int>(), subjects);
 
             return RedirectToPage("/ReportSubmission");

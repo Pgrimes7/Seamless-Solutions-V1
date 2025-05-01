@@ -40,6 +40,7 @@
                                 <div class="modal-body">
                                     <form method="post" asp-page="/ReportSubmission" class="mt-4">
                                         <div class="mb-3">
+                                            <label for="reportName" class="form-label">Report Title</label>
                                             <input type="text" class="form-control" id="reportName" name="ReportName" required />
                                         </div>
                                         <div class="mb-3">
@@ -64,7 +65,7 @@
 
                                         <div class="mb-3">
                                             <label for="reportSubject" class="form-label">Subject</label>
-                                            <input type="text" class="form-control" id="reportSubject" name="SubjectTitle" placeholder="Enter subject">
+                                            <input type="text" class="form-control" id="reportSubject" name="SubjectTitle" placeholder="Enter subject" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="reportContent" class="form-label">Content</label>
@@ -149,27 +150,11 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Send message</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <table class="table table-bordered table-responsive table-hover">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Author</th>
-                        </tr>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">Title of report</a></td>
-                            <td>5/4/2025</td>
-                            <td>Lucas Langley</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -201,11 +186,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="sectionTitle${sectionCount}" class="form-label">Subject</label>
-                    <input type="text" class="form-control" id="sectionTitle${sectionCount}" name="SubjectTitle" placeholder="Enter subject">
+                    <input type="text" class="form-control" id="sectionTitle${sectionCount}" name="SubjectTitle" placeholder="Enter subject" required >
                 </div>
                 <div class="mb-3">
                     <label for="sectionContent${sectionCount}" class="form-label">Content</label>
-                    <textarea class="form-control" id="sectionContent${sectionCount}" name="SubjectText" rows="4" placeholder="Enter content"></textarea>
+                    <textarea class="form-control" id="sectionContent${sectionCount}" name="SubjectText" rows="4" placeholder="Enter content" required ></textarea>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', newSection);

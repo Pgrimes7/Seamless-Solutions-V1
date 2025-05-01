@@ -1427,17 +1427,34 @@ namespace Lab1484.Pages.DB
                     try
                     {
                         // Insert Report
-                        string insertReportQuery = "INSERT INTO Reports (ReportDate, ReportName, AuthorName) VALUES (@ReportDate, @ReportName, @AuthorName);";
+                        string insertReportQuery = @"
+                    INSERT INTO Reports (ReportDate, ReportName, AuthorName) 
+                    VALUES (@ReportDate, @ReportName, @AuthorName);
+                    SELECT SCOPE_IDENTITY();";
+
                         SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
                         cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.ReportDate);
                         cmdInsertReport.Parameters.AddWithValue("@ReportName", report.ReportName);
+                        Console.WriteLine("AuthorName: " + report.AuthorName);
                         cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName);
-                        int reportID = (int)cmdInsertReport.ExecuteScalar();
+
+                        Console.WriteLine("Executing SQL Query: " + insertReportQuery);
+                        Console.WriteLine($"Parameters: ReportDate = {report.ReportDate}, ReportName = {report.ReportName}, AuthorName = {report.AuthorName}");
+
+                        object result = cmdInsertReport.ExecuteScalar();
+                        if (result == null || result == DBNull.Value)
+                        {
+                            throw new Exception("Failed to retrieve the ReportID after inserting the report.");
+                        }
+
+                        // Explicitly convert the result to an int
+                        int reportID = Convert.ToInt32(result);
+                        Console.WriteLine($"Report inserted successfully with ReportID = {reportID}");
 
                         // Insert ReportSubjects
                         string insertReportSubjectQuery = @"
-    INSERT INTO ReportSubjects (ReportID, SubjectTitle, SubjectText, GrantID, ProjectID) 
-    VALUES (@ReportID, @SubjectTitle, @SubjectText, @GrantID, @ProjectID);";
+                    INSERT INTO ReportSubjects (ReportID, SubjectTitle, SubjectText, GrantID, ProjectID) 
+                    VALUES (@ReportID, @SubjectTitle, @SubjectText, @GrantID, @ProjectID);";
 
                         foreach (var subject in subjects)
                         {
@@ -1449,11 +1466,11 @@ namespace Lab1484.Pages.DB
                             cmdInsertReportSubject.Parameters.AddWithValue("@SubjectText", subject.SubjectText);
                             cmdInsertReportSubject.Parameters.AddWithValue("@GrantID", subject.GrantID.HasValue ? (object)subject.GrantID.Value : DBNull.Value);
                             cmdInsertReportSubject.Parameters.AddWithValue("@ProjectID", subject.ProjectID.HasValue ? (object)subject.ProjectID.Value : DBNull.Value);
+
                             Console.WriteLine($"SQL Parameters: GrantID = {cmdInsertReportSubject.Parameters["@GrantID"].Value}, ProjectID = {cmdInsertReportSubject.Parameters["@ProjectID"].Value}");
 
                             cmdInsertReportSubject.ExecuteNonQuery();
                         }
-
 
                         // Commit transaction
                         transaction.Commit();
@@ -1462,11 +1479,13 @@ namespace Lab1484.Pages.DB
                     {
                         // Rollback transaction if any error occurs
                         transaction.Rollback();
-                        throw new Exception("Error inserting report information: " + ex.Message);
+                        Console.WriteLine($"Error inserting report information: {ex.Message}");
+                        throw;
                     }
                 }
             }
         }
+
 
 
 
@@ -1628,7 +1647,7 @@ namespace Lab1484.Pages.DB
         public static User? GetUserInfoById(int userId)
         {
             User? user = null;
-            
+
             using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
             {
                 string query = @"SELECT userID, firstName, lastName, email, phoneNumber, UserType, ProfileImageFileName 
@@ -1645,7 +1664,7 @@ namespace Lab1484.Pages.DB
                         {
                             user = new User
                             {
-                                userID = reader.GetInt32(reader.GetOrdinal("UserID")),
+                                userID = reader.GetInt32(reader.GetOrdinal("userID")),
                                 firstName = reader.GetString(reader.GetOrdinal("firstName")),
                                 lastName = reader.GetString(reader.GetOrdinal("lastName")),
                                 email = reader.GetString(reader.GetOrdinal("email")),
@@ -1653,6 +1672,11 @@ namespace Lab1484.Pages.DB
                                 UserType = reader["UserType"] as int?,
                                 ProfileImageFileName = reader["ProfileImageFileName"] as string
                             };
+                            Console.WriteLine($"User retrieved: {user.firstName} {user.lastName}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"No user found with userID: {userId}");
                         }
                     }
                 }
@@ -1660,6 +1684,7 @@ namespace Lab1484.Pages.DB
 
             return user;
         }
+
 
         //Publish
         public static List<Publish> GetAllPublishes()
