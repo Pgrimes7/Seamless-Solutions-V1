@@ -24,27 +24,26 @@ namespace Lab1484.Pages.DB
 
 
          //Connection String - How to find and connect to DB - Uncomment when making local changes
-        //private static readonly String? Lab3DBConnString =
-           //"Server=LocalHost;Database=Lab3;Trusted_Connection=True";
+        private static readonly String? Lab3DBConnString ="Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-        private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-            "Database=Lab3;" +
-            "User Id=capstoneadmin;" +
-            "Password=Seamless123!@#;" +
-            "Encrypt=True;" +
-            "TrustServerCertificate=True;";
+       // private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+         //   "Database=Lab3;" +
+         //   "User Id=capstoneadmin;" +
+         //   "Password=Seamless123!@#;" +
+           // "Encrypt=True;" +
+           // "TrustServerCertificate=True;";
 
 
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
-        //private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
+        private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
-        private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-            "Database=AUTH;" +
-            "User Id=capstoneadmin;" +
-            "Password=Seamless123!@#;" +
-            "Encrypt=True;" +
-            "TrustServerCertificate=True;";
+        //private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+         //   "Database=AUTH;" +
+        //    "User Id=capstoneadmin;" +
+          //  "Password=Seamless123!@#;" +
+         //   "Encrypt=True;" +
+         //   "TrustServerCertificate=True;";
 
         //Connection Methods:
 
@@ -1668,6 +1667,48 @@ namespace Lab1484.Pages.DB
 
             return user;
         }
+
+        //Publish
+        public static List<Publish> GetAllPublishes()
+        {
+            List<Publish> list = new();
+            using SqlConnection conn = new SqlConnection(Lab3DBConnString);
+            string query = "SELECT * FROM Publishes";
+            SqlCommand cmd = new(query, conn);
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                list.Add(new Publish
+                {
+                    PublishID = (int)reader["PublishID"],
+                    DueDate = reader["DueDate"] as DateTime?,
+                    Requirements = reader["Requirements"].ToString(),
+                    Authors = reader["Authors"].ToString(),
+                    Status = reader["Status"].ToString(),
+                    ReferenceCount = (int)reader["ReferenceCount"]
+                });
+            }
+            return list;
+        }
+
+        public static void InsertPublish(Publish p)
+        {
+            using SqlConnection conn = new SqlConnection(Lab3DBConnString);
+            string query = @"INSERT INTO Publishes (DueDate, Requirements, Authors, Status, ReferenceCount)
+                     VALUES (@DueDate, @Requirements, @Authors, @Status, @ReferenceCount)";
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@DueDate", p.DueDate ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Requirements", p.Requirements ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Authors", p.Authors ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Status", p.Status ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@ReferenceCount", p.ReferenceCount);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+        }
+
+
 
         public static void AddProfileImage(User user)
         {
