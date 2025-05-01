@@ -1,0 +1,284 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="YOUR DESCRIPTION HERE">
+    <meta name="author" content="YOUR NAME HERE">
+    <title>Test</title>
+
+    <!-- LOAD BOOTSTRAP CSS - DO NOT DELETE -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- END LOADING BOOTSTRAP CSS -->
+
+    <!-- Custom styles - add your own CSS to this stylesheet -->
+    <link href="style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  
+    <!-- DO NOT DELETE -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- DO NOT DELETE -->
+  </head>
+  
+  <body>      
+  
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+  
+          <!--sidebar-->
+          <div class="sidebar-col col-auto col-md-3 col-xl-2 inline-flex flex-column align-items-start px-sm-2 px-0 mt-2">
+            <div class="d-flex flex-column align-items-center vh-100 position-fixed align-items-sm-start px-4 pt-3 border-end border-light-subtle">
+                <img class="logo img-fluid" src="JMU Care-purple.png" alt="jmu care logo">
+                
+
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Dashboard", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-border-all"></i>
+                            <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/GrantsAndProjects" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/GrantsAndProjects", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-file"></i>
+                            <span class="ms-1 d-none d-sm-inline">Grants and Projects</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/Tasks" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Tasks", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span class="ms-1 d-none d-sm-inline">Tasks</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/AllUsers", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-users"></i>
+                            <span class="ms-1 d-none d-sm-inline">All Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/UpdatePermission" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/UpdatePermission", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <span class="ms-1 d-none d-sm-inline">Permission Update</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/Messages" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Messages", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="ms-1 d-none d-sm-inline">Messages</span>
+                        </a>
+    </li>
+    <li class="nav-item">
+      <a asp-page="/ReportSubmission" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/ReportSubmission", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+        <i class="fa-solid fa-box-archive"></i>
+        <span class="ms-1 d-none d-sm-inline">Reports</span>
+      </a>
+    </li>
+                    <li class="nav-item">
+                        <a asp-page="/Archive" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Archive", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-file-alt"></i>
+                            <span class="ms-1 d-none d-sm-inline">Grant Archive</span>
+                        </a>
+                    </li>
+                    <div>
+                        <hr>
+                    </div>
+                    <li class="nav-item">
+                        <a asp-page="/Settings" class="nav-link link-body-emphasis px-0 align-middle">
+                            <i class="fa-solid fa-gear"></i>
+                            <span class="ms-1 d-none d-sm-inline">Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span class="ms-1 d-none d-sm-inline">Support</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="dropup pb-4">
+                    <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        
+          <img src="https://jmuedu.sharepoint.com/sites/484CapstoneTeam/Shared%20Documents/General/emily%20picture.png?csf=1&web=1&e=fig8vo&CID=bf79a580-6dc5-41d6-a577-8343e6304d35" alt="username" width="30" height="30" class="rounded-circle">
+          <span class="d-none d-sm-inline mx-2">@currentUser</span>
+    
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                        <li><a class="dropdown-item" asp-page="/Logout">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+  
+          <!--main content col-->
+        <div class="col py-3 mb-3">
+  <!-- Support Page Content -->
+  <div class="support-page">
+    <h2>Need Help?</h2>
+    
+<div class="col py-3 mb-3">
+
+ <video id="supportVideo" width="300" height="200" controls style="cursor:pointer;">
+<source src="supportvideo.mp4" type="video/mp4">
+Your browser does not support the video tag.
+ </video>
+ <div class="play-button" onclick="playVideo()">▶</div>
+
+
+    
+    <!-- Help Topics -->
+    <div class="help-topics">
+      <div class="topic-column">
+        <h3>Getting Started</h3>
+        <ul>
+          <li>Setting up your profile</li>
+          <li>Adding users and managing roles</li>
+          <li>Navigating the dashboard</li>
+ 
+<li><a href="https://www.jmu.edu/humanresources/recruitment/onboardresources.shtml">JMU onboarding resources</a></li>
+
+
+        </ul>
+      </div>
+      <div class="topic-column">
+        <h3>Grants and Funding</h3>
+        <ul>
+          <li>Submitting a new grant</li>
+          <li>Tracking deadlines and status</li>
+          <li>Exporting grant reports</li>
+        </ul>
+      </div>
+      <div class="topic-column">
+        <h3>Data & Documents</h3>
+        <ul>
+          <li>Uploading password</li>
+          <li>Setting notification preferences</li>
+          <li>Managing account settings</li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- FAQ Section -->
+<!-- FAQ Section -->
+<div class="faq-section">
+  <h3>Frequently Asked Questions</h3>
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          How do I invite a team member?
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          To invite a team member, go to the 'Users' section, click 'Invite', and enter their email address. They will receive an invitation to join your team.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          What's the difference between "Pending" and "Ongoing" status?
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          "Pending" status means the grant is awaiting approval, while "Ongoing" status means the grant has been approved and is currently active.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          How do I set user alerts for expending funds?
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          To set user alerts for expending funds, navigate to the 'Notifications' section, select 'Expenditure Alerts', and configure the alert settings as needed.
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFour">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          Can I restore accidentally deleted data?
+        </button>
+      </h2>
+      <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          Yes, you can restore accidentally deleted data by going to the 'Recycle Bin' section and selecting the data you wish to restore.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Contact Information -->
+    <div class="contact-info">
+        <h2> Contact Information</h2>
+      <p>Email: onboard@jmu.edu</p>
+      <button>Schedule a 1:1 session</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function playVideo() {
+    // Code to play the video
+    alert('Video playing...');
+  }
+</script>
+
+<style>
+  .support-page {
+    font-family: Arial, sans-serif;
+  }
+  .video-placeholder {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background-color: #ccc;
+  }
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    color: white;
+    cursor: pointer;
+  }
+  .help-topics {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  .topic-column {
+    width: 30%;
+  }
+  .faq-section {
+    margin-top: 20px;
+  }
+  .contact-info {
+    margin-top: 20px;
+  }
+</style>
+
+  
+        </div> <!--close row-->
+      </div> <!--close container-->
+
+    <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+
+  </body>
+
+</html>
