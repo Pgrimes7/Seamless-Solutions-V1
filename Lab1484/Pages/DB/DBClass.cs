@@ -136,9 +136,11 @@ namespace Lab1484.Pages.DB
             }
             cmdProjectRead.Connection = Lab3DBConnection;
             cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectRead.CommandText = "SELECT Tasks.*, Project.ProjectName " +
-                "FROM Tasks " +
-                "JOIN Project ON Project.ProjectID = Tasks.ProjectID;";
+            cmdProjectRead.CommandText = "SELECT ProjTasks.*, Project.ProjectName, CONCAT(Users.FirstName, ' ', Users.LastName) AS 'UserName' " +
+                "FROM ProjTasks " +
+                "JOIN Project ON Project.ProjectID = ProjTasks.ProjectID " +
+                "JOIN Users ON Users.UserID = ProjTasks.UserID " +
+                "ORDER BY ProjTasks.dueDate ASC;";
             cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
@@ -156,17 +158,64 @@ namespace Lab1484.Pages.DB
                     Lab3DBConnection.Close();
                 }
 
-                string sqlQuery = "INSERT INTO Tasks (ProjectID, taskDescription, dueDate) VALUES (@ProjectID, @taskDescription, @dueDate);";
+                string sqlQuery = "INSERT INTO ProjTasks (ProjectID, UserID, taskDescription, dueDate) VALUES (@ProjectID, @UserID, @taskDescription, @dueDate);";
 
                 SqlCommand cmdTaskInsert = new SqlCommand();
                 cmdTaskInsert.Connection = Lab3DBConnection;
                 cmdTaskInsert.Connection.ConnectionString = Lab3DBConnString;
                 cmdTaskInsert.CommandText = sqlQuery;
                 cmdTaskInsert.Parameters.AddWithValue("@ProjectID", t.ProjectID);
+                cmdTaskInsert.Parameters.AddWithValue("@UserID", t.UserID);
                 cmdTaskInsert.Parameters.AddWithValue("@taskDescription", t.taskDescription);
                 cmdTaskInsert.Parameters.AddWithValue("@dueDate", t.dueDate);
                 cmdTaskInsert.Connection.Open();
                 cmdTaskInsert.ExecuteNonQuery();
+            }
+        }
+
+        public static SqlDataReader GrantTaskReader()
+        {
+            SqlCommand cmdGrantTaskRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdGrantTaskRead.Connection = Lab3DBConnection;
+            cmdGrantTaskRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdGrantTaskRead.CommandText = "SELECT GrantTasks.*, Grants.grantName, CONCAT(Users.FirstName, ' ', Users.LastName) AS 'UserName' " +
+                "FROM GrantTasks " +
+                "JOIN Grants ON Grants.GrantID = GrantTasks.GrantID " +
+                "JOIN Users ON Users.UserID = GrantTasks.UserID " +
+                "ORDER BY GrantTasks.dueDate ASC;";
+            cmdGrantTaskRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdGrantTaskRead.ExecuteReader();
+
+            return tempReader;
+            cmdGrantTaskRead.Connection.Close();
+        }
+
+        //Insert Task
+        public static void GrantInsertTask(ProjTask t)
+        {
+            {
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+
+                string sqlQuery = "INSERT INTO GrantTasks (GrantID, UserID, taskDescription, dueDate) VALUES (@GrantID, @UserID, @taskDescription, @dueDate);";
+
+                SqlCommand cmdGrantTaskInsert = new SqlCommand();
+                cmdGrantTaskInsert.Connection = Lab3DBConnection;
+                cmdGrantTaskInsert.Connection.ConnectionString = Lab3DBConnString;
+                cmdGrantTaskInsert.CommandText = sqlQuery;
+                cmdGrantTaskInsert.Parameters.AddWithValue("@GrantID", t.ProjectID);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@UserID", t.UserID);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@taskDescription", t.taskDescription);
+                cmdGrantTaskInsert.Parameters.AddWithValue("@dueDate", t.dueDate);
+                cmdGrantTaskInsert.Connection.Open();
+                cmdGrantTaskInsert.ExecuteNonQuery();
             }
         }
 
