@@ -43,6 +43,13 @@
             
             <!--main content col-->
             <div class="col py-3">
+                @if (Model.CreateUserSuccess != null)
+                {
+                    <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                        @Model.CreateUserSuccess
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
                 <h1>All Users</h1>
 
                 <!--row for search and filter-->
@@ -357,6 +364,30 @@
             document.getElementById("passwordInput").value = "12345";
             document.getElementById("phoneInput").value = "111-222-3333";
         }
+    </script>
+    <script>
+        const createUserModal = document.getElementById('createuserModal');
+        createUserModal.addEventListener('show.bs.modal', function () {
+            // Clear all inputs inside the modal
+            createUserModal.querySelectorAll('input, select').forEach(input => {
+                if (input.tagName === 'SELECT') {
+                    input.selectedIndex = 0;
+                } else {
+                    input.value = '';
+                }
+            });
+        });
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                // Fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); // 4 seconds before starting fade-out
     </script>
 
 
