@@ -12,6 +12,21 @@
     <body>
         <main>
             <br />
+            @if (Model.CreateOrEditGrantSuccess != null)
+            {
+                <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                    @Model.CreateOrEditGrantSuccess
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @*@if (Model.CreateOrEditGrantFailure != null)
+            {
+                <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @Model.CreateOrEditGrantFailure
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }*@
+
 
             @if (Model.SelectedGrantId == 0)
             {
@@ -212,6 +227,28 @@
             modal.find('#modalUserId').val(userId);
             modal.find('#modalGrantId').val(grantId);
         });
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                // Fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); // 4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
+            if (alertBox) {
+                // Fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); // 4 seconds before starting fade-out
     </script>
 
 

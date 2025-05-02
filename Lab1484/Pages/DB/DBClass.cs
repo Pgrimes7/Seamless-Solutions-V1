@@ -556,34 +556,45 @@ namespace Lab1484.Pages.DB
 
 
 
-        public static void InsertGrant(Grant g)
+        public static bool InsertGrant(Grant g)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+
+                string sqlQuery = @"INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName,
+                    category, dueDate, grantStatus, amount, grantName)
+                    VALUES (@FacultyLeadID, @BusinessPartnerID, @BusinessName,
+                    @Category, @DueDate, @GrantStatus, @Amount, @GrantName);";
+
+                using (SqlCommand cmdGrantInsert = new SqlCommand(sqlQuery, Lab3DBConnection))
+                {
+                    cmdGrantInsert.Connection.ConnectionString = Lab3DBConnString;
+
+                    cmdGrantInsert.Parameters.AddWithValue("@FacultyLeadID", g.FacultyLeadID);
+                    cmdGrantInsert.Parameters.AddWithValue("@BusinessPartnerID", g.BusinessPartnerID);
+                    cmdGrantInsert.Parameters.AddWithValue("@BusinessName", g.businessName);
+                    cmdGrantInsert.Parameters.AddWithValue("@Category", g.category);
+                    cmdGrantInsert.Parameters.AddWithValue("@DueDate", g.dueDate);
+                    cmdGrantInsert.Parameters.AddWithValue("@GrantStatus", g.grantStatus);
+                    cmdGrantInsert.Parameters.AddWithValue("@Amount", g.amount);
+                    cmdGrantInsert.Parameters.AddWithValue("@GrantName", g.grantName);
+
+                    cmdGrantInsert.Connection.Open();
+                    cmdGrantInsert.ExecuteNonQuery();
+                }
+
+                return true;
             }
-
-            string sqlQuery = @"INSERT INTO Grants (FacultyLeadID, BusinessPartnerID, businessName,
-                        category, dueDate, grantStatus, amount, grantName)
-                        VALUES (@FacultyLeadID, @businessPartnerID, @businessName,
-                        @category, @dueDate, @grantStatus, @amount, @grantName);";
-
-            SqlCommand cmdGrantInsert = new SqlCommand();
-            cmdGrantInsert.Connection = Lab3DBConnection;
-            cmdGrantInsert.Connection.ConnectionString = Lab3DBConnString;
-            cmdGrantInsert.CommandText = sqlQuery;
-            cmdGrantInsert.Parameters.AddWithValue("@FacultyLeadID", g.FacultyLeadID);
-            cmdGrantInsert.Parameters.AddWithValue("@businessPartnerID", g.BusinessPartnerID);
-            cmdGrantInsert.Parameters.AddWithValue("@businessName", g.businessName);
-            cmdGrantInsert.Parameters.AddWithValue("@category", g.category);
-            cmdGrantInsert.Parameters.AddWithValue("@dueDate", g.dueDate);
-            cmdGrantInsert.Parameters.AddWithValue("@grantStatus", g.grantStatus);
-            cmdGrantInsert.Parameters.AddWithValue("@amount", g.amount);
-            cmdGrantInsert.Parameters.AddWithValue("@grantName", g.grantName);
-
-            cmdGrantInsert.Connection.Open();
-            cmdGrantInsert.ExecuteNonQuery();
+            catch
+            {
+                return false;
+            }
         }
+
 
         //Update Grant
         public static void UpdateGrant(Grant g)

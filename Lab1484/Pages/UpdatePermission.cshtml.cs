@@ -37,6 +37,12 @@ namespace Lab1484.Pages
         [BindProperty]
         public string SelectedGrantName { get; set; }
 
+        [TempData]
+        public string? CreateOrEditGrantSuccess { get; set; }
+
+        [TempData]
+        public string? CreateOrEditGrantFailure { get; set; }
+
 
         public UpdatePermissionModel()
         {
