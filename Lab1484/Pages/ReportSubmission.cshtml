@@ -33,34 +33,105 @@
 </head>
 <body>
     <div class="col py-3 mb-3">
-        <h1 class="mb-3">Reports</h1>
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Progress</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Performance</button>
-            </li>
-        </ul>
 
-        <!-- Modal buttons -->
-        <div class="mt-3" id="modalButtons">
-            <button type="button" class="btn btn-primary rounded-pill" id="progressModalButton" data-bs-toggle="modal" data-bs-target="#progressModal">Create Progress Report</button>
-            <button type="button" class="btn btn-primary rounded-pill d-none" id="performanceModalButton" data-bs-toggle="modal" data-bs-target="#performanceModal">Create Performance Report</button>
-        </div>
+        <!-- Only show the Create buttons and tabs if no report is selected -->
+        @if (Model.SelectedReportID == 0)
+        {
+            <h1 class="mb-3">Reports</h1>
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Progress</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Performance</button>
+                </li>
+            </ul>
 
-        <!-- Tabs content -->
-        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-            @if (Model.SelectedReportID > 0)
+            <!-- Modal buttons -->
+            <div class="mt-3" id="modalButtons">
+                <button type="button" class="btn btn-primary rounded-pill" id="progressModalButton" data-bs-toggle="modal" data-bs-target="#progressModal">Create Progress Report</button>
+                <button type="button" class="btn btn-primary rounded-pill d-none" id="performanceModalButton" data-bs-toggle="modal" data-bs-target="#performanceModal">Create Performance Report</button>
+            </div>
+
+            <!-- Tabs content -->
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                <!-- Display the list of progress reports -->
+                <table class="table table-bordered table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Author</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var report in Model.ReportList)
+                        {
+                            <tr>
+                                <td>
+                                    <form method="post" asp-page-handler="SelectProgressReport" class="d-inline">
+                                        <input type="hidden" name="reportID" value="@report.ReportID" />
+                                        <button type="submit" class="btn btn-link p-0">@report.ReportName</button>
+                                    </form>
+                                </td>
+                                <td>@report.ReportDate.ToString("MM/dd/yyyy")</td>
+                                <td>@report.AuthorName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Performance tab -->
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                <table class="table table-bordered table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Author</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.PerformanceReportList != null && Model.PerformanceReportList.Any())
+                        {
+                            @foreach (var report in Model.PerformanceReportList)
+                            {
+                                <tr>
+                                    <td><a href="#">@report.PerformanceReportName</a></td>
+                                    <td>@report.Description</td>
+                                    <td>@report.StartDate.ToString("MM/dd/yyyy")</td>
+                                    <td>@report.EndDate.ToString("MM/dd/yyyy")</td>
+                                    <td>@report.AuthorName</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">No performance reports available.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <!-- Show the selected report details if a report is selected -->
+        @if (Model.SelectedReportID > 0)
+        {
+            @if (Model.SelectedReport == null)
             {
-                @if (Model.SelectedReport == null)
-                {
-                    <p>SelectedReport is null.</p>
-                }
-
+                <p>SelectedReport is null.</p>
+            }
+            else
+            {
                 <!-- Display the selected report's details -->
                 <div class="mb-4">
-                    <h2>@Model.SelectedReport?.ReportName</h2>
+                    <h1>@Model.SelectedReport?.ReportName</h1>
                     <p><strong>Author:</strong> @Model.SelectedReport?.AuthorName</p>
                     <p><strong>Date:</strong> @Model.SelectedReport?.ReportDate.ToString("MM/dd/yyyy")</p>
                 </div>
@@ -97,7 +168,7 @@
                                 <strong>Associated Project:</strong> @Model.ProjectList[i].ProjectName
 
                                 <br />
-                                <strong>Status:</strong> @Model.ProjectList[i].ProjectStatus
+                                <strong>Project Status:</strong> @Model.ProjectList[i].ProjectStatus
 
                                 <br />
                                 <strong>Due Date:</strong> @Model.ProjectList[i].DateDue.ToString("MM/dd/yyyy")
@@ -114,72 +185,9 @@
                     }
                 </ul>
             }
-            else
-            {
-                <!-- Display the list of reports -->
-                <table class="table table-bordered table-responsive table-hover">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Author</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var report in Model.ReportList)
-                        {
-                            <tr>
-                                <td>
-                                    <form method="post" asp-page-handler="SelectProgressReport" class="d-inline">
-                                        <input type="hidden" name="reportID" value="@report.ReportID" />
-                                        <button type="submit" class="btn btn-link p-0">@report.ReportName</button>
-                                    </form>
-                                </td>
-                                <td>@report.ReportDate.ToString("MM/dd/yyyy")</td>
-                                <td>@report.AuthorName</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-        </div>
+        }
+    </div>
 
-        <!-- Performance tab -->
-        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-            <table class="table table-bordered table-responsive table-hover">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Author</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.PerformanceReportList != null && Model.PerformanceReportList.Any())
-                    {
-                        @foreach (var report in Model.PerformanceReportList)
-                        {
-                            <tr>
-                                <td><a href="#">@report.PerformanceReportName</a></td>
-                                <td>@report.Description</td>
-                                <td>@report.StartDate.ToString("MM/dd/yyyy")</td>
-                                <td>@report.EndDate.ToString("MM/dd/yyyy")</td>
-                                <td>@report.AuthorName</td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="5" class="text-center">No performance reports available.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
 
     <!-- Create progress report modal -->
     <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">

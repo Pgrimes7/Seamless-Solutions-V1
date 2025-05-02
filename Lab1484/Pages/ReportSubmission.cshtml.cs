@@ -134,37 +134,48 @@ namespace Lab1484.Pages
 
                 return Page();
             }
-            
-        
+
+
 
 
         public async Task<IActionResult> OnPostCreatePerformanceReportAsync()
         {
-            int UserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
-            CurrentUserID = DBClass.GetUserInfoById(UserID);
+            // Retrieve the current user ID from the session
+            int userID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
+            CurrentUserID = DBClass.GetUserInfoById(userID);
 
+            // Set the author name for the performance report
             PerformanceReport.AuthorName = $"{CurrentUserID.firstName} {CurrentUserID.lastName}";
-            PerformanceReport.StartDate = PerformanceReport.StartDate;
-            PerformanceReport.EndDate = PerformanceReport.EndDate;
 
-            // Get the aggregated data
+            // Ensure the start and end dates are valid
+            if (PerformanceReport.StartDate == default || PerformanceReport.EndDate == default)
+            {
+                throw new Exception("Start Date and End Date must be provided.");
+            }
+
+            // Get the aggregated data for the performance report
             var reportData = DBClass.GetPerformanceReportData(PerformanceReport.StartDate, PerformanceReport.EndDate);
 
-            // Populate the PerformanceReport object
+            // Populate the PerformanceReport object with the aggregated data
             PerformanceReport.Funding = reportData.Funding;
             PerformanceReport.ProjectsCompleted = reportData.ProjectsCompleted;
-            PerformanceReport.GrantsArchived = reportData.GrantsArchived;
-            PerformanceReport.ActiveGrants = reportData.ActiveGrants;
-            PerformanceReport.GrantsInProgress = reportData.GrantsInProgress;
             PerformanceReport.GrantsSubmitted = reportData.GrantsSubmitted;
             PerformanceReport.ProjectsWIP = reportData.ProjectsWIP;
             PerformanceReport.PapersPublished = reportData.PapersPublished;
+            PerformanceReport.UnawardedFunding = reportData.UnawardedFunding;
+            PerformanceReport.PotentialGrants = reportData.PotentialGrants;
+            PerformanceReport.AwardedGrants = reportData.AwardedGrants;
+            PerformanceReport.ActiveGrants = reportData.ActiveGrants;
+            PerformanceReport.RejectedGrants = reportData.RejectedGrants;
+            PerformanceReport.ArchivedGrants = reportData.ArchivedGrants;
 
             // Insert the performance report into the database
             DBClass.InsertPerformanceReport(PerformanceReport);
 
+            // Redirect back to the ReportSubmission page
             return RedirectToPage("/ReportSubmission");
         }
+
 
 
 
@@ -304,7 +315,53 @@ namespace Lab1484.Pages
 
             // Log for debugging
             Console.WriteLine($"SelectedReport: {SelectedReport?.ReportName}, Author: {SelectedReport?.AuthorName}, Date: {SelectedReport?.ReportDate}");
+            Console.WriteLine($"Total Projects: {ProjectList.Count}");
         }
+        public void OnPostSelectPerformanceReport(int ReportID)
+        {
+            SelectedReportID = ReportID;
+
+            // Clear previous data
+            PerformanceReport = new PerformanceReport();
+
+            // Retrieve the selected performance report data
+            using (SqlDataReader reader = DBClass.AllPerformanceReportReader())
+            {
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(reader.GetOrdinal("PerformanceReportID")) == ReportID)
+                    {
+                        PerformanceReport = new PerformanceReport
+                        {
+                            PerformanceReportID = reader.GetInt32(reader.GetOrdinal("PerformanceReportID")),
+                            ReportID = reader.GetInt32(reader.GetOrdinal("ReportID")),
+                            PerformanceReportName = reader["ReportName"].ToString(),
+                            Description = reader["Description"]?.ToString(),
+                            StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
+                            EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
+                            Funding = reader.GetDouble(reader.GetOrdinal("Funding")),
+                            ProjectsCompleted = reader.GetInt32(reader.GetOrdinal("ProjectsCompleted")),
+                            GrantsSubmitted = reader.GetInt32(reader.GetOrdinal("GrantsSubmitted")),
+                            ProjectsWIP = reader.GetInt32(reader.GetOrdinal("ProjectsWIP")),
+                            PapersPublished = reader.GetInt32(reader.GetOrdinal("PapersPublished")),
+                            UnawardedFunding = reader.GetDouble(reader.GetOrdinal("UnawardedFunding")),
+                            PotentialGrants = reader.GetInt32(reader.GetOrdinal("PotentialGrants")),
+                            AwardedGrants = reader.GetInt32(reader.GetOrdinal("AwardedGrants")),
+                            ActiveGrants = reader.GetInt32(reader.GetOrdinal("ActiveGrants")),
+                            RejectedGrants = reader.GetInt32(reader.GetOrdinal("RejectedGrants")),
+                            ArchivedGrants = reader.GetInt32(reader.GetOrdinal("ArchivedGrants")),
+                            AuthorName = reader["AuthorName"]?.ToString()
+                        };
+                        break; // Exit the loop once the matching report is found
+                    }
+                }
+            }
+
+            // Log for debugging
+            Console.WriteLine($"Selected Performance Report: {PerformanceReport.PerformanceReportName}, Author: {PerformanceReport.AuthorName}, Start Date: {PerformanceReport.StartDate}, End Date: {PerformanceReport.EndDate}");
+        }
+
+
 
 
 
