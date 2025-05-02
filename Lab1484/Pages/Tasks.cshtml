@@ -259,7 +259,11 @@
                                                 <td>@gtask.GrantName</td>
                                                 <td>@gtask.taskDescription</td>
                                                 <td>@(gtask.dueDate.HasValue ? gtask.dueDate.Value.ToShortDateString() : "N/A")</td>
-                                                <td>@gtask.GTStatus</td>
+                                                @if (gtask.GTStatus == "Complete") {
+                                                    <td><span class="badge text-bg-success">@gtask.GTStatus</span></td>
+                                                } else {
+                                                    <td><span class="badge text-bg-danger">@gtask.GTStatus</span></td>
+                                                }
                                             </tr>
                                         }
                                     </tbody>
@@ -374,7 +378,14 @@
                                                 <td>@task.ProjectName</td>
                                                 <td>@task.taskDescription</td>
                                                 <td>@(task.dueDate.HasValue ? task.dueDate.Value.ToShortDateString() : "N/A")</td>
-                                                <td>@task.PTStatus</td>
+                                                @if (task.PTStatus == "Complete")
+                                                {
+                                                    <td><span class="badge text-bg-success">@task.PTStatus</span></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><span class="badge text-bg-danger">@task.PTStatus</span></td>
+                                                }
                                             </tr>
                                         }
                                     </tbody>
