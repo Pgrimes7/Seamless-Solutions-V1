@@ -65,7 +65,7 @@
                                         </label>
 
 
-                                        <!-- Edit Profile Picture Modal -->
+                                        <!-- edit profile pic modal -->
                                         <div class="modal fade" id="editProfilePicModal" tabindex="-1" aria-labelledby="editProfilePicModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -77,10 +77,10 @@
                                                         <p>Would you like to upload a new profile picture or delete the current one?</p>
                                                     </div>
                                                     <div class="modal-footer justify-content-between">
-                                                        <!-- Cancel -->
+                                                        <!-- cancel -->
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 
-                                                        <!-- Edit / Upload -->
+                                                        <!-- edit/upload -->
                                                         <form method="post" enctype="multipart/form-data" asp-page-handler="UploadProfileImage">
                                                             <input type="file" id="hiddenFileInput" name="ProfileImage" accept=".png,.jpg,.jpeg"
                                                                    style="display: none;" onchange="this.form.submit()" />
@@ -89,7 +89,7 @@
                                                             </button>
                                                         </form>
 
-                                                        <!-- Delete -->
+                                                        <!-- delete -->
                                                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
                                                             Delete
                                                         </button>
@@ -99,7 +99,7 @@
                                         </div>
 
 
-                                        <!-- Confirm Delete Modal -->
+                                        <!-- confirm delete modal -->
                                         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -158,16 +158,6 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div class="row mb-3">
-                            <div class="col-4">
-                                <label for="inputUsername" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="inputLast" placeholder="doej">
-                            </div>
-                            <div class="col-4">
-                                <label for="inputPassword" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="inputLast" placeholder="Password1234">
-                            </div>
-                        </div>*@
                         <div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputEmail" class="form-label">Email</label>
@@ -188,13 +178,7 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div class="row mb-3">
-                            <div class="col-4">
-                                <label for="inputPicture" class="form-label">Profile picture:</label>
-                                <input type="file" class="form-control" id="inputPicture" placeholder="Doe" accept="image/*">
-                            </div>
-                        </div>*@
-
+                        
                         <button type="submit" class="btn btn-primary">Update</button>
                         </form>
 
