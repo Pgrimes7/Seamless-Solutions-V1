@@ -1810,50 +1810,55 @@ namespace Lab1484.Pages.DB
 
         public static SqlDataReader SingleReportReader(int reportID)
         {
-            //could modify insert report so it submits the user who submitted it so here it could be displayed too
-            SqlCommand cmdReportRead = new SqlCommand();
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
 
-            cmdReportRead.CommandText = @"
-        SELECT Reports.ReportID,
-            Reports.ReportDate,
-            Reports.ReportName,
-            ReportSubjects.SubjectID,
-            ReportSubjects.SubjectTitle,
-            ReportSubjects.SubjectText,
-            ReportGrants.ReportGrantID,
-            ReportGrants.GrantID,
-            ReportProjects.ReportProjectID,
-            ReportProjects.ProjectID
-        FROM 
-            Reports
-        LEFT JOIN 
-            ReportSubjects ON Reports.ReportID = ReportSubjects.ReportID
-        LEFT JOIN 
-            ReportGrants ON Reports.ReportID = ReportGrants.ReportID
-        LEFT JOIN 
-            ReportProjects ON Reports.ReportID = ReportProjects.ReportID
-        WHERE 
-            Reports.ReportID = @ReportID;";
+            string query = @"
+        SELECT 
+            Reports.ReportID,
+            Reports.ReportName,
+            Reports.ReportDate,
+            Reports.AuthorName,
+            ReportSubjects.SubjectTitle,
+            ReportSubjects.SubjectText,
+            ReportSubjects.GrantID,
+            ReportSubjects.ProjectID,
+            Grants.GrantName,
+            Grants.businessName AS GrantBusinessName,
+            Grants.category AS GrantCategory,
+            Grants.dueDate AS GrantDueDate,
+            Grants.grantStatus AS GrantStatus,
+            Grants.amount AS GrantAmount,
+            Projects.ProjectName,
+            Projects.ProjectStatus,
+            Projects.dueDate AS ProjectDueDate,
+            Projects.DateCreated AS ProjectCreatedDate,
+            Projects.DateCompleted AS ProjectCompletedDate
+        FROM 
+            Reports
+        LEFT JOIN 
+            ReportSubjects ON Reports.ReportID = ReportSubjects.ReportID
+        LEFT JOIN 
+            Grants ON ReportSubjects.GrantID = Grants.GrantID
+        LEFT JOIN 
+            Project AS Projects ON ReportSubjects.ProjectID = Projects.ProjectID
+        WHERE 
+            Reports.ReportID = @ReportID;";
 
+            SqlCommand cmdReportRead = new SqlCommand(query, Lab3DBConnection);
             cmdReportRead.Parameters.AddWithValue("@ReportID", reportID);
 
-
-            cmdReportRead.Connection = Lab3DBConnection;
-            cmdReportRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdReportRead.Connection.Open(); // Open connection here, close in Model!
-
+            cmdReportRead.Connection.Open();
             SqlDataReader tempReader = cmdReportRead.ExecuteReader();
 
             return tempReader;
-
-
-
-
         }
+
+
+
+
 
         public static void UploadFile(IFormFile formFile)
         {
@@ -1949,11 +1954,15 @@ namespace Lab1484.Pages.DB
                 list.Add(new Publish
                 {
                     PublishID = (int)reader["PublishID"],
+                    JournalTitle = reader["JournalTitle"].ToString(),
                     DueDate = reader["DueDate"] as DateTime?,
                     Requirements = reader["Requirements"].ToString(),
                     Authors = reader["Authors"].ToString(),
                     Status = reader["Status"].ToString(),
-                    ReferenceCount = (int)reader["ReferenceCount"]
+                    ReferenceCount = (int)reader["ReferenceCount"],
+                    FileName = reader["FileName"].ToString()
+
+
                 });
             }
             return list;
@@ -1962,14 +1971,16 @@ namespace Lab1484.Pages.DB
         public static void InsertPublish(Publish p)
         {
             using SqlConnection conn = new SqlConnection(Lab3DBConnString);
-            string query = @"INSERT INTO Publishes (DueDate, Requirements, Authors, Status, ReferenceCount)
-                     VALUES (@DueDate, @Requirements, @Authors, @Status, @ReferenceCount)";
+            string query = @"INSERT INTO Publishes (JournalTitle, DueDate, Requirements, Authors, Status, ReferenceCount, FileName)
+                     VALUES (@JournalTitle, @DueDate, @Requirements, @Authors, @Status, @ReferenceCount, @FileName)";
             SqlCommand cmd = new(query, conn);
             cmd.Parameters.AddWithValue("@DueDate", p.DueDate ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@Requirements", p.Requirements ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@Authors", p.Authors ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@Status", p.Status ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@ReferenceCount", p.ReferenceCount);
+            cmd.Parameters.AddWithValue("@JournalTitle", p.JournalTitle ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@FileName", p.FileName ?? (object)DBNull.Value);
             conn.Open();
             cmd.ExecuteNonQuery();
         }
