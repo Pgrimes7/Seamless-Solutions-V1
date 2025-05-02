@@ -51,10 +51,14 @@
                         <div class="col">
                             <select name="UserType" class="form-select rounded-pill" aria-label="User Type Filter" onchange="this.form.submit()">
                                 <option value="" selected="@(Model.UserType == null)">All Users</option>
-                                <option value="0" selected="@(Model.UserType == 0)">Admin</option>
-                                <option value="1" selected="@(Model.UserType == 1)">Faculty</option>
-                                <option value="2" selected="@(Model.UserType == 2)">Employee</option>
-                                <option value="3" selected="@(Model.UserType == 3)">Representative</option>
+                                <option value="0" selected="@(Model.UserType == 0)">Executive Director</option>
+                                <option value="1" selected="@(Model.UserType == 1)">Associate Director</option>
+                                <option value="2" selected="@(Model.UserType == 2)">Faculty Affiliate</option>
+                                <option value="3" selected="@(Model.UserType == 3)">Student</option>
+                                <option value="4" selected="@(Model.UserType == 4)">Administrative Assistant</option>
+                                <option value="5" selected="@(Model.UserType == 5)">External Partner</option>
+                                <option value="6" selected="@(Model.UserType == 6)">Principal Investigator</option>
+                                <option value="7" selected="@(Model.UserType == 7)">Co Principal Investigator</option>
                             </select>
                         </div>
                     </form>
@@ -93,12 +97,13 @@
                                             <select asp-for="NewUser.UserType" class="form-select" aria-label="Default select example">
                                                 <option value="" disabled selected>Select User Type</option>
                                                 <option value="0">Executive Director</option>
-                                                <option value="1">Faculty Affiliate</option>
-                                                <option value="2">Employee</option>
-                                                <option value="3">External Partner</option>
-                                                <option value="4">Student</option>
-                                                <option value="5">Associate Director</option>
-                                                <option value="6">JMU Office Staff</option>
+                                                <option value="1">Associate Director</option>
+                                                <option value="2">Faculty Affiliate</option>
+                                                <option value="3">Student</option>
+                                                <option value="4">Administrative Assistant</option>
+                                                <option value="5">External Partner</option>                                                                                              
+                                                <option value="6">Principal Investigator</option>
+                                                <option value="7">Co-Principal Investigator</option>
                                             </select>
                                         </div>
                                     </div>
@@ -230,10 +235,14 @@
                                                                     <div class="col">
                                                                         <select asp-for="UpdateUser.UserType"class="form-select" aria-label="Default select example">
                                                                             <option value="" disabled selected>Select User Type</option>
-                                                                            <option value="0">Admin</option>
-                                                                            <option value="1">Faculty</option>
-                                                                            <option value="2">Employee</option>
-                                                                            <option value="3">Representative</option>
+                                                                            <option value="0">Executive Director</option>
+                                                                            <option value="1">Associate Director</option>
+                                                                            <option value="2">Faculty Affiliate</option>
+                                                                            <option value="3">Student</option>
+                                                                            <option value="4">Administrative Assistant</option>
+                                                                            <option value="5">External Partner</option>
+                                                                            <option value="6">Principal Investigator</option>
+                                                                            <option value="7">Co Principal Investigator</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -327,10 +336,14 @@
             // Map role name back to its value (Admin=0, etc.)
             let typeValue = "";
             switch (userTypeName) {
-                case "Admin": typeValue = 0; break;
-                case "Faculty": typeValue = 1; break;
-                case "Staff": typeValue = 2; break;
+                case "Executive Director": typeValue = 0; break;
+                case "Associate Director": typeValue = 1; break;
+                case "Faculty Affiliate": typeValue = 2; break;
                 case "Student": typeValue = 3; break;
+                case "Administrative Assistant": typeValue = 4; break;
+                case "External Partner": typeValue = 5; break;
+                case "Principal Investigator": typeValue = 6; break;
+                case "Co Principal Investigator": typeValue = 7; break;
             }
             document.querySelector('[name="UpdateUser.UserType"]').value = typeValue;
         }
