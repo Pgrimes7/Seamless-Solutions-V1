@@ -1621,7 +1621,6 @@ namespace Lab1484.Pages.DB
 
         public static SqlDataReader AllReportReader()
         {
-            //could modify insert report so it submits the user who submitted it so here it could be displayed too
             SqlCommand cmdReportRead = new SqlCommand();
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
@@ -1629,17 +1628,27 @@ namespace Lab1484.Pages.DB
             }
             cmdReportRead.Connection = Lab3DBConnection;
             cmdReportRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdReportRead.CommandText = "SELECT * from Reports;";
+
+            // Updated query to include a LEFT JOIN with ReportSubjects to check for SubjectID
+            cmdReportRead.CommandText = @"
+        SELECT 
+            Reports.ReportID,
+            Reports.ReportName,
+            Reports.ReportDate,
+            Reports.AuthorName,
+            ReportSubjects.SubjectID
+        FROM 
+            Reports
+        LEFT JOIN 
+            ReportSubjects ON Reports.ReportID = ReportSubjects.ReportID;";
+
             cmdReportRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdReportRead.ExecuteReader();
 
             return tempReader;
-
-
-
-
         }
+
 
 
         public static SqlDataReader AllPerformanceReportReader()
@@ -1691,26 +1700,6 @@ namespace Lab1484.Pages.DB
                     report.ProjectsCompleted = Convert.ToInt32(cmd.ExecuteScalar());
                 }
 
-                // Grants Archived
-                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS GrantsArchived FROM Grants WHERE grantStatus = 'Archived' AND awardDate BETWEEN @StartDate AND @EndDate;", connection))
-                {
-                    cmd.Parameters.AddWithValue("@StartDate", startDate);
-                    cmd.Parameters.AddWithValue("@EndDate", endDate);
-                    report.GrantsArchived = Convert.ToInt32(cmd.ExecuteScalar());
-                }
-
-                // Active Grants
-                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS ActiveGrants FROM Grants WHERE grantStatus = 'Active';", connection))
-                {
-                    report.ActiveGrants = Convert.ToInt32(cmd.ExecuteScalar());
-                }
-
-                // Grants In Progress
-                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS GrantsInProgress FROM Grants WHERE grantStatus = 'In Progress';", connection))
-                {
-                    report.GrantsInProgress = Convert.ToInt32(cmd.ExecuteScalar());
-                }
-
                 // Grants Submitted
                 using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS GrantsSubmitted FROM Grants WHERE submissionDate BETWEEN @StartDate AND @EndDate;", connection))
                 {
@@ -1719,7 +1708,7 @@ namespace Lab1484.Pages.DB
                     report.GrantsSubmitted = Convert.ToInt32(cmd.ExecuteScalar());
                 }
 
-                // Projects In Progress
+                // Projects WIP
                 using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS ProjectsWIP FROM Project WHERE projectStatus = 'In Progress';", connection))
                 {
                     report.ProjectsWIP = Convert.ToInt32(cmd.ExecuteScalar());
@@ -1732,10 +1721,50 @@ namespace Lab1484.Pages.DB
                     cmd.Parameters.AddWithValue("@EndDate", endDate);
                     report.PapersPublished = Convert.ToInt32(cmd.ExecuteScalar());
                 }
+
+                // Unawarded Funding (Total funding amount for rejected grants)
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(amount), 0) AS UnawardedFunding FROM Grants WHERE grantStatus = 'RejectedGrants' AND submissionDate BETWEEN @StartDate AND @EndDate;", connection))
+                {
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@EndDate", endDate);
+                    report.UnawardedFunding = Convert.ToDouble(cmd.ExecuteScalar());
+                }
+
+                // Potential Grants
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS PotentialGrants FROM Grants WHERE grantStatus = 'PotentialGrants';", connection))
+                {
+                    report.PotentialGrants = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Awarded Grants
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS AwardedGrants FROM Grants WHERE grantStatus = 'AwardedGrants';", connection))
+                {
+                    report.AwardedGrants = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Active Grants
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS ActiveGrants FROM Grants WHERE grantStatus = 'ActiveGrants';", connection))
+                {
+                    report.ActiveGrants = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Rejected Grants
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS RejectedGrants FROM Grants WHERE grantStatus = 'RejectedGrants';", connection))
+                {
+                    report.RejectedGrants = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Archived Grants
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS ArchivedGrants FROM Grants WHERE grantStatus = 'ArchivedGrants';", connection))
+                {
+                    report.ArchivedGrants = Convert.ToInt32(cmd.ExecuteScalar());
+                }
             }
 
             return report;
         }
+
+
 
 
 
@@ -1755,47 +1784,58 @@ namespace Lab1484.Pages.DB
                 {
                     try
                     {
-                        // Step 1: Insert into Reports table
-                        string insertReportQuery = @"
-                INSERT INTO Reports (ReportDate, ReportName, AuthorName) 
-                VALUES (@ReportDate, @ReportName, @AuthorName);
-                SELECT SCOPE_IDENTITY();";
-
-                        SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
-                        cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.StartDate); // Use StartDate as the report date
-                        cmdInsertReport.Parameters.AddWithValue("@ReportName", report.PerformanceReportName ?? "Performance Report");
-                        cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName ?? "Unknown");
-
-                        object result = cmdInsertReport.ExecuteScalar();
-                        if (result == null || result == DBNull.Value)
+                        // Step 1: Insert into Reports table (if ReportID is not null)
+                        int? reportID = null;
+                        if (report.ReportID == 0) // If no ReportID is provided, insert a new Report
                         {
-                            throw new Exception("Failed to retrieve the ReportID after inserting into the Reports table.");
-                        }
+                            string insertReportQuery = @"
+                        INSERT INTO Reports (ReportDate, ReportName, AuthorName) 
+                        VALUES (@ReportDate, @ReportName, @AuthorName);
+                        SELECT SCOPE_IDENTITY();";
 
-                        int reportID = Convert.ToInt32(result);
-                        report.ReportID = reportID; // Assign the generated ReportID to the PerformanceReport object
+                            SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
+                            cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.StartDate); // Use StartDate as the report date
+                            cmdInsertReport.Parameters.AddWithValue("@ReportName", report.PerformanceReportName ?? "Performance Report");
+                            cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName ?? "Unknown");
+
+                            object result = cmdInsertReport.ExecuteScalar();
+                            if (result == null || result == DBNull.Value)
+                            {
+                                throw new Exception("Failed to retrieve the ReportID after inserting into the Reports table.");
+                            }
+
+                            reportID = Convert.ToInt32(result);
+                        }
+                        else
+                        {
+                            reportID = report.ReportID; // Use the provided ReportID
+                        }
 
                         // Step 2: Insert into PerformanceReport table
                         string insertPerformanceReportQuery = @"
-                INSERT INTO PerformanceReport 
-                (ReportID, Description, StartDate, EndDate, Funding, ProjectsCompleted, GrantsArchived, ActiveGrants, GrantsInProgress, GrantsSubmitted, ProjectsWIP, BudgetUsed, PapersPublished)
-                VALUES 
-                (@ReportID, @Description, @StartDate, @EndDate, @Funding, @ProjectsCompleted, @GrantsArchived, @ActiveGrants, @GrantsInProgress, @GrantsSubmitted, @ProjectsWIP, @BudgetUsed, @PapersPublished);";
+                    INSERT INTO PerformanceReport 
+                    (ReportID, Description, StartDate, EndDate, Funding, ProjectsCompleted, GrantsSubmitted, ProjectsWIP, PapersPublished, 
+                     UnawardedFunding, PotentialGrants, AwardedGrants, ActiveGrants, RejectedGrants, ArchivedGrants)
+                    VALUES 
+                    (@ReportID, @Description, @StartDate, @EndDate, @Funding, @ProjectsCompleted, @GrantsSubmitted, @ProjectsWIP, @PapersPublished, 
+                     @UnawardedFunding, @PotentialGrants, @AwardedGrants, @ActiveGrants, @RejectedGrants, @ArchivedGrants);";
 
                         SqlCommand cmdInsertPerformanceReport = new SqlCommand(insertPerformanceReportQuery, connection, transaction);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ReportID", report.ReportID);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ReportID", reportID);
                         cmdInsertPerformanceReport.Parameters.AddWithValue("@Description", report.Description ?? (object)DBNull.Value);
                         cmdInsertPerformanceReport.Parameters.AddWithValue("@StartDate", report.StartDate);
                         cmdInsertPerformanceReport.Parameters.AddWithValue("@EndDate", report.EndDate);
                         cmdInsertPerformanceReport.Parameters.AddWithValue("@Funding", report.Funding);
                         cmdInsertPerformanceReport.Parameters.AddWithValue("@ProjectsCompleted", report.ProjectsCompleted);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@GrantsArchived", report.GrantsArchived);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ActiveGrants", report.ActiveGrants);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@GrantsInProgress", report.GrantsInProgress);
                         cmdInsertPerformanceReport.Parameters.AddWithValue("@GrantsSubmitted", report.GrantsSubmitted);
                         cmdInsertPerformanceReport.Parameters.AddWithValue("@ProjectsWIP", report.ProjectsWIP);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@BudgetUsed", report.BudgetUsed);
                         cmdInsertPerformanceReport.Parameters.AddWithValue("@PapersPublished", report.PapersPublished);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@UnawardedFunding", report.UnawardedFunding);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@PotentialGrants", report.PotentialGrants);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@AwardedGrants", report.AwardedGrants);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ActiveGrants", report.ActiveGrants);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@RejectedGrants", report.RejectedGrants);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ArchivedGrants", report.ArchivedGrants);
 
                         cmdInsertPerformanceReport.ExecuteNonQuery();
 
@@ -1815,7 +1855,8 @@ namespace Lab1484.Pages.DB
 
 
 
-        public static SqlDataReader SingleReportReader(int reportID)
+
+        public static SqlDataReader SingleReportReader(int reportID)//reads progress report data
         {
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
@@ -1838,11 +1879,12 @@ namespace Lab1484.Pages.DB
             Grants.dueDate AS GrantDueDate,
             Grants.grantStatus AS GrantStatus,
             Grants.amount AS GrantAmount,
-            Projects.ProjectName,
-            Projects.ProjectStatus,
-            Projects.dueDate AS ProjectDueDate,
-            Projects.DateCreated AS ProjectCreatedDate,
-            Projects.DateCompleted AS ProjectCompletedDate
+            Project.ProjectID,
+            Project.ProjectName,
+            Project.ProjectStatus,
+            Project.dueDate AS ProjectDueDate,
+            Project.DateCreated AS ProjectCreatedDate,
+            Project.DateCompleted AS ProjectCompletedDate
         FROM 
             Reports
         LEFT JOIN 
@@ -1850,7 +1892,7 @@ namespace Lab1484.Pages.DB
         LEFT JOIN 
             Grants ON ReportSubjects.GrantID = Grants.GrantID
         LEFT JOIN 
-            Project AS Projects ON ReportSubjects.ProjectID = Projects.ProjectID
+            Project ON ReportSubjects.ProjectID = Project.ProjectID
         WHERE 
             Reports.ReportID = @ReportID;";
 
@@ -1862,6 +1904,7 @@ namespace Lab1484.Pages.DB
 
             return tempReader;
         }
+
 
 
 
