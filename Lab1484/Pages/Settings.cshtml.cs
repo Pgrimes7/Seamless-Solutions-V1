@@ -17,6 +17,9 @@ namespace Lab1484.Pages
         [BindProperty]
         public UserUpdate UpdateUser { get; set; } = new UserUpdate();
 
+        [TempData]
+        public string SuccessfulChange { get; set; }
+
         public IActionResult OnGet()
         {
             string currentUser = HttpContext.Session.GetString("username");

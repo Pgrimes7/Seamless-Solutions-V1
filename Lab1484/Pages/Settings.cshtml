@@ -42,6 +42,12 @@
 
                 <div class="col py-3">
                     <div class="row">
+                        @if (!string.IsNullOrEmpty(Model.SuccessfulChange))
+                        {
+                            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                @Model.SuccessfulChange
+                            </div>
+                        }
                         <h1 class="mb-3">Settings</h1>
                         <form method="post" enctype="multipart/form-data" asp-page-handler="UploadProfileImage">
                         <!--row for profile pic-->
@@ -181,6 +187,19 @@
             input.focus();
         }
     </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                //Fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); // 4 seconds before starting fade-out
+    </script>
+
 
 </body>
 
