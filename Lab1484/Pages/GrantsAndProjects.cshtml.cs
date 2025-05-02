@@ -448,8 +448,12 @@ namespace Lab1484.Pages
         }
         public IActionResult OnPostUpdateGrant()
         {
+            TempData.Remove(nameof(CreateOrEditGAndPSuccess));
+            TempData.Remove(nameof(CreateOrEditGAndPFailure));
+
+
             //Updates existing grant
-            DBClass.UpdateGrant(newGrant);
+            bool success = DBClass.UpdateGrant(newGrant);
             DBClass.Lab3DBConnection.Close();
 
             SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);
@@ -536,7 +540,17 @@ namespace Lab1484.Pages
 
             DBClass.Lab3DBConnection.Close();
 
+
+            if (success)
+            {
+                CreateOrEditGAndPSuccess = "Grant was successfully updated.";
+            }
+            else
+            {
+                CreateOrEditGAndPFailure = "Error: Grant could not be updated.";
+            }
             return Page();
+
         }
     }
 }
