@@ -3,7 +3,29 @@
 @{
     ViewData["Title"] = "Create Report";
 }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="YOUR DESCRIPTION HERE">
+<meta name="author" content="YOUR NAME HERE">
+<title>Test</title>
 
+<!-- LOAD BOOTSTRAP CSS - DO NOT DELETE -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<!-- END LOADING BOOTSTRAP CSS -->
+<link href="~/css/style.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+<!-- DO NOT DELETE -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<!-- DO NOT DELETE -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,155 +39,256 @@
                 <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Progress</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Performance</button>
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Performance</button>
             </li>
         </ul>
-        <div class="tab-content" id="myTabContent">
-            <!-- Progress tab -->
-            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                <div class="btn-toolbar my-2 mb-md-0">
-                    <div class="row mb-2">
-                        <div class="d-flex">
-                            <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#progressModal">Create Progress Report</button>
-                        </div>
-                    </div>
-                    <!-- Create progress report modal -->
-                    <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="progressModalLabel">Create Progress Report</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form method="post" asp-page="/ReportSubmission" class="mt-4">
-                                        <div class="mb-3">
-                                            <label for="reportName" class="form-label">Report Title</label>
-                                            <input type="text" class="form-control" id="reportName" name="ReportName" required />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="reportDate" class="form-label">Date</label>
-                                            <input type="date" class="form-control" id="reportDate" name="ReportDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="grantProjectSelect0" class="form-label">Select Grant or Project</label>
-                                            <select class="form-select searchable-select" id="grantProjectSelect0" name="SelectedGrantOrProjectID">
-                                                <option selected>Choose...</option>
-                                                @foreach (var grant in Model.GrantList)
-                                                {
-                                                    <option value="grant-@grant.GrantID">@grant.grantName</option>
-                                                }
-                                                @foreach (var project in Model.ProjectList)
-                                                {
-                                                    <option value="project-@project.ProjectID">@project.ProjectName</option>
-                                                }
-                                            </select>
-                                        </div>
 
+        <!-- Modal buttons -->
+        <div class="mt-3" id="modalButtons">
+            <button type="button" class="btn btn-primary rounded-pill" id="progressModalButton" data-bs-toggle="modal" data-bs-target="#progressModal">Create Progress Report</button>
+            <button type="button" class="btn btn-primary rounded-pill d-none" id="performanceModalButton" data-bs-toggle="modal" data-bs-target="#performanceModal">Create Performance Report</button>
+        </div>
 
-                                        <div class="mb-3">
-                                            <label for="reportSubject" class="form-label">Subject</label>
-                                            <input type="text" class="form-control" id="reportSubject" name="SubjectTitle" placeholder="Enter subject" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="reportContent" class="form-label">Content</label>
-                                            <textarea class="form-control" id="reportContent" name="SubjectText" rows="4" placeholder="Enter content"></textarea>
-                                        </div>
-                                        <div id="additionalSections"></div>
-                                        <button type="button" class="btn btn-secondary mb-3" id="addSectionButton" onclick="addSection()">Add Section</button>
-                                        <div>
-                                            <button type="submit" class="btn btn-primary">Create Report</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Send message</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Tabs content -->
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+            @if (Model.SelectedReportID > 0)
+            {
+                @if (Model.SelectedReport == null)
+                {
+                    <p>SelectedReport is null.</p>
+                }
 
+                <!-- Display the selected report's details -->
+                <div class="mb-4">
+                    <h2>@Model.SelectedReport?.ReportName</h2>
+                    <p><strong>Author:</strong> @Model.SelectedReport?.AuthorName</p>
+                    <p><strong>Date:</strong> @Model.SelectedReport?.ReportDate.ToString("MM/dd/yyyy")</p>
+                </div>
+
+                <!-- Display associated subjects, grants, and projects -->
+                <h3>Subjects and Associated Grants/Projects</h3>
+                <ul>
+                    @for (int i = 0; i < Model.SubjectTitle.Count; i++)
+                    {
+                        <li>
+                            <strong>Subject:</strong> @Model.SubjectTitle[i]<br />
+                            <strong>Details:</strong> @Model.SubjectText[i]<br />
+
+                            @if (i < Model.GrantList.Count)
+                            {
+                                <strong>Associated Grant:</strong> @(Model.GrantList[i].grantName + " - " + Model.GrantList[i].businessName)
+
+                                <br />
+                                <strong>Category:</strong> @Model.GrantList[i].category
+
+                                <br />
+                                <strong>Due Date:</strong> @Model.GrantList[i].dueDate.ToString("MM/dd/yyyy")
+
+                                <br />
+                                <strong>Status:</strong> @Model.GrantList[i].grantStatus
+
+                                <br />
+                                <strong>Amount:</strong> @Model.GrantList[i].amount.ToString("C")
+
+                                <br />
+                            }
+                            else if (i < Model.ProjectList.Count)
+                            {
+                                <strong>Associated Project:</strong> @Model.ProjectList[i].ProjectName
+
+                                <br />
+                                <strong>Status:</strong> @Model.ProjectList[i].ProjectStatus
+
+                                <br />
+                                <strong>Due Date:</strong> @Model.ProjectList[i].DateDue.ToString("MM/dd/yyyy")
+
+                                <br />
+                                <strong>Created:</strong> @Model.ProjectList[i].DateCreated?.ToString("MM/dd/yyyy")
+
+                                <br />
+                                <strong>Completed:</strong> @Model.ProjectList[i].DateCompleted?.ToString("MM/dd/yyyy")
+
+                                <br />
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <!-- Display the list of reports -->
                 <table class="table table-bordered table-responsive table-hover">
                     <thead>
                         <tr>
                             <th>Title</th>
                             <th>Date</th>
                             <th>Author</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                   
+                    <tbody>
                         @foreach (var report in Model.ReportList)
                         {
                             <tr>
-                                <td><a href="#">@report.ReportName</a></td>
+                                <td>
+                                    <form method="post" asp-page-handler="SelectProgressReport" class="d-inline">
+                                        <input type="hidden" name="reportID" value="@report.ReportID" />
+                                        <button type="submit" class="btn btn-link p-0">@report.ReportName</button>
+                                    </form>
+                                </td>
                                 <td>@report.ReportDate.ToString("MM/dd/yyyy")</td>
-                                <td>Author Name</td>
+                                <td>@report.AuthorName</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-            </div>
-            <!-- Performance tab -->
-            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                <div class="btn-toolbar my-2 mb-md-0">
-                    <div class="row mb-2">
-                        <div class="d-flex">
-                            <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#performanceModal">Create Performance Report</button>
+            }
+        </div>
+
+        <!-- Performance tab -->
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <table class="table table-bordered table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Author</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.PerformanceReportList != null && Model.PerformanceReportList.Any())
+                    {
+                        @foreach (var report in Model.PerformanceReportList)
+                        {
+                            <tr>
+                                <td><a href="#">@report.PerformanceReportName</a></td>
+                                <td>@report.Description</td>
+                                <td>@report.StartDate.ToString("MM/dd/yyyy")</td>
+                                <td>@report.EndDate.ToString("MM/dd/yyyy")</td>
+                                <td>@report.AuthorName</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No performance reports available.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    <!-- Create progress report modal -->
+    <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="progressModalLabel">Create Progress Report</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-page-handler="ProgressReport" class="mt-4">
+                        <div class="mb-3">
+                            <label for="reportName" class="form-label">Report Title</label>
+                            <input type="text" class="form-control" id="reportName" name="ReportName" required />
                         </div>
-                    </div>
-                    <!-- Create performance report modal -->
-                    <div class="modal fade" id="performanceModal" tabindex="-1" aria-labelledby="performanceModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="performanceModalLabel">Create Performance Report</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="mt-4">
-                                        <div class="mb-3">
-                                            <label for="performanceReportName" class="form-label">Report Name</label>
-                                            <input type="text" class="form-control" id="performanceReportName" placeholder="Enter report name">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="performanceReportDescription" class="form-label">Description</label>
-                                            <textarea class="form-control" id="performanceReportDescription" rows="3" placeholder="Enter report description"></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Select Date Range</label>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <label for="performanceStartDate" class="form-label">Start Date</label>
-                                                    <input type="date" class="form-control" id="performanceStartDate">
-                                                </div>
-                                                <div class="col">
-                                                    <label for="performanceEndDate" class="form-label">End Date</label>
-                                                    <input type="date" class="form-control" id="performanceEndDate">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Create Report</button>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="reportDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="reportDate" name="ReportDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
                         </div>
-                    </div>
+                        <div class="mb-3">
+                            <label for="grantProjectSelect0" class="form-label">Select Grant or Project</label>
+                            <select class="form-select searchable-select" id="grantProjectSelect0" name="SelectedGrantOrProjectID">
+                                <option selected>Choose...</option>
+                                @foreach (var grant in Model.GrantList)
+                                {
+                                    <option value="grant-@grant.GrantID">@grant.grantName</option>
+                                }
+                                @foreach (var project in Model.ProjectList)
+                                {
+                                    <option value="project-@project.ProjectID">@project.ProjectName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reportSubject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="reportSubject" name="SubjectTitle" placeholder="Enter subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reportContent" class="form-label">Content</label>
+                            <textarea class="form-control" id="reportContent" name="SubjectText" rows="4" placeholder="Enter content"></textarea>
+                        </div>
+                        <div id="additionalSections"></div>
+                        <button type="button" class="btn btn-secondary mb-3" id="addSectionButton" onclick="addSection()">Add Section</button>
+                        <button type="submit" class="btn btn-primary">Create Report</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    </body>
 
-@section Scripts {
-    <div id="additionalSections"></div>
-    <button type="button" class="btn btn-secondary mb-3" id="addSectionButton" onclick="addSection()">Add Section</button>
+    <!-- Create performance report modal -->
+    <div class="modal fade" id="performanceModal" tabindex="-1" aria-labelledby="performanceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="performanceModalLabel">Create Performance Report</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-page-handler="CreatePerformanceReport" class="mt-4">
+                        <div class="mb-3">
+                            <label for="performanceReportName" class="form-label">Report Name</label>
+                            <input type="text" class="form-control" asp-for="PerformanceReport.PerformanceReportName" id="performanceReportName" placeholder="Enter report name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="performanceReportDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="performanceReportDescription" asp-for="PerformanceReport.Description" rows="3" placeholder="Enter report description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Select Date Range</label>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="performanceStartDate" class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="performanceStartDate" asp-for="PerformanceReport.StartDate">
+                                </div>
+                                <div class="col">
+                                    <label for="performanceEndDate" class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="performanceEndDate" asp-for="PerformanceReport.EndDate">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Report</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-              let sectionCount = 1; // Start from 1 because the first dropdown is static
+        document.addEventListener('DOMContentLoaded', function () {
+            const progressButton = document.getElementById('progressModalButton');
+            const performanceButton = document.getElementById('performanceModalButton');
+            const tabs = document.querySelectorAll('#myTab button');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    if (this.id === 'home-tab') {
+                        progressButton.classList.remove('d-none');
+                        performanceButton.classList.add('d-none');
+                    } else if (this.id === 'profile-tab') {
+                        progressButton.classList.add('d-none');
+                        performanceButton.classList.remove('d-none');
+                    }
+                });
+            });
+        });
+
+        let sectionCount = 1;
 
         function addSection() {
             const container = document.getElementById('additionalSections');
@@ -186,20 +309,15 @@
                 </div>
                 <div class="mb-3">
                     <label for="sectionTitle${sectionCount}" class="form-label">Subject</label>
-                    <input type="text" class="form-control" id="sectionTitle${sectionCount}" name="SubjectTitle" placeholder="Enter subject" required >
+                    <input type="text" class="form-control" id="sectionTitle${sectionCount}" name="SubjectTitle" placeholder="Enter subject" required>
                 </div>
                 <div class="mb-3">
                     <label for="sectionContent${sectionCount}" class="form-label">Content</label>
-                    <textarea class="form-control" id="sectionContent${sectionCount}" name="SubjectText" rows="4" placeholder="Enter content" required ></textarea>
+                    <textarea class="form-control" id="sectionContent${sectionCount}" name="SubjectText" rows="4" placeholder="Enter content" required></textarea>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', newSection);
-            sectionCount++; // Increment the section count
+            sectionCount++;
         }
-
-        
     </script>
-
-}
-
-        
+</body>

@@ -259,6 +259,22 @@ ADD JournalTitle NVARCHAR(255);
 ALTER TABLE Publishes
 ADD FileName NVARCHAR(255);
 
+CREATE TABLE PerformanceReport (
+    PerformanceReportID INT IDENTITY(1,1) PRIMARY KEY,
+    ReportID INT,
+    Description VARCHAR(MAX),
+    StartDate DATE,
+    EndDate DATE,
+    Funding FLOAT,
+    ProjectsCompleted INT,
+    GrantsArchived INT,
+    ActiveGrants INT,
+    GrantsInProgress INT,
+    GrantsSubmitted INT,
+    ProjectsWIP INT,
+PapersPublished INT,
+    BudgetUsed FLOAT,
+FOREIGN KEY (ReportID) REFERENCES Reports(ReportID) );
 
 
 
