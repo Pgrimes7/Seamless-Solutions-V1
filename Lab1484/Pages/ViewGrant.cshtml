@@ -40,13 +40,13 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-page="/GrantsAndProjects">Grants and Projects</a></li>
                     @*Pull the grant name for this*@
-                    <li class="breadcrumb-item active" aria-current="page">The Learning Agency</li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.SpecGrant.grantName</li>
                 </ol>
             </nav>
         </div>
 
         @*Pull the grant name for this*@
-        <h2>The Learning Agency</h2>
+        <h2>@Model.SpecGrant.grantName</h2>
         <br>
 
         <!--row for project details-->

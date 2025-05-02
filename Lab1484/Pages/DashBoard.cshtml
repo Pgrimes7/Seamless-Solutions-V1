@@ -268,7 +268,14 @@
                                         };
 
                                       <tr>
-                                            <td>@prod.grantName</td>
+                                            <td>
+                                                <form method="post" asp-page-handler="ViewGrant">
+                                                    <input type="hidden" name="grantId" value="@prod.GrantID" />
+                                                    <button type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                        @prod.grantName
+                                                    </button>
+                                                </form>
+                                            </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="ms-3">

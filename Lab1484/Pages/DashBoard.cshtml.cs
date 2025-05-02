@@ -36,6 +36,9 @@ namespace Lab1484.Pages
         [TempData]
         public string? CreateOrEditGrantFailure { get; set; }
 
+        [BindProperty]
+        public int grantId { get; set; }
+
 
         public DashBoardModel()
         {
@@ -517,6 +520,13 @@ namespace Lab1484.Pages
                 CreateOrEditGrantFailure = "Error: Grant could not be updated.";
             }
             return Page();
+        }
+
+        public IActionResult OnPostViewGrant()
+        {
+
+            HttpContext.Session.SetInt32("GrantID", grantId);
+            return RedirectToPage("/ViewGrant", new { handler = "" });
         }
     }
 }
