@@ -319,7 +319,7 @@ namespace Lab1484.Pages
         public IActionResult OnPostUpdateGrant()
         {
             //Updates existing grant
-            DBClass.UpdateGrant(newGrant);
+            bool success = DBClass.UpdateGrant(newGrant);
             DBClass.Lab3DBConnection.Close();
 
             string currentUser = HttpContext.Session.GetString("username");
@@ -506,6 +506,16 @@ namespace Lab1484.Pages
                 .ThenBy(g => g.businessName)
                 .ToList();
 
+
+
+            if (success)
+            {
+                CreateOrEditGrantSuccess = "Grant was successfully updated.";
+            }
+            else
+            {
+                CreateOrEditGrantFailure = "Error: Grant could not be updated.";
+            }
             return Page();
         }
     }
