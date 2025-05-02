@@ -56,33 +56,70 @@
                                 <div style="position: relative; width: 100px; height: 100px;">
                                         <img src="@(Model.ProfileImagePath)" alt="" style="width: 100px; height: 100px" class="rounded-circle">
 
-                                        <label for="fileInput" style="position: absolute; bottom: 0; right: 0; background-color: #ffffffcc;
-                                        border: none; border-radius: 50%; padding: 6px; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.2);
-                                        width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                        <label style="position: absolute; bottom: 0; right: 0; background-color: #ffffffcc;
+                                         border: none; border-radius: 50%; padding: 6px; cursor: pointer;
+                                         box-shadow: 0 0 4px rgba(0,0,0,0.2); width: 30px; height: 30px;
+                                         display: flex; align-items: center; justify-content: center;"
+                                               data-bs-toggle="modal" data-bs-target="#editProfilePicModal">
                                             <i class="fa-solid fa-pencil"></i>
                                         </label>
 
 
-                                        @*<!-- Modal -->
-                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <!-- Edit Profile Picture Modal -->
+                                        <div class="modal fade" id="editProfilePicModal" tabindex="-1" aria-labelledby="editProfilePicModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                        <h5 class="modal-title">Edit Profile Picture?</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <p>Would you like to upload a new profile picture or delete the current one?</p>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <!-- Cancel -->
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                                        <!-- Edit / Upload -->
+                                                        <form method="post" enctype="multipart/form-data" asp-page-handler="UploadProfileImage">
+                                                            <input type="file" id="hiddenFileInput" name="ProfileImage" accept=".png,.jpg,.jpeg"
+                                                                   style="display: none;" onchange="this.form.submit()" />
+                                                            <button type="button" class="btn btn-primary" onclick="document.getElementById('hiddenFileInput').click();">
+                                                                Edit
+                                                            </button>
+                                                        </form>
+
+                                                        <!-- Delete -->
+                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Confirm Delete Modal -->
+                                        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Profile Picture?</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Are you sure you want to delete your profile picture? This action cannot be undone.
+                                                        Are you sure you want to delete your profile picture? This cannot be undone.
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <form method="post" enctype="multipart/form-data" asp-page-handler="DeleteProfileImage">
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        <form method="post" asp-page-handler="DeleteProfileImage">
+                                                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>*@
+                                        </div>
+
 
                                         <input type="file" id="fileInput" name="ProfileImage"
                                                accept=".png,.jpg,.jpeg"

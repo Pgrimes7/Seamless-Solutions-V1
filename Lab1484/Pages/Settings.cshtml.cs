@@ -77,14 +77,13 @@ namespace Lab1484.Pages
                 return RedirectToPage();
             }
 
-            // If no file is uploaded, just return the same page without changing anything
             return Page();
         }
 
         public async Task<IActionResult> OnPostDeleteProfileImageAsync()
         {
             // Retrieve the current user ID from session
-            string? currentUserIdStr = HttpContext.Session.GetString("userId");
+            string? currentUserIdStr = HttpContext.Session.GetString("userID");
             if (int.TryParse(currentUserIdStr, out int currentUserId))
             {
                 // Get the current user
@@ -93,7 +92,7 @@ namespace Lab1484.Pages
                 // If the user has a custom profile picture
                 if (!string.IsNullOrEmpty(user?.ProfileImageFileName))
                 {
-                    // Optional: Delete the profile picture file from wwwroot
+                    
                     string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", user.ProfileImageFileName);
                     if (System.IO.File.Exists(filePath))
                     {
