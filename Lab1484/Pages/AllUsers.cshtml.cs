@@ -29,11 +29,11 @@ namespace Lab1484.Pages
         public string? ProfileImagePath { get; set; } = "/images/default.png";
 
         [TempData]
-        public string? CreateOrEditSuccess { get; set; }
+        public string? CreateOrEditUserSuccess { get; set; }
 
 
         [TempData]
-        public string? CreateOrEditFailure { get; set; }
+        public string? CreateOrEditUserFailure { get; set; }
 
 
         public IActionResult OnGet()
@@ -175,11 +175,11 @@ namespace Lab1484.Pages
 
             if (success)
             {
-                CreateOrEditSuccess = "User was successfully created.";
+                CreateOrEditUserSuccess = "User was successfully created.";
             }
             else
             {
-                CreateOrEditFailure = "Error: User could not be created.";
+                CreateOrEditUserFailure = "Error: User could not be created.";
             }
 
             return RedirectToPage("/AllUsers");
@@ -194,11 +194,11 @@ namespace Lab1484.Pages
 
             if (success)
             {
-                CreateOrEditSuccess = "User was successfully updated.";
+                CreateOrEditUserSuccess = "User was successfully updated.";
             }
             else
             {
-                CreateOrEditFailure = "Error: User could not be updated.";
+                CreateOrEditUserFailure = "Error: User could not be updated.";
             }
 
             return RedirectToPage("/AllUsers");

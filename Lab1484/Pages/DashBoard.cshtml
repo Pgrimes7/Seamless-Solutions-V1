@@ -93,7 +93,20 @@
 
 <body>
 
-   
+    @if (Model.CreateOrEditGrantSuccess != null)
+    {
+        <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.CreateOrEditGrantSuccess
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (Model.CreateOrEditGrantFailure != null)
+    {
+        <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+            @Model.CreateOrEditGrantFailure
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
                     <h1>Home</h1>
                     <div class="row">
 
@@ -255,7 +268,14 @@
                                         };
 
                                       <tr>
-                                            <td>@prod.grantName</td>
+                                            <td>
+                                                <form method="post" asp-page-handler="ViewGrant">
+                                                    <input type="hidden" name="grantId" value="@prod.GrantID" />
+                                                    <button type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                        @prod.grantName
+                                                    </button>
+                                                </form>
+                                            </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="ms-3">
