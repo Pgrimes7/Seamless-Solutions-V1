@@ -75,6 +75,7 @@ namespace Lab1484.Pages
 
         public IActionResult OnPostUpdatePassword()
         {
+            UsernameConfirmed = true;
 
             if (NewPassword != ConfirmPassword)
             {
