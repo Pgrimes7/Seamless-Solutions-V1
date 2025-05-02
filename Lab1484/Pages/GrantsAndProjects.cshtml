@@ -151,10 +151,11 @@
                                                         <div class="col-sm-6">
                                                             <div class="form-floating">
                                                                 <select asp-for="newGrant.FacultyLeadID" class="form-select" id="floatingAdmin" aria-label="Principal Investigator">
+                                                                    <option value=""></option>
                                                                     @foreach (var admin in Model.AdminList)
                                                                     {
-                                                                        <option value="@admin.userID"> @admin.firstName @admin.lastName </option>
-                                                                    });
+                                                                        <option value="@admin.userID">@admin.firstName @admin.lastName</option>
+                                                                    }
                                                                 </select>
                                                                 <label for="floatingAdmin">Principal Investigator</label>
                                                             </div>
@@ -203,6 +204,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline-secondary" id="populateGrantBtn">Populate</button>
                                                         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
                                                         <button type="submit" class="btn btn-primary">
                                                             Create Grant
@@ -628,6 +630,20 @@
           modal.querySelector('select[name="newGrant.category"]').value    = category;
           modal.querySelector('select[name="newGrant.grantStatus"]').value = status;
           modal.querySelector('input[name="newGrant.amount"]').value       = amount;
+        });
+    </script>
+    <script>
+        document.getElementById('populateGrantBtn').addEventListener('click', function () {
+            document.querySelector('input[name="newGrant.grantName"]').value = "REDI Research Support Center";
+            document.querySelector('input[name="newGrant.dueDate"]').value = "2025-08-15";
+            document.querySelector('input[name="newGrant.businessName"]').value = "Research Support Center";
+            document.querySelector('input[name="newGrant.amount"]').value = "15000";
+
+            // Clear or reset other optional dropdowns
+            document.querySelector('select[name="newGrant.FacultyLeadID"]').selectedIndex = 0;
+            document.querySelector('select[name="newGrant.BusinessPartnerID"]').selectedIndex = 0;
+            document.querySelector('select[name="newGrant.category"]').selectedIndex = 0;
+            document.querySelector('select[name="newGrant.grantStatus"]').selectedIndex = 0;
         });
     </script>
 
