@@ -43,13 +43,21 @@
             
             <!--main content col-->
             <div class="col py-3">
-                @if (Model.CreateUserSuccess != null)
+                @if (Model.CreateOrEditSuccess != null)
                 {
                     <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
-                        @Model.CreateUserSuccess
+                        @Model.CreateOrEditSuccess
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 }
+                @if (Model.CreateOrEditFailure != null)
+                {
+                    <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @Model.CreateOrEditFailure
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                
                 <h1>All Users</h1>
 
                 <!--row for search and filter-->
@@ -196,7 +204,7 @@
                                             @{
                                                 if (string.IsNullOrEmpty(user.ProfileImageFileName))
                                                 {
-                                                    <img src="@Model.ProfileImagePath" alt="" style="width: 45px; height: 45px" class="rounded-circle">
+                                                    <img src="/images/default.png" alt="" style="width: 45px; height: 45px" class="rounded-circle">
                                                 }
 
                                                 else
@@ -282,20 +290,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <div class="form-floating mb-4">
-                                                                            <input asp-for="UpdateUser.Username" type="text" class="form-control" id="floatingUsername" placeholder="username" value="@user.Username" disabled/>
-                                                                            <label for="floatingUsername">Username</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col">
-                                                                        <div class="form-floating mb-4">
-                                                                            <input asp-for="UpdateUser.Password" type="password" class="form-control" id="floatingPassword" placeholder="Password" value="@user.Password" disabled/>
-                                                                            <label for="floatingPassword">Password</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                
                                                         
                                                         </div>
                                                         <div class="modal-footer">
@@ -381,6 +376,17 @@
     <script>
         window.setTimeout(function () {
             const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                // Fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); // 4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
             if (alertBox) {
                 // Fade out
                 alertBox.classList.remove('show');

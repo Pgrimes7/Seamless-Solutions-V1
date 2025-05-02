@@ -1150,35 +1150,44 @@ namespace Lab1484.Pages.DB
 
 
 
-        public static void UpdateHashedUser(UserUpdate p)
+        public static bool UpdateHashedUser(UserUpdate p)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+
+                string userUpdatedQuery = @"
+         UPDATE Users
+         SET userType = @UserType, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @Phone
+         WHERE UserID = @UserID;";
+
+                SqlCommand cmdUserUpdate = new SqlCommand();
+                cmdUserUpdate.Connection = Lab3DBConnection;
+                cmdUserUpdate.CommandText = userUpdatedQuery;
+
+                cmdUserUpdate.Parameters.AddWithValue("@UserID", p.UserID);
+                cmdUserUpdate.Parameters.AddWithValue("@UserType", p.UserType);
+                cmdUserUpdate.Parameters.AddWithValue("@FirstName", p.FirstName);
+                cmdUserUpdate.Parameters.AddWithValue("@LastName", p.LastName);
+                cmdUserUpdate.Parameters.AddWithValue("@Email", p.Email);
+                cmdUserUpdate.Parameters.AddWithValue("@Phone", p.Phone);
+
+                cmdUserUpdate.Connection.Open();
+                cmdUserUpdate.ExecuteNonQuery();
+
+                return true;
             }
-
-            string userUpdatedQuery = @"
-             UPDATE Users
-             SET userType = @UserType, firstName = @FirstName, lastName = @LastName, email = @Email, phoneNumber = @Phone
-             WHERE UserID = @UserID;";
-
-            SqlCommand cmdUserUpdate = new SqlCommand();
-            cmdUserUpdate.Connection = Lab3DBConnection;
-            cmdUserUpdate.CommandText = userUpdatedQuery;
-
-            cmdUserUpdate.Parameters.AddWithValue("@UserID", p.UserID);
-            cmdUserUpdate.Parameters.AddWithValue("@UserType", p.UserType);
-            cmdUserUpdate.Parameters.AddWithValue("@FirstName", p.FirstName);
-            cmdUserUpdate.Parameters.AddWithValue("@LastName", p.LastName);
-            cmdUserUpdate.Parameters.AddWithValue("@Email", p.Email);
-            cmdUserUpdate.Parameters.AddWithValue("@Phone", p.Phone);
-
-            cmdUserUpdate.Connection.Open();
-
-            cmdUserUpdate.ExecuteNonQuery();
-            cmdUserUpdate.Connection.Close();
-
+            catch (Exception)
+            {
+                return false;
+            }
+            
         }
+
+
 
 
         public static bool UpdateHashedPassword(string userID, string newPassword)
