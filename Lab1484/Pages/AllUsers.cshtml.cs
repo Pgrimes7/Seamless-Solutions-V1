@@ -28,7 +28,13 @@ namespace Lab1484.Pages
         [BindProperty]
         public string? ProfileImagePath { get; set; } = "/images/default.png";
 
-       
+        [TempData]
+        public string? CreateOrEditUserSuccess { get; set; }
+
+
+        [TempData]
+        public string? CreateOrEditUserFailure { get; set; }
+
 
         public IActionResult OnGet()
         {
@@ -100,13 +106,14 @@ namespace Lab1484.Pages
                 int type = reader.GetInt32(1);
                 string role = "";
 
-                if (type == 0) role = "Admin";
-                else if (type == 1) role = "Faculty";
-                else if (type == 2) role = "Staff";
-                else if (type == 3) role = "Representative";
-                else if (type == 4) role = "Student";
-                else if (type == 5) role = "Project Manager";
-                else if (type == 6) role = "JMU Office Staff";
+                if (type == 0) role = "Executive Director";
+                else if (type == 1) role = "Associate Director";
+                else if (type == 2) role = "Faculty Affiliate";
+                else if (type == 3) role = "Student";
+                else if (type == 4) role = "Administrative Assistant";
+                else if (type == 5) role = "External Partner";
+                else if (type == 6) role = "Principal Investigator";
+                else if (type == 7) role = "Co-Principal Investigator";
                 else role = "Unknown";
 
                 Users.Add(new UserDisplay
@@ -163,21 +170,36 @@ namespace Lab1484.Pages
                 return RedirectToPage("/AllUsers");
             }
 
-            DBClass.CreateHashedUser(NewUser);
+            bool success = DBClass.CreateHashedUser(NewUser);
             DBClass.Lab3DBConnection.Close();
 
+            if (success)
+            {
+                CreateOrEditUserSuccess = "User was successfully created.";
+            }
+            else
+            {
+                CreateOrEditUserFailure = "Error: User could not be created.";
+            }
+
             return RedirectToPage("/AllUsers");
-            
         }
 
         public IActionResult OnPostUpdateUser()
         {
 
 
-
-
-            DBClass.UpdateHashedUser(UpdateUser);
+            bool success = DBClass.UpdateHashedUser(UpdateUser);
             DBClass.Lab3DBConnection.Close();
+
+            if (success)
+            {
+                CreateOrEditUserSuccess = "User was successfully updated.";
+            }
+            else
+            {
+                CreateOrEditUserFailure = "Error: User could not be updated.";
+            }
 
             return RedirectToPage("/AllUsers");
         }

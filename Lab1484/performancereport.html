@@ -1,0 +1,284 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="YOUR DESCRIPTION HERE">
+    <meta name="author" content="YOUR NAME HERE">
+    <title>Test</title>
+
+    <!-- LOAD BOOTSTRAP CSS - DO NOT DELETE -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- END LOADING BOOTSTRAP CSS -->
+
+    <!-- Custom styles - add your own CSS to this stylesheet -->
+    <link href="style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  
+    <!-- DO NOT DELETE -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <!-- DO NOT DELETE -->
+  </head>
+  
+  <body>      
+  
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+  
+          <!--sidebar-->
+          <div class="sidebar-col col-auto col-md-3 col-xl-2 inline-flex flex-column align-items-start px-sm-2 px-0 mt-2">
+            <div class="d-flex flex-column align-items-center vh-100 position-fixed align-items-sm-start px-4 pt-3 border-end border-light-subtle">
+                <img class="logo img-fluid" src="JMU Care-purple.png" alt="jmu care logo">
+                
+
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a asp-page="/Dashboard" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Dashboard", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-border-all"></i>
+                            <span class="ms-1 d-none d-sm-inline">Home/Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/GrantsAndProjects" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/GrantsAndProjects", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-file"></i>
+                            <span class="ms-1 d-none d-sm-inline">Grants and Projects</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/Tasks" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Tasks", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span class="ms-1 d-none d-sm-inline">Tasks</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/AllUsers", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-users"></i>
+                            <span class="ms-1 d-none d-sm-inline">All Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/UpdatePermission" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/UpdatePermission", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <span class="ms-1 d-none d-sm-inline">Permission Update</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-page="/Messages" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Messages", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="ms-1 d-none d-sm-inline">Messages</span>
+                        </a>
+    </li>
+    <li class="nav-item">
+      <a asp-page="/ReportSubmission" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/ReportSubmission", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+        <i class="fa-solid fa-box-archive"></i>
+        <span class="ms-1 d-none d-sm-inline">Reports</span>
+      </a>
+    </li>
+                    <li class="nav-item">
+                        <a asp-page="/Archive" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/Archive", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-file-alt"></i>
+                            <span class="ms-1 d-none d-sm-inline">Grant Archive</span>
+                        </a>
+                    </li>
+                    <div>
+                        <hr>
+                    </div>
+                    <li class="nav-item">
+                        <a asp-page="/Settings" class="nav-link link-body-emphasis px-0 align-middle">
+                            <i class="fa-solid fa-gear"></i>
+                            <span class="ms-1 d-none d-sm-inline">Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link link-body-emphasis px-0 align-middle">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span class="ms-1 d-none d-sm-inline">Support</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="dropup pb-4">
+                    <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        
+          <img src="https://jmuedu.sharepoint.com/sites/484CapstoneTeam/Shared%20Documents/General/emily%20picture.png?csf=1&web=1&e=fig8vo&CID=bf79a580-6dc5-41d6-a577-8343e6304d35" alt="username" width="30" height="30" class="rounded-circle">
+          <span class="d-none d-sm-inline mx-2">@currentUser</span>
+    
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                        <li><a class="dropdown-item" asp-page="/Logout">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+  
+          <!--main content col-->
+          <div class="col m-3">
+
+            <!--row for breadcrumbs-->
+            <div class="row row-cols-auto my-2 mb-md-0">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="#">Reports</a></li>
+                      <li class="breadcrumb-item"><a href="#">Performance Report</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">Report Name</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <h2>Report Name</h2>
+            <br>
+
+            <!--row for project details-->
+            <div class="row row-cols-auto">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <colgroup>
+                            <col style="width: 10%;">
+                            <col style="width: 90%;">
+                        </colgroup>
+                        <thead></thead>
+                          <tbody>   
+                            <tr>
+                              <th scope="row" class="table-light">Author</th>
+                              <td>Todd Smith</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-light">Date Created</th>
+                                <td>mm/dd/yyyy</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-light">Date Range</th>
+                                <td>mm/dd/yyyy - mm/dd/yyyy</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table-light">Details</th>
+                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</td>
+                            </tr>
+                          </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <hr>
+                 
+            <div class="row">
+                <div class="col">
+                    <div class="my-4 text-center">
+                        <h5>Funding</h5>
+                        <p>Funding Goal for mm/dd/yyyy - mm/dd/yyyy: $30,000</p>
+                        <div style="max-width: 250px; margin: 0 auto;">
+                            <canvas id="stackedBarChart" width="600" height="400"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="my-4 text-center">
+                        <h5>Grant Status Overview</h5>
+                        <div style="max-width: 250px; margin: 0 auto;">
+                            <canvas id="grantDonutChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            
+            
+            
+            </div> <!--close main content row-->
+          </div> <!--close main content col-->
+  
+        </div> <!--close row-->
+      </div> <!--close container-->
+
+    <script>
+         // Stacked Horizontal Bar Chart
+        const ctxBar = document.getElementById('stackedBarChart').getContext('2d');
+        const stackedBarChart = new Chart(ctxBar, {
+            type: 'bar', // Horizontal bar chart
+            data: {
+            labels: [''],
+            datasets: [
+                {
+                label: 'Funding Received',
+                data: [20000],
+                backgroundColor: '#C9E265',
+                },
+                {
+                label: 'Funding Needed to Reach Goal',
+                data: [10000],
+                backgroundColor: '#B2B2B2',
+                }
+            ]
+            },
+            options: {
+            responsive: true,
+            indexAxis: 'y', // Makes it horizontal
+            scales: {
+                x: {
+                stacked: true, // Enable stacking on X-axis
+                },
+                y: {
+                stacked: true, // Enable stacking on Y-axis
+                }
+            },
+            plugins: {
+                legend: {
+                position: 'top', // Legend at the top
+                }
+            }
+            }
+        });
+        //donut
+        const ctx = document.getElementById('grantDonutChart').getContext('2d');
+        const grantDonutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+            labels: ['Awarded', 'Rejected', 'Archived', 'Active'],
+            datasets: [{
+                label: 'Grants',
+                data: [12, 8, 3, 5], // example values
+                backgroundColor: [
+                '#C9E265',
+                '#E85C6F',
+                '#B2B2B2',
+                '#A3DAF5'
+                ],
+                borderWidth: 1
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '50%',
+            plugins: {
+                legend: {
+                position: 'top',
+                align: 'center',
+                labels: {
+                    boxWidth: 12,
+                    padding: 15
+                }
+                },
+                title: {
+                display: false
+                }
+            },
+            layout: {
+                padding: 10
+            }
+            }
+        });
+    </script>
+    <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+
+  </body>
+
+</html>

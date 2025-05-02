@@ -43,6 +43,21 @@
             
             <!--main content col-->
             <div class="col py-3">
+                @if (Model.CreateOrEditUserSuccess != null)
+                {
+                    <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                        @Model.CreateOrEditUserSuccess
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (Model.CreateOrEditUserFailure != null)
+                {
+                    <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @Model.CreateOrEditUserFailure
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                
                 <h1>All Users</h1>
 
                 <!--row for search and filter-->
@@ -51,10 +66,14 @@
                         <div class="col">
                             <select name="UserType" class="form-select rounded-pill" aria-label="User Type Filter" onchange="this.form.submit()">
                                 <option value="" selected="@(Model.UserType == null)">All Users</option>
-                                <option value="0" selected="@(Model.UserType == 0)">Admin</option>
-                                <option value="1" selected="@(Model.UserType == 1)">Faculty</option>
-                                <option value="2" selected="@(Model.UserType == 2)">Employee</option>
-                                <option value="3" selected="@(Model.UserType == 3)">Representative</option>
+                                <option value="0" selected="@(Model.UserType == 0)">Executive Director</option>
+                                <option value="1" selected="@(Model.UserType == 1)">Associate Director</option>
+                                <option value="2" selected="@(Model.UserType == 2)">Faculty Affiliate</option>
+                                <option value="3" selected="@(Model.UserType == 3)">Student</option>
+                                <option value="4" selected="@(Model.UserType == 4)">Administrative Assistant</option>
+                                <option value="5" selected="@(Model.UserType == 5)">External Partner</option>
+                                <option value="6" selected="@(Model.UserType == 6)">Principal Investigator</option>
+                                <option value="7" selected="@(Model.UserType == 7)">Co Principal Investigator</option>
                             </select>
                         </div>
                     </form>
@@ -93,12 +112,13 @@
                                             <select asp-for="NewUser.UserType" class="form-select" aria-label="Default select example">
                                                 <option value="" disabled selected>Select User Type</option>
                                                 <option value="0">Executive Director</option>
-                                                <option value="1">Faculty Affiliate</option>
-                                                <option value="2">Employee</option>
-                                                <option value="3">External Partner</option>
-                                                <option value="4">Student</option>
-                                                <option value="5">Associate Director</option>
-                                                <option value="6">JMU Office Staff</option>
+                                                <option value="1">Associate Director</option>
+                                                <option value="2">Faculty Affiliate</option>
+                                                <option value="3">Student</option>
+                                                <option value="4">Administrative Assistant</option>
+                                                <option value="5">External Partner</option>                                                                                              
+                                                <option value="6">Principal Investigator</option>
+                                                <option value="7">Co-Principal Investigator</option>
                                             </select>
                                         </div>
                                     </div>
@@ -184,7 +204,7 @@
                                             @{
                                                 if (string.IsNullOrEmpty(user.ProfileImageFileName))
                                                 {
-                                                    <img src="@Model.ProfileImagePath" alt="" style="width: 45px; height: 45px" class="rounded-circle">
+                                                    <img src="/images/default.png" alt="" style="width: 45px; height: 45px" class="rounded-circle">
                                                 }
 
                                                 else
@@ -230,10 +250,14 @@
                                                                     <div class="col">
                                                                         <select asp-for="UpdateUser.UserType"class="form-select" aria-label="Default select example">
                                                                             <option value="" disabled selected>Select User Type</option>
-                                                                            <option value="0">Admin</option>
-                                                                            <option value="1">Faculty</option>
-                                                                            <option value="2">Employee</option>
-                                                                            <option value="3">Representative</option>
+                                                                            <option value="0">Executive Director</option>
+                                                                            <option value="1">Associate Director</option>
+                                                                            <option value="2">Faculty Affiliate</option>
+                                                                            <option value="3">Student</option>
+                                                                            <option value="4">Administrative Assistant</option>
+                                                                            <option value="5">External Partner</option>
+                                                                            <option value="6">Principal Investigator</option>
+                                                                            <option value="7">Co Principal Investigator</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -266,20 +290,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <div class="form-floating mb-4">
-                                                                            <input asp-for="UpdateUser.Username" type="text" class="form-control" id="floatingUsername" placeholder="username" value="@user.Username" disabled/>
-                                                                            <label for="floatingUsername">Username</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col">
-                                                                        <div class="form-floating mb-4">
-                                                                            <input asp-for="UpdateUser.Password" type="password" class="form-control" id="floatingPassword" placeholder="Password" value="@user.Password" disabled/>
-                                                                            <label for="floatingPassword">Password</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                
                                                         
                                                         </div>
                                                         <div class="modal-footer">
@@ -327,10 +338,14 @@
             // Map role name back to its value (Admin=0, etc.)
             let typeValue = "";
             switch (userTypeName) {
-                case "Admin": typeValue = 0; break;
-                case "Faculty": typeValue = 1; break;
-                case "Staff": typeValue = 2; break;
+                case "Executive Director": typeValue = 0; break;
+                case "Associate Director": typeValue = 1; break;
+                case "Faculty Affiliate": typeValue = 2; break;
                 case "Student": typeValue = 3; break;
+                case "Administrative Assistant": typeValue = 4; break;
+                case "External Partner": typeValue = 5; break;
+                case "Principal Investigator": typeValue = 6; break;
+                case "Co Principal Investigator": typeValue = 7; break;
             }
             document.querySelector('[name="UpdateUser.UserType"]').value = typeValue;
         }
@@ -344,6 +359,41 @@
             document.getElementById("passwordInput").value = "12345";
             document.getElementById("phoneInput").value = "111-222-3333";
         }
+    </script>
+    <script>
+        const createUserModal = document.getElementById('createuserModal');
+        createUserModal.addEventListener('show.bs.modal', function () {
+            // Clear all inputs inside the modal
+            createUserModal.querySelectorAll('input, select').forEach(input => {
+                if (input.tagName === 'SELECT') {
+                    input.selectedIndex = 0;
+                } else {
+                    input.value = '';
+                }
+            });
+        });
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                // Fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); // 4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
+            if (alertBox) {
+                // Fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); // 4 seconds before starting fade-out
     </script>
 
 

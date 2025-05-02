@@ -30,6 +30,12 @@ namespace Lab1484.Pages
 
         public List<User> PartnerList { get; set; } = new List<User>();
 
+        [TempData]
+        public string? CreateOrEditGrantSuccess { get; set; }
+
+        [TempData]
+        public string? CreateOrEditGrantFailure { get; set; }
+
 
         public DashBoardModel()
         {
@@ -233,7 +239,7 @@ namespace Lab1484.Pages
 
         public IActionResult OnPostInsertGrant()
         {
-            DBClass.InsertGrant(newGrant);
+            bool success = DBClass.InsertGrant(newGrant);
 
             SqlDataReader adminReader = DBClass.AdminReader();
             while (adminReader.Read())
@@ -290,6 +296,17 @@ namespace Lab1484.Pages
                 .ThenBy(g => g.businessName)
                 .ToList();
 
+           
+            if (success)
+            {
+                CreateOrEditGrantSuccess = "Grant was successfully created.";
+            }
+            else
+            {
+                CreateOrEditGrantFailure = "Error: Grant could not be created.";
+                return RedirectToPage("/Dashboard");
+            }
+
             return RedirectToPage("/UpdatePermission");
         }
 
@@ -302,7 +319,7 @@ namespace Lab1484.Pages
         public IActionResult OnPostUpdateGrant()
         {
             //Updates existing grant
-            DBClass.UpdateGrant(newGrant);
+            bool success = DBClass.UpdateGrant(newGrant);
             DBClass.Lab3DBConnection.Close();
 
             string currentUser = HttpContext.Session.GetString("username");
@@ -489,6 +506,16 @@ namespace Lab1484.Pages
                 .ThenBy(g => g.businessName)
                 .ToList();
 
+
+
+            if (success)
+            {
+                CreateOrEditGrantSuccess = "Grant was successfully updated.";
+            }
+            else
+            {
+                CreateOrEditGrantFailure = "Error: Grant could not be updated.";
+            }
             return Page();
         }
     }

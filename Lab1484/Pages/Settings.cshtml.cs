@@ -17,6 +17,9 @@ namespace Lab1484.Pages
         [BindProperty]
         public UserUpdate UpdateUser { get; set; } = new UserUpdate();
 
+        [TempData]
+        public string SuccessfulChange { get; set; }
+
         public IActionResult OnGet()
         {
             string currentUser = HttpContext.Session.GetString("username");
@@ -50,18 +53,18 @@ namespace Lab1484.Pages
 
             if (ProfileImage != null && ProfileImage.Length > 0)
             {
-                // Generate a unique filename based on the user ID and the original file name
+                // generate unique filename based on the user ID and the original file name
                 string fileExtension = Path.GetExtension(ProfileImage.FileName);
                 string fileName = $"profile_{HttpContext.Session.GetString("userID")}{fileExtension}";
                 string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 
-                // Save the file to wwwroot/images
+                // save the file to wwwroot/images
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await ProfileImage.CopyToAsync(stream);
                 }
 
-                // Update the user's profile image in the database
+                //update the user's profile image in the database
                 var userId = int.Parse(HttpContext.Session.GetString("userID"));
                 User user = DBClass.GetUserInfoById(userId);
                 if (user != null)
@@ -70,43 +73,41 @@ namespace Lab1484.Pages
                     DBClass.AddProfileImage(user);
                 }
 
-                // Redirect to the same page to refresh the image
                 return RedirectToPage();
             }
 
-            // If no file is uploaded, just return the same page without changing anything
             return Page();
         }
 
         public async Task<IActionResult> OnPostDeleteProfileImageAsync()
         {
-            // Retrieve the current user ID from session
-            string? currentUserIdStr = HttpContext.Session.GetString("userId");
+            
+            string? currentUserIdStr = HttpContext.Session.GetString("userID");
             if (int.TryParse(currentUserIdStr, out int currentUserId))
             {
-                // Get the current user
+                
                 var user = DBClass.GetUserInfoById(currentUserId);
 
-                // If the user has a custom profile picture
+                
                 if (!string.IsNullOrEmpty(user?.ProfileImageFileName))
                 {
-                    // Optional: Delete the profile picture file from wwwroot
+                    
                     string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", user.ProfileImageFileName);
                     if (System.IO.File.Exists(filePath))
                     {
-                        System.IO.File.Delete(filePath);  // Delete the file
+                        System.IO.File.Delete(filePath);  //delete the file
                     }
                 }
 
-                // Update the user's profile picture in the database to the default picture
-                user.ProfileImageFileName = "default.png";  // Set to default image
-                DBClass.AddProfileImage(user);  // Update the database
+                //update the user's profile picture in the database to the default picture
+                user.ProfileImageFileName = "default.png";  //set to default image
+                DBClass.AddProfileImage(user);  //update the database
 
-                // Redirect to the Settings page (or where you'd like after deletion)
+                
                 return RedirectToPage();
             }
 
-            // Return error if userId is not found or something goes wrong
+            //return error if userID is not found or something goes wrong
             return NotFound();
         }
 

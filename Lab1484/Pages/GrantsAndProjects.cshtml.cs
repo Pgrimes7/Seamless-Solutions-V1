@@ -38,6 +38,13 @@ namespace Lab1484.Pages
         [BindProperty]
         public int grantId { get; set; }
 
+        [TempData]
+        public string? CreateOrEditGAndPSuccess { get; set; }
+
+        [TempData]
+        public string? CreateOrEditGAndPFailure { get; set; }
+
+
         //public GrantsAndProjectsModel()
         //{
         //    ProjectList = new List<Project>();
@@ -239,7 +246,7 @@ namespace Lab1484.Pages
 
         public IActionResult OnPostInsertGrant()
         {
-            DBClass.InsertGrant(newGrant);
+            bool success = DBClass.InsertGrant(newGrant);
 
             SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);
             while (projectReader.Read())
@@ -326,6 +333,17 @@ namespace Lab1484.Pages
             grantId = DBClass.GetLastGrantID();
 
             HttpContext.Session.SetInt32("GrantID", grantId);
+
+            if (success)
+            {
+                CreateOrEditGAndPSuccess = "Grant was successfully created.";
+            }
+            else
+            {
+                CreateOrEditGAndPFailure = "Error: Grant could not be created.";
+                return RedirectToPage("/GrantsAndProjects");
+            }
+
 
             return RedirectToPage("/UpdatePermission", new { handler = "" });
         }
@@ -430,8 +448,12 @@ namespace Lab1484.Pages
         }
         public IActionResult OnPostUpdateGrant()
         {
+            TempData.Remove(nameof(CreateOrEditGAndPSuccess));
+            TempData.Remove(nameof(CreateOrEditGAndPFailure));
+
+
             //Updates existing grant
-            DBClass.UpdateGrant(newGrant);
+            bool success = DBClass.UpdateGrant(newGrant);
             DBClass.Lab3DBConnection.Close();
 
             SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);
@@ -518,7 +540,17 @@ namespace Lab1484.Pages
 
             DBClass.Lab3DBConnection.Close();
 
+
+            if (success)
+            {
+                CreateOrEditGAndPSuccess = "Grant was successfully updated.";
+            }
+            else
+            {
+                CreateOrEditGAndPFailure = "Error: Grant could not be updated.";
+            }
             return Page();
+
         }
 
         public IActionResult OnPostViewGrant()
