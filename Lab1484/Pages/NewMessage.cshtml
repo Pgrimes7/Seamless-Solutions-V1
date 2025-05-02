@@ -6,20 +6,35 @@
 <link href="~/css/style.css" rel="stylesheet">
 
 <form id="NewMessage" asp-page="NewMessage" method="post">
-	<h1>New Message</h1>
-	Receiver
-	<select asp-for="NewMessage.Receiver" class="form-select">
-		@{
-			foreach (var username in Model.CredentialsList)
-			{
-				<option value="@username.Username">@username.Username</option>
-			}
-		}
-	</select>
-	<br />
-	Message Content
-	<textarea asp-for="NewMessage.Content" class="form-control" rows="5" cols="50" placeholder="Enter Message Content"></textarea>
-	<span asp-validation-for="NewMessage.Content" class="text-danger"></span>
-	<br />
-	<input type="submit" value="Send Message" />
+    <h1>New Message</h1>
+
+    Receiver
+    <select asp-for="NewMessage.Receiver" class="form-select">
+        @{
+            foreach (var username in Model.CredentialsList)
+            {
+                <option value="@username.Username">@username.Username</option>
+            }
+        }
+    </select>
+
+    <br />
+
+    Message Content
+    <textarea asp-for="NewMessage.Content" id="messageContent" class="form-control" rows="5" cols="50" placeholder="Enter Message Content"></textarea>
+    <span asp-validation-for="NewMessage.Content" class="text-danger"></span>
+
+    <br />
+
+    <button type="button" class="btn btn-outline-secondary" id="populateMessageBtn">Populate</button>
+
+    <br /><br />
+
+    <input type="submit" value="Send Message" class="btn btn-primary" />
 </form>
+<script>
+    document.getElementById('populateMessageBtn').addEventListener('click', function () {
+        document.getElementById('messageContent').value =
+            "Welcome to JMU CARE Mark! I have assigned you to work on the REDI Research Support Center Grant.";
+    });
+</script>

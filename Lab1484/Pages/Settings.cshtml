@@ -29,6 +29,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <!-- DO NOT DELETE -->
+
+    <link href="~/css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -42,6 +44,12 @@
 
                 <div class="col py-3">
                     <div class="row">
+                        @if (!string.IsNullOrEmpty(Model.SuccessfulChange))
+                        {
+                            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                @Model.SuccessfulChange
+                            </div>
+                        }
                         <h1 class="mb-3">Settings</h1>
                         <form method="post" enctype="multipart/form-data" asp-page-handler="UploadProfileImage">
                         <!--row for profile pic-->
@@ -50,33 +58,70 @@
                                 <div style="position: relative; width: 100px; height: 100px;">
                                         <img src="@(Model.ProfileImagePath)" alt="" style="width: 100px; height: 100px" class="rounded-circle">
 
-                                        <label for="fileInput" style="position: absolute; bottom: 0; right: 0; background-color: #ffffffcc;
-                                        border: none; border-radius: 50%; padding: 6px; cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,0.2);
-                                        width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                        <label style="position: absolute; bottom: 0; right: 0; background-color: #ffffffcc;
+                                         border: none; border-radius: 50%; padding: 6px; cursor: pointer;
+                                         box-shadow: 0 0 4px rgba(0,0,0,0.2); width: 30px; height: 30px;
+                                         display: flex; align-items: center; justify-content: center;"
+                                               data-bs-toggle="modal" data-bs-target="#editProfilePicModal">
                                             <i class="fa-solid fa-pencil"></i>
                                         </label>
 
 
-                                        @*<!-- Modal -->
-                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <!-- edit profile pic modal -->
+                                        <div class="modal fade" id="editProfilePicModal" tabindex="-1" aria-labelledby="editProfilePicModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                        <h5 class="modal-title">Edit Profile Picture?</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <p>Would you like to upload a new profile picture or delete the current one?</p>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <!-- cancel -->
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                                        <!-- edit/upload -->
+                                                        <form method="post" enctype="multipart/form-data" asp-page-handler="UploadProfileImage">
+                                                            <input type="file" id="hiddenFileInput" name="ProfileImage" accept=".png,.jpg,.jpeg"
+                                                                   style="display: none;" onchange="this.form.submit()" />
+                                                            <button type="button" class="btn btn-primary" onclick="document.getElementById('hiddenFileInput').click();">
+                                                                Edit
+                                                            </button>
+                                                        </form>
+
+                                                        <!-- delete -->
+                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- confirm delete modal -->
+                                        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Profile Picture?</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Are you sure you want to delete your profile picture? This action cannot be undone.
+                                                        Are you sure you want to delete your profile picture? This cannot be undone.
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <form method="post" enctype="multipart/form-data" asp-page-handler="DeleteProfileImage">
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        <form method="post" asp-page-handler="DeleteProfileImage">
+                                                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>*@
+                                        </div>
+
 
                                         <input type="file" id="fileInput" name="ProfileImage"
                                                accept=".png,.jpg,.jpeg"
@@ -115,16 +160,6 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div class="row mb-3">
-                            <div class="col-4">
-                                <label for="inputUsername" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="inputLast" placeholder="doej">
-                            </div>
-                            <div class="col-4">
-                                <label for="inputPassword" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="inputLast" placeholder="Password1234">
-                            </div>
-                        </div>*@
                         <div class="row mb-3">
                             <div class="col-4">
                                 <label for="inputEmail" class="form-label">Email</label>
@@ -145,18 +180,12 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div class="row mb-3">
-                            <div class="col-4">
-                                <label for="inputPicture" class="form-label">Profile picture:</label>
-                                <input type="file" class="form-control" id="inputPicture" placeholder="Doe" accept="image/*">
-                            </div>
-                        </div>*@
-
+                        
                         <button type="submit" class="btn btn-primary">Update</button>
                         </form>
 
                         <div class="mt-3">
-                            <a href="/ChangePassword" class="btn btn-outline-secondary">
+                            <a href="/ChangePassword" class="btn btn-secondary">
                                 <i class="fa-solid fa-key me-2"></i>Change Password
                             </a>
                         </div>
@@ -181,6 +210,20 @@
             input.focus();
         }
     </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                // Fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); // 4 seconds before starting fade-out
+    </script>
+
+
+
 
 </body>
 

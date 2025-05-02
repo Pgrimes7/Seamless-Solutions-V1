@@ -223,9 +223,11 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" id="populateGrantTaskBtn">Populate</button>
                                                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
                                                 <button type="submit" class="btn btn-primary">Assign Task</button>
                                             </div>
+
                                         </form>
                                     </div> <!--close modal content-->
                                 </div> <!--close modal dialog-->
@@ -259,7 +261,11 @@
                                                 <td>@gtask.GrantName</td>
                                                 <td>@gtask.taskDescription</td>
                                                 <td>@(gtask.dueDate.HasValue ? gtask.dueDate.Value.ToShortDateString() : "N/A")</td>
-                                                <td>@gtask.GTStatus</td>
+                                                @if (gtask.GTStatus == "Complete") {
+                                                    <td><span class="badge text-bg-success">@gtask.GTStatus</span></td>
+                                                } else {
+                                                    <td><span class="badge text-bg-danger">@gtask.GTStatus</span></td>
+                                                }
                                             </tr>
                                         }
                                     </tbody>
@@ -374,7 +380,14 @@
                                                 <td>@task.ProjectName</td>
                                                 <td>@task.taskDescription</td>
                                                 <td>@(task.dueDate.HasValue ? task.dueDate.Value.ToShortDateString() : "N/A")</td>
-                                                <td>@task.PTStatus</td>
+                                                @if (task.PTStatus == "Complete")
+                                                {
+                                                    <td><span class="badge text-bg-success">@task.PTStatus</span></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><span class="badge text-bg-danger">@task.PTStatus</span></td>
+                                                }
                                             </tr>
                                         }
                                     </tbody>
@@ -408,6 +421,16 @@
           }
         });
     </script>
+    <script>
+        document.getElementById('populateGrantTaskBtn').addEventListener('click', function () {
+            // Set due date to May 5, 2025
+            document.getElementById('floatingDate').value = "2025-05-05";
+
+            // Set task description
+            document.getElementById('floatingGrantTaskDesc').value = "Create a progress report for the REDI Research Support Center Grant";
+        });
+    </script>
+
 
 </body>
 

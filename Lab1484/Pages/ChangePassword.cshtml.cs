@@ -1,5 +1,6 @@
 using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +26,9 @@ namespace Lab1484.Pages
 
         [BindProperty]
         public string PasswordError { get; set; }
+
+        [TempData]
+        public string SuccessfulChange { get; set; }
 
         public IActionResult OnGet()
         {
@@ -87,6 +91,12 @@ namespace Lab1484.Pages
 
             DBClass.UpdateHashedPassword(userIdString, NewPassword);
             DBClass.Lab3DBConnection.Close();
+
+            if (NewPassword == ConfirmPassword)
+            {
+                SuccessfulChange = "Password successfully changed.";
+                return RedirectToPage("/Settings");
+            }
 
             return Page();
         }
