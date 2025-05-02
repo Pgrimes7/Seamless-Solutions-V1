@@ -43,6 +43,12 @@ namespace Lab1484.Pages
         [TempData]
         public string? CreateOrEditGrantFailure { get; set; }
 
+        [TempData]
+        public string? CreateOrEditGAndPSuccess { get; set; }
+
+        [TempData]
+        public string? CreateOrEditGAndPFailure { get; set; }
+
 
         public UpdatePermissionModel()
         {

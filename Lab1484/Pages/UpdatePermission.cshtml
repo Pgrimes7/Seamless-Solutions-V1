@@ -19,13 +19,29 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
-            @*@if (Model.CreateOrEditGrantFailure != null)
+            @if (Model.CreateOrEditGrantFailure != null)
             {
                 <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
                     @Model.CreateOrEditGrantFailure
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            }*@
+            }
+            @if (Model.CreateOrEditGAndPSuccess != null)
+            {
+                <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                    @Model.CreateOrEditGAndPSuccess
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (Model.CreateOrEditGAndPFailure != null)
+            {
+                <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @Model.CreateOrEditGAndPFailure
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+
 
 
             @if (Model.SelectedGrantId == 0)
@@ -232,23 +248,45 @@
         window.setTimeout(function () {
             const alertBox = document.getElementById('success-alert');
             if (alertBox) {
-                // Fade out
+                //fade out
                 alertBox.classList.remove('show');
                 alertBox.classList.add('fade');
                 setTimeout(() => alertBox.remove(), 500);
             }
-        }, 4000); // 4 seconds before starting fade-out
+        }, 4000); //4 seconds before starting fade-out
     </script>
     <script>
         window.setTimeout(function () {
             const alertBox = document.getElementById('failure-alert');
             if (alertBox) {
-                // Fade out
+                //fade out
                 alertBox.classList.remove('show');
                 alertBox.classList.add('fade');
                 setTimeout(() => alertBox.remove(), 500);
             }
-        }, 4000); // 4 seconds before starting fade-out
+        }, 4000); //4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
     </script>
 
 

@@ -76,6 +76,21 @@
 
                 <!--main content div-->
                 <div class="col py-3">
+                    @if (Model.CreateOrEditGAndPSuccess != null)
+                    {
+                        <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                            @Model.CreateOrEditGAndPSuccess
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (Model.CreateOrEditGAndPFailure != null)
+                    {
+                        <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @Model.CreateOrEditGAndPFailure
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
                     <h1>Grants and Projects</h1>
 
                     <!--tabs-->
@@ -645,6 +660,28 @@
             document.querySelector('select[name="newGrant.category"]').selectedIndex = 0;
             document.querySelector('select[name="newGrant.grantStatus"]').selectedIndex = 0;
         });
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
     </script>
 
 </body>

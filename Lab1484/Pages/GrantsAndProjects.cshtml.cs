@@ -38,6 +38,13 @@ namespace Lab1484.Pages
         [BindProperty]
         public int grantId { get; set; }
 
+        [TempData]
+        public string? CreateOrEditGAndPSuccess { get; set; }
+
+        [TempData]
+        public string? CreateOrEditGAndPFailure { get; set; }
+
+
         //public GrantsAndProjectsModel()
         //{
         //    ProjectList = new List<Project>();
@@ -239,7 +246,7 @@ namespace Lab1484.Pages
 
         public IActionResult OnPostInsertGrant()
         {
-            DBClass.InsertGrant(newGrant);
+            bool success = DBClass.InsertGrant(newGrant);
 
             SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);
             while (projectReader.Read())
@@ -326,6 +333,17 @@ namespace Lab1484.Pages
             grantId = DBClass.GetLastGrantID();
 
             HttpContext.Session.SetInt32("GrantID", grantId);
+
+            if (success)
+            {
+                CreateOrEditGAndPSuccess = "Grant was successfully created.";
+            }
+            else
+            {
+                CreateOrEditGAndPFailure = "Error: Grant could not be created.";
+                return RedirectToPage("/Dashboard");
+            }
+
 
             return RedirectToPage("/UpdatePermission", new { handler = "" });
         }
