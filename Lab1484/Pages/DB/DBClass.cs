@@ -1560,6 +1560,181 @@ namespace Lab1484.Pages.DB
 
 
         }
+
+
+        public static SqlDataReader AllPerformanceReportReader()
+        {
+            SqlCommand cmdReportRead = new SqlCommand();
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdReportRead.Connection = Lab3DBConnection;
+            cmdReportRead.Connection.ConnectionString = Lab3DBConnString;
+
+            // Corrected SQL query
+            cmdReportRead.CommandText = @"
+        SELECT PerformanceReport.*, Reports.ReportName 
+        FROM PerformanceReport 
+        JOIN Reports ON PerformanceReport.ReportID = Reports.ReportID;";
+
+            cmdReportRead.Connection.Open(); // Open connection here, close in Model!
+
+            SqlDataReader tempReader = cmdReportRead.ExecuteReader();
+
+            return tempReader;
+        }
+
+
+
+        public static PerformanceReport GetPerformanceReportData(DateTime startDate, DateTime endDate)
+        {
+            PerformanceReport report = new PerformanceReport();
+
+            using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
+            {
+                connection.Open();
+
+                // Total Funding
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(amount), 0) AS TotalFunding FROM Grants WHERE awardDate BETWEEN @StartDate AND @EndDate;", connection))
+                {
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@EndDate", endDate);
+                    report.Funding = Convert.ToDouble(cmd.ExecuteScalar());
+                }
+
+                // Projects Completed
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS ProjectsCompleted FROM Project WHERE projectStatus = 'Complete' AND dateCompleted BETWEEN @StartDate AND @EndDate;", connection))
+                {
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@EndDate", endDate);
+                    report.ProjectsCompleted = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Grants Archived
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS GrantsArchived FROM Grants WHERE grantStatus = 'Archived' AND awardDate BETWEEN @StartDate AND @EndDate;", connection))
+                {
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@EndDate", endDate);
+                    report.GrantsArchived = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Active Grants
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS ActiveGrants FROM Grants WHERE grantStatus = 'Active';", connection))
+                {
+                    report.ActiveGrants = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Grants In Progress
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS GrantsInProgress FROM Grants WHERE grantStatus = 'In Progress';", connection))
+                {
+                    report.GrantsInProgress = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Grants Submitted
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS GrantsSubmitted FROM Grants WHERE submissionDate BETWEEN @StartDate AND @EndDate;", connection))
+                {
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@EndDate", endDate);
+                    report.GrantsSubmitted = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Projects In Progress
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS ProjectsWIP FROM Project WHERE projectStatus = 'In Progress';", connection))
+                {
+                    report.ProjectsWIP = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                // Papers Published
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(COUNT(*), 0) AS PapersPublished FROM Publishes WHERE DueDate BETWEEN @StartDate AND @EndDate;", connection))
+                {
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@EndDate", endDate);
+                    report.PapersPublished = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+
+            return report;
+        }
+
+
+
+
+
+        public static void InsertPerformanceReport(PerformanceReport report)
+        {
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+
+            using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Step 1: Insert into Reports table
+                        string insertReportQuery = @"
+                INSERT INTO Reports (ReportDate, ReportName, AuthorName) 
+                VALUES (@ReportDate, @ReportName, @AuthorName);
+                SELECT SCOPE_IDENTITY();";
+
+                        SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
+                        cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.StartDate); // Use StartDate as the report date
+                        cmdInsertReport.Parameters.AddWithValue("@ReportName", report.PerformanceReportName ?? "Performance Report");
+                        cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName ?? "Unknown");
+
+                        object result = cmdInsertReport.ExecuteScalar();
+                        if (result == null || result == DBNull.Value)
+                        {
+                            throw new Exception("Failed to retrieve the ReportID after inserting into the Reports table.");
+                        }
+
+                        int reportID = Convert.ToInt32(result);
+                        report.ReportID = reportID; // Assign the generated ReportID to the PerformanceReport object
+
+                        // Step 2: Insert into PerformanceReport table
+                        string insertPerformanceReportQuery = @"
+                INSERT INTO PerformanceReport 
+                (ReportID, Description, StartDate, EndDate, Funding, ProjectsCompleted, GrantsArchived, ActiveGrants, GrantsInProgress, GrantsSubmitted, ProjectsWIP, BudgetUsed, PapersPublished)
+                VALUES 
+                (@ReportID, @Description, @StartDate, @EndDate, @Funding, @ProjectsCompleted, @GrantsArchived, @ActiveGrants, @GrantsInProgress, @GrantsSubmitted, @ProjectsWIP, @BudgetUsed, @PapersPublished);";
+
+                        SqlCommand cmdInsertPerformanceReport = new SqlCommand(insertPerformanceReportQuery, connection, transaction);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ReportID", report.ReportID);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@Description", report.Description ?? (object)DBNull.Value);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@StartDate", report.StartDate);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@EndDate", report.EndDate);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@Funding", report.Funding);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ProjectsCompleted", report.ProjectsCompleted);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@GrantsArchived", report.GrantsArchived);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ActiveGrants", report.ActiveGrants);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@GrantsInProgress", report.GrantsInProgress);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@GrantsSubmitted", report.GrantsSubmitted);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ProjectsWIP", report.ProjectsWIP);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@BudgetUsed", report.BudgetUsed);
+                        cmdInsertPerformanceReport.Parameters.AddWithValue("@PapersPublished", report.PapersPublished);
+
+                        cmdInsertPerformanceReport.ExecuteNonQuery();
+
+                        // Commit the transaction
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Rollback the transaction in case of an error
+                        transaction.Rollback();
+                        Console.WriteLine($"Error inserting performance report: {ex.Message}");
+                        throw;
+                    }
+                }
+            }
+        }
+
+
+
         public static SqlDataReader SingleReportReader(int reportID)
         {
             //could modify insert report so it submits the user who submitted it so here it could be displayed too
@@ -1742,6 +1917,7 @@ namespace Lab1484.Pages.DB
             }
         }
 
+        
 
 
     }
