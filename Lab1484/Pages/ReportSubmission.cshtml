@@ -41,10 +41,10 @@
             <!-- Navigation Tabs -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Progress</button>
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Progress Reports</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Performance</button>
+                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Performance Reports</button>
                 </li>
             </ul>
 
@@ -55,68 +55,61 @@
             </div>
 
             <!-- Tabs content -->
-            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                <!-- Display the list of progress reports -->
-                <table class="table table-bordered table-responsive table-hover">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Author</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var report in Model.ReportList)
-                        {
+            <div class="tab-content" id="myTabContent">
+                <!-- Progress Reports Tab -->
+                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <h2>Progress Reports</h2>
+                    <table class="table table-bordered table-responsive table-hover">
+                        <thead>
                             <tr>
-                                <td>
-                                    <form method="post" asp-page-handler="SelectProgressReport" class="d-inline">
-                                        <input type="hidden" name="reportID" value="@report.ReportID" />
-                                        <button type="submit" class="btn btn-link p-0">@report.ReportName</button>
-                                    </form>
-                                </td>
-                                <td>@report.ReportDate.ToString("MM/dd/yyyy")</td>
-                                <td>@report.AuthorName</td>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Author</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Performance tab -->
-            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                <table class="table table-bordered table-responsive table-hover">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Author</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.PerformanceReportList != null && Model.PerformanceReportList.Any())
-                        {
-                            @foreach (var report in Model.PerformanceReportList)
+                        </thead>
+                        <tbody>
+                            @foreach (var report in Model.ReportList)
                             {
                                 <tr>
-                                    <td><a href="#">@report.PerformanceReportName</a></td>
-                                    <td>@report.Description</td>
-                                    <td>@report.StartDate.ToString("MM/dd/yyyy")</td>
-                                    <td>@report.EndDate.ToString("MM/dd/yyyy")</td>
+                                    <td>
+                                        <form method="post" asp-page-handler="SelectProgressReport" class="d-inline">
+                                            <input type="hidden" name="reportID" value="@report.ReportID" />
+                                            <button type="submit" class="btn btn-link p-0">@report.ReportName</button>
+                                        </form>
+                                    </td>
+                                    <td>@report.ReportDate.ToString("MM/dd/yyyy")</td>
                                     <td>@report.AuthorName</td>
                                 </tr>
                             }
-                        }
-                        else
-                        {
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Performance Reports Tab -->
+                <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    <h2>Performance Reports</h2>
+                    <table class="table table-bordered table-hover">
+                        <thead>
                             <tr>
-                                <td colspan="5" class="text-center">No performance reports available.</td>
+                                <th>Report Name</th>
+                                <th>Author</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var report in Model.PerformanceReportList)
+                            {
+                                <tr>
+                                    <td>@report.PerformanceReportName</td>
+                                    <td>@report.AuthorName</td>
+                                    <td>@report.StartDate.ToShortDateString()</td>
+                                    <td>@report.EndDate.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         }
 
@@ -187,7 +180,6 @@
             }
         }
     </div>
-
 
     <!-- Create progress report modal -->
     <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
@@ -307,11 +299,11 @@
                         <option selected>Choose...</option>
         @foreach (var grant in Model.GrantList)
         {
-                                <option value="grant-@grant.GrantID">@grant.grantName</option>
+                                    <option value="grant-@grant.GrantID">@grant.grantName</option>
         }
         @foreach (var project in Model.ProjectList)
         {
-                                <option value="project-@project.ProjectID">@project.ProjectName</option>
+                                    <option value="project-@project.ProjectID">@project.ProjectName</option>
         }
                     </select>
                 </div>
@@ -329,3 +321,4 @@
         }
     </script>
 </body>
+</html>

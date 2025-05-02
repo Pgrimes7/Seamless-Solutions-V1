@@ -1,3 +1,4 @@
+using System;
 using System.Data.SqlClient;
 using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
@@ -57,20 +58,16 @@ namespace Lab1484.Pages
         {
             // Check if the user is logged in
             string currentUser = HttpContext.Session.GetString("username");
-            // Redirect them if they aren't
             if (string.IsNullOrEmpty(currentUser))
             {
                 return RedirectToPage("/Login");
             }
 
-            // If a report is already selected, skip reinitializing the lists
-            
-
-
-
-                // Initialize ReportList
-                SqlDataReader reportReader = DBClass.AllReportReader();
-                while (reportReader.Read())
+            // Initialize Progress Reports and Performance Reports
+            SqlDataReader reportReader = DBClass.AllReportReader();
+            while (reportReader.Read())
+            {
+                if (reportReader["SubjectID"] != DBNull.Value) // Progress Reports (have SubjectID)
                 {
                     ReportList.Add(new Report
                     {
@@ -80,60 +77,57 @@ namespace Lab1484.Pages
                         AuthorName = reportReader["AuthorName"].ToString()
                     });
                 }
-
-                // Initialize GrantList
-                SqlDataReader grantReader = DBClass.GrantReader(null);
-                while (grantReader.Read())
-                {
-                    GrantList.Add(new Grant
-                    {
-                        GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
-                        businessName = grantReader["businessName"].ToString(),
-                        amount = Double.Parse(grantReader["amount"].ToString()),
-                        category = grantReader["category"].ToString(),
-                        dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
-                        facultyName = grantReader["FacultyLead"].ToString(),
-                        facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
-                        grantStatus = grantReader["grantStatus"].ToString(),
-                        grantName = grantReader["grantName"].ToString()
-                    });
-                }
-
-                // Initialize ProjectList
-                SqlDataReader projectReader = DBClass.ProjectReader(null);
-                while (projectReader.Read())
-                {
-                    ProjectList.Add(new Project
-                    {
-                        ProjectID = Int32.Parse(projectReader["ProjectID"].ToString()),
-                        ProjectName = projectReader["ProjectName"].ToString(),
-                        DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")),
-                        DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
-                        DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
-                        AdminName = projectReader["AdminName"].ToString(),
-                        AdminEmail = projectReader["AdminEmail"].ToString(),
-                        ProjectStatus = projectReader["ProjectStatus"].ToString()
-                    });
-                }
-
-                // Initialize PerformanceReportList
-                SqlDataReader performanceReportReader = DBClass.AllPerformanceReportReader();
-                while (performanceReportReader.Read())
+                else // Performance Reports (no SubjectID)
                 {
                     PerformanceReportList.Add(new PerformanceReport
                     {
-                        PerformanceReportName = performanceReportReader["ReportName"].ToString(),
-                        PerformanceReportID = performanceReportReader.GetInt32(performanceReportReader.GetOrdinal("PerformanceReportID")),
-                        ReportID = performanceReportReader.GetInt32(performanceReportReader.GetOrdinal("ReportID")),
-                        Description = performanceReportReader["Description"]?.ToString(),
-                        AuthorName = performanceReportReader["AuthorName"]?.ToString(),
-                        StartDate = performanceReportReader.GetDateTime(performanceReportReader.GetOrdinal("StartDate")),
-                        EndDate = performanceReportReader.GetDateTime(performanceReportReader.GetOrdinal("EndDate")),
+                        PerformanceReportID = reportReader.GetInt32(reportReader.GetOrdinal("ReportID")),
+                        PerformanceReportName = reportReader["ReportName"].ToString(),
+                        AuthorName = reportReader["AuthorName"].ToString(),
+                        StartDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate")),
+                        EndDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate")) // Assuming same date for simplicity
                     });
                 }
-
-                return Page();
             }
+
+            // Initialize GrantList
+            SqlDataReader grantReader = DBClass.GrantReader(null);
+            while (grantReader.Read())
+            {
+                GrantList.Add(new Grant
+                {
+                    GrantID = Int32.Parse(grantReader["GrantID"].ToString()),
+                    businessName = grantReader["businessName"].ToString(),
+                    amount = Double.Parse(grantReader["amount"].ToString()),
+                    category = grantReader["category"].ToString(),
+                    dueDate = grantReader.GetDateTime(grantReader.GetOrdinal("dueDate")),
+                    facultyName = grantReader["FacultyLead"].ToString(),
+                    facultyEmail = grantReader["FacultyLeadEmail"].ToString(),
+                    grantStatus = grantReader["grantStatus"].ToString(),
+                    grantName = grantReader["grantName"].ToString()
+                });
+            }
+
+            // Initialize ProjectList
+            SqlDataReader projectReader = DBClass.ProjectReader(null);
+            while (projectReader.Read())
+            {
+                ProjectList.Add(new Project
+                {
+                    ProjectID = Int32.Parse(projectReader["ProjectID"].ToString()),
+                    ProjectName = projectReader["ProjectName"].ToString(),
+                    DateDue = projectReader.GetDateTime(projectReader.GetOrdinal("dueDate")),
+                    DateCreated = projectReader.GetDateTime(projectReader.GetOrdinal("dateCreated")),
+                    DateCompleted = projectReader.GetDateTime(projectReader.GetOrdinal("dateCompleted")),
+                    AdminName = projectReader["AdminName"].ToString(),
+                    AdminEmail = projectReader["AdminEmail"].ToString(),
+                    ProjectStatus = projectReader["ProjectStatus"].ToString()
+                });
+            }
+
+            return Page();
+        }
+
 
 
 

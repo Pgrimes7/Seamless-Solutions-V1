@@ -1614,7 +1614,6 @@ namespace Lab1484.Pages.DB
 
         public static SqlDataReader AllReportReader()
         {
-            //could modify insert report so it submits the user who submitted it so here it could be displayed too
             SqlCommand cmdReportRead = new SqlCommand();
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
@@ -1622,17 +1621,27 @@ namespace Lab1484.Pages.DB
             }
             cmdReportRead.Connection = Lab3DBConnection;
             cmdReportRead.Connection.ConnectionString = Lab3DBConnString;
-            cmdReportRead.CommandText = "SELECT * from Reports;";
+
+            // Updated query to include a LEFT JOIN with ReportSubjects to check for SubjectID
+            cmdReportRead.CommandText = @"
+        SELECT 
+            Reports.ReportID,
+            Reports.ReportName,
+            Reports.ReportDate,
+            Reports.AuthorName,
+            ReportSubjects.SubjectID
+        FROM 
+            Reports
+        LEFT JOIN 
+            ReportSubjects ON Reports.ReportID = ReportSubjects.ReportID;";
+
             cmdReportRead.Connection.Open(); // Open connection here, close in Model!
 
             SqlDataReader tempReader = cmdReportRead.ExecuteReader();
 
             return tempReader;
-
-
-
-
         }
+
 
 
         public static SqlDataReader AllPerformanceReportReader()
