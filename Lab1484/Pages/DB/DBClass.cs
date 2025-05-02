@@ -1965,12 +1965,14 @@ namespace Lab1484.Pages.DB
             }
         }
 
-          
+            /*Lab3DBConnection.Open();
+            cmd.ExecuteNonQuery();
+            Lab3DBConnection.Close();*/
         }
 
 
 
     }
-
+}
 
 
