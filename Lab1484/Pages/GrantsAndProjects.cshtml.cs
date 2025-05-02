@@ -341,7 +341,7 @@ namespace Lab1484.Pages
             else
             {
                 CreateOrEditGAndPFailure = "Error: Grant could not be created.";
-                return RedirectToPage("/Dashboard");
+                return RedirectToPage("/GrantsAndProjects");
             }
 
 
