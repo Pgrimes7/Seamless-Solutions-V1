@@ -1660,28 +1660,52 @@ namespace Lab1484.Pages.DB
 
 
 
-        public static SqlDataReader AllPerformanceReportReader()
+        public static SqlDataReader AllPerformanceReportReader(int reportID)
         {
-            SqlCommand cmdReportRead = new SqlCommand();
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
-            cmdReportRead.Connection = Lab3DBConnection;
-            cmdReportRead.Connection.ConnectionString = Lab3DBConnString;
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = Lab3DBConnection;
+            cmd.Connection.ConnectionString = Lab3DBConnString;
 
             // Corrected SQL query
-            cmdReportRead.CommandText = @"
-        SELECT PerformanceReport.*, Reports.ReportName, Reports.AuthorName
-        FROM PerformanceReport 
-        JOIN Reports ON PerformanceReport.ReportID = Reports.ReportID;";
+            cmd.CommandText = @"
+        SELECT 
+            PerformanceReport.PerformanceReportID,
+            PerformanceReport.ReportID,
+            PerformanceReport.Description,
+            PerformanceReport.StartDate,
+            PerformanceReport.EndDate,
+            PerformanceReport.Funding,
+            PerformanceReport.ProjectsCompleted,
+            PerformanceReport.GrantsSubmitted,
+            PerformanceReport.ProjectsWIP,
+            PerformanceReport.PapersPublished,
+            PerformanceReport.UnawardedFunding,
+            PerformanceReport.PotentialGrants,
+            PerformanceReport.AwardedGrants,
+            PerformanceReport.ActiveGrants,
+            PerformanceReport.RejectedGrants,
+            PerformanceReport.ArchivedGrants,
+            Reports.ReportName,
+            Reports.AuthorName
+        FROM 
+            PerformanceReport
+        INNER JOIN 
+            Reports ON PerformanceReport.ReportID = Reports.ReportID
+        WHERE 
+            PerformanceReport.ReportID = @ReportID;";
 
-            cmdReportRead.Connection.Open(); // Open connection here, close in Model!
+            cmd.Parameters.AddWithValue("@ReportID", reportID);
 
-            SqlDataReader tempReader = cmdReportRead.ExecuteReader();
-
-            return tempReader;
+            cmd.Connection.Open();
+            return cmd.ExecuteReader();
         }
+
+
 
 
 

@@ -5,6 +5,7 @@
         public string PerformanceReportName { get; set; }
         public int PerformanceReportID { get; set; }
         public int ReportID { get; set; }
+        public DateTime CreatedDate { get; set; }
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
