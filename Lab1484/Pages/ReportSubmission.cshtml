@@ -23,6 +23,8 @@
 
         @if (Model.SelectedReportID > 0)
         {
+            if (Model.SelectedReportType == "Progress")
+            {
             @if (Model.SelectedReport == null)
             {
                 <p class="text-danger">Selected report not found.</p>
@@ -86,7 +88,26 @@
                 </ul>
             }
         }
-        else
+        }
+        else if (Model.SelectedReportType == "Performance")
+        {
+            if (Model.SelectedPerformanceReport == null)
+            {
+                <p class="text-danger">Selected performance report not found.</p>
+            }
+            else
+            {
+                <div class="mb-4">
+                    <p>ReportID: @Model.SelectedPerformanceReport.ReportID</p>
+                    <h2>@Model.SelectedPerformanceReport.PerformanceReportName</h2>
+                    <p><strong>Author:</strong> @Model.SelectedPerformanceReport.AuthorName</p>
+                    <p><strong>Description:</strong> @Model.SelectedPerformanceReport.Description</p>
+                    <p><strong>Start Date:</strong> @Model.SelectedPerformanceReport.StartDate.ToString("MM/dd/yyyy")</p>
+                    <p><strong>End Date:</strong> @Model.SelectedPerformanceReport.EndDate.ToString("MM/dd/yyyy")</p>
+                </div>
+            }
+        }
+        else 
         {
             <!-- Display the list of reports -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -148,21 +169,24 @@
                         <tbody>
                             @if (Model.PerformanceReportList != null && Model.PerformanceReportList.Any())
                             {
-                                @foreach (var report in Model.PerformanceReportList)
+                                @foreach (var PerformanceReport in Model.PerformanceReportList)
                                 {
                                     <tr>
                                         <td>
-                                            <form method="post" asp-page-handler="SelectPerformanceReport" class="d-inline">
-                                                <input type="hidden" name="reportID" value="@report.ReportID" />
-                                                <button type="submit" class="btn btn-link p-0">@report.PerformanceReportName</button>
+                                            <p>Debug: PerformanceReportID = @PerformanceReport.PerformanceReportID, ReportID = @PerformanceReport.ReportID</p>
+                                            <form method="post" asp-page-handler="SelectPerformanceReport">
+                                                <input type="hidden" name="ReportID" value="@PerformanceReport.ReportID" />
+                                                <button type="submit" class="btn btn-link p-0">@PerformanceReport.PerformanceReportName</button>
                                             </form>
+
                                         </td>
-                                        <td>@report.Description</td>
-                                        <td>@report.StartDate.ToString("MM/dd/yyyy")</td>
-                                        <td>@report.EndDate.ToString("MM/dd/yyyy")</td>
-                                        <td>@report.AuthorName</td>
+                                        <td>@PerformanceReport.Description</td>
+                                        <td>@PerformanceReport.StartDate.ToString("MM/dd/yyyy")</td>
+                                        <td>@PerformanceReport.EndDate.ToString("MM/dd/yyyy")</td>
+                                        <td>@PerformanceReport.AuthorName</td>
                                     </tr>
                                 }
+
                             }
                             else
                             {

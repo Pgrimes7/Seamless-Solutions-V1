@@ -40,6 +40,11 @@ namespace Lab1484.Pages
         public string SelectedReportName { get; set; }
         [BindProperty]
         public Report SelectedReport { get; set; }
+        [BindProperty]
+        public string SelectedReportType { get; set; } // "Progress" or "Performance"
+        [BindProperty]
+        public PerformanceReport SelectedPerformanceReport { get; set; }
+
 
 
         public ReportSubmissionModel()
@@ -81,12 +86,14 @@ namespace Lab1484.Pages
                 {
                     PerformanceReportList.Add(new PerformanceReport
                     {
-                        PerformanceReportID = reportReader.GetInt32(reportReader.GetOrdinal("ReportID")),
+                        ReportID = reportReader.GetInt32(reportReader.GetOrdinal("ReportID")), // Use the correct column for ReportID
                         PerformanceReportName = reportReader["ReportName"].ToString(),
                         AuthorName = reportReader["AuthorName"].ToString(),
-                        StartDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate")),
-                        EndDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate")) // Assuming same date for simplicity
+                        CreatedDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate"))
+
+
                     });
+
                 }
             }
 
@@ -243,6 +250,7 @@ namespace Lab1484.Pages
         public void OnPostSelectProgressReport(int reportID)
         {
             SelectedReportID = reportID;
+            SelectedReportType = "Progress";
 
             // Clear previous data
             SubjectTitle.Clear();
@@ -313,48 +321,57 @@ namespace Lab1484.Pages
         }
         public void OnPostSelectPerformanceReport(int ReportID)
         {
+            Console.WriteLine($"OnPostSelectPerformanceReport called with PerformanceReportID: {ReportID}");
             SelectedReportID = ReportID;
+            SelectedReportType = "Performance";
 
             // Clear previous data
             PerformanceReport = new PerformanceReport();
 
             // Retrieve the selected performance report data
-            using (SqlDataReader reader = DBClass.AllPerformanceReportReader())
+            using (SqlDataReader reader = DBClass.AllPerformanceReportReader(ReportID))
             {
                 while (reader.Read())
                 {
-                    if (reader.GetInt32(reader.GetOrdinal("PerformanceReportID")) == ReportID)
-                    {
+                    Console.WriteLine($"DB ReportID: {reader["ReportID"]}, Expected ReportID: {ReportID}");
+                    
                         PerformanceReport = new PerformanceReport
                         {
                             PerformanceReportID = reader.GetInt32(reader.GetOrdinal("PerformanceReportID")),
                             ReportID = reader.GetInt32(reader.GetOrdinal("ReportID")),
                             PerformanceReportName = reader["ReportName"].ToString(),
                             Description = reader["Description"]?.ToString(),
-                            StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
-                            EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
-                            Funding = reader.GetDouble(reader.GetOrdinal("Funding")),
-                            ProjectsCompleted = reader.GetInt32(reader.GetOrdinal("ProjectsCompleted")),
-                            GrantsSubmitted = reader.GetInt32(reader.GetOrdinal("GrantsSubmitted")),
-                            ProjectsWIP = reader.GetInt32(reader.GetOrdinal("ProjectsWIP")),
-                            PapersPublished = reader.GetInt32(reader.GetOrdinal("PapersPublished")),
-                            UnawardedFunding = reader.GetDouble(reader.GetOrdinal("UnawardedFunding")),
-                            PotentialGrants = reader.GetInt32(reader.GetOrdinal("PotentialGrants")),
-                            AwardedGrants = reader.GetInt32(reader.GetOrdinal("AwardedGrants")),
-                            ActiveGrants = reader.GetInt32(reader.GetOrdinal("ActiveGrants")),
-                            RejectedGrants = reader.GetInt32(reader.GetOrdinal("RejectedGrants")),
-                            ArchivedGrants = reader.GetInt32(reader.GetOrdinal("ArchivedGrants")),
+                            StartDate = reader["StartDate"] != DBNull.Value ? reader.GetDateTime(reader.GetOrdinal("StartDate")) : DateTime.MinValue,
+                            EndDate = reader["EndDate"] != DBNull.Value ? reader.GetDateTime(reader.GetOrdinal("EndDate")) : DateTime.MinValue,
+                            Funding = reader["Funding"] != DBNull.Value ? reader.GetDouble(reader.GetOrdinal("Funding")) : 0,
+                            ProjectsCompleted = reader["ProjectsCompleted"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("ProjectsCompleted")) : 0,
+                            GrantsSubmitted = reader["GrantsSubmitted"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("GrantsSubmitted")) : 0,
+                            ProjectsWIP = reader["ProjectsWIP"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("ProjectsWIP")) : 0,
+                            PapersPublished = reader["PapersPublished"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("PapersPublished")) : 0,
+                            UnawardedFunding = reader["UnawardedFunding"] != DBNull.Value ? reader.GetDouble(reader.GetOrdinal("UnawardedFunding")) : 0,
+                            PotentialGrants = reader["PotentialGrants"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("PotentialGrants")) : 0,
+                            AwardedGrants = reader["AwardedGrants"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("AwardedGrants")) : 0,
+                            ActiveGrants = reader["ActiveGrants"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("ActiveGrants")) : 0,
+                            RejectedGrants = reader["RejectedGrants"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("RejectedGrants")) : 0,
+                            ArchivedGrants = reader["ArchivedGrants"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("ArchivedGrants")) : 0,
                             AuthorName = reader["AuthorName"]?.ToString()
                         };
+
+                        // Assign to SelectedPerformanceReport
+                        SelectedPerformanceReport = PerformanceReport;
                         break; // Exit the loop once the matching report is found
                     }
                 }
+            
+
+            if (SelectedPerformanceReport == null)
+            {
+                throw new Exception($"No performance report found with ReportID: {ReportID}");
             }
 
             // Log for debugging
-            Console.WriteLine($"Selected Performance Report: {PerformanceReport.PerformanceReportName}, Author: {PerformanceReport.AuthorName}, Start Date: {PerformanceReport.StartDate}, End Date: {PerformanceReport.EndDate}");
+            Console.WriteLine($"Selected Performance Report: {SelectedPerformanceReport.PerformanceReportName}, Author: {SelectedPerformanceReport.AuthorName}, Start Date: {SelectedPerformanceReport.StartDate}, End Date: {SelectedPerformanceReport.EndDate}");
         }
-
 
 
 
