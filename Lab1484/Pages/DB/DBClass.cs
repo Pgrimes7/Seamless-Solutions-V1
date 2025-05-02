@@ -1954,11 +1954,15 @@ namespace Lab1484.Pages.DB
                 list.Add(new Publish
                 {
                     PublishID = (int)reader["PublishID"],
+                    JournalTitle = reader["JournalTitle"].ToString(),
                     DueDate = reader["DueDate"] as DateTime?,
                     Requirements = reader["Requirements"].ToString(),
                     Authors = reader["Authors"].ToString(),
                     Status = reader["Status"].ToString(),
-                    ReferenceCount = (int)reader["ReferenceCount"]
+                    ReferenceCount = (int)reader["ReferenceCount"],
+                    FileName = reader["FileName"].ToString()
+
+
                 });
             }
             return list;
@@ -1967,14 +1971,16 @@ namespace Lab1484.Pages.DB
         public static void InsertPublish(Publish p)
         {
             using SqlConnection conn = new SqlConnection(Lab3DBConnString);
-            string query = @"INSERT INTO Publishes (DueDate, Requirements, Authors, Status, ReferenceCount)
-                     VALUES (@DueDate, @Requirements, @Authors, @Status, @ReferenceCount)";
+            string query = @"INSERT INTO Publishes (JournalTitle, DueDate, Requirements, Authors, Status, ReferenceCount, FileName)
+                     VALUES (@JournalTitle, @DueDate, @Requirements, @Authors, @Status, @ReferenceCount, @FileName)";
             SqlCommand cmd = new(query, conn);
             cmd.Parameters.AddWithValue("@DueDate", p.DueDate ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@Requirements", p.Requirements ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@Authors", p.Authors ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@Status", p.Status ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@ReferenceCount", p.ReferenceCount);
+            cmd.Parameters.AddWithValue("@JournalTitle", p.JournalTitle ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@FileName", p.FileName ?? (object)DBNull.Value);
             conn.Open();
             cmd.ExecuteNonQuery();
         }
