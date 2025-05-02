@@ -28,6 +28,9 @@ namespace Lab1484.Pages
         [BindProperty]
         public string? ProfileImagePath { get; set; } = "/images/default.png";
 
+        [TempData]
+        public string? CreateUserSuccess { get; set; }
+
        
 
         public IActionResult OnGet()
@@ -163,11 +166,19 @@ namespace Lab1484.Pages
                 return RedirectToPage("/AllUsers");
             }
 
-            DBClass.CreateHashedUser(NewUser);
+            bool success = DBClass.CreateHashedUser(NewUser);
             DBClass.Lab3DBConnection.Close();
 
+            if (success)
+            {
+                CreateUserSuccess = "User was successfully created.";
+            }
+            else
+            {
+                CreateUserSuccess = "Error: User could not be created.";
+            }
+
             return RedirectToPage("/AllUsers");
-            
         }
 
         public IActionResult OnPostUpdateUser()

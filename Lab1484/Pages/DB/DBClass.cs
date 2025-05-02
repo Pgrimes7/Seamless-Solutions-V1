@@ -1074,9 +1074,6 @@ namespace Lab1484.Pages.DB
 
             cmdLogin.Connection.Open();
 
-            // ExecuteScalar() returns back data type Object
-            // Use a typecast to convert this to an int.
-            // Method returns first column of first row.
             SqlDataReader hashReader = cmdLogin.ExecuteReader();
 
 
@@ -1096,51 +1093,61 @@ namespace Lab1484.Pages.DB
         }
 
 
-        public static void CreateHashedUser(User p)
+        public static bool CreateHashedUser(User p)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+
+                int userID;
+
+                using (SqlCommand cmdUserInsert = new SqlCommand())
+                {
+                    cmdUserInsert.Connection = Lab3DBConnection;
+                    cmdUserInsert.CommandText = @"
+                INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
+                VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
+                SELECT SCOPE_IDENTITY();";
+
+                    cmdUserInsert.Parameters.AddWithValue("@UserType", p.UserType);
+                    cmdUserInsert.Parameters.AddWithValue("@firstName", p.firstName);
+                    cmdUserInsert.Parameters.AddWithValue("@lastName", p.lastName);
+                    cmdUserInsert.Parameters.AddWithValue("@email", p.email);
+                    cmdUserInsert.Parameters.AddWithValue("@phoneNumber", p.phone);
+
+                    cmdUserInsert.Connection.Open();
+                    userID = Convert.ToInt32(cmdUserInsert.ExecuteScalar());
+                    cmdUserInsert.Connection.Close();
+                }
+
+                using (SqlConnection authConn = new SqlConnection(AuthConnString))
+                using (SqlCommand cmdNewHashed = new SqlCommand())
+                {
+                    cmdNewHashed.Connection = authConn;
+                    cmdNewHashed.CommandText = @"
+                INSERT INTO HashedCredentials (UserID, Username, Password)
+                VALUES (@UserID, @Username, @Password);";
+
+                    cmdNewHashed.Parameters.AddWithValue("@UserID", userID);
+                    cmdNewHashed.Parameters.AddWithValue("@Username", p.username);
+                    cmdNewHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.password));
+
+                    authConn.Open();
+                    cmdNewHashed.ExecuteNonQuery();
+                    authConn.Close();
+                }
+
+                return true;
             }
-
-
-
-            string userInsertQuery = @"
-             INSERT INTO Users (userType, firstName, lastName, email, phoneNumber)
-             VALUES (@UserType, @firstName, @lastName, @email, @phoneNumber);
-
-             SELECT SCOPE_IDENTITY();";
-
-            SqlCommand cmdUserInsert = new SqlCommand();
-            cmdUserInsert.Connection = Lab3DBConnection;
-            cmdUserInsert.CommandText = userInsertQuery;
-
-            cmdUserInsert.Parameters.AddWithValue("@UserType", p.UserType);
-            cmdUserInsert.Parameters.AddWithValue("@firstName", p.firstName);
-            cmdUserInsert.Parameters.AddWithValue("@lastName", p.lastName);
-            cmdUserInsert.Parameters.AddWithValue("@email", p.email);
-            cmdUserInsert.Parameters.AddWithValue("@phoneNumber", p.phone);
-
-            cmdUserInsert.Connection.Open();
-
-
-            int userID = Convert.ToInt32(cmdUserInsert.ExecuteScalar());
-
-            string newHashedCredsQuery = @"
-            INSERT INTO HashedCredentials (UserID,Username,Password)
-            VALUES (@UserID, @Username, @Password);";
-
-            SqlCommand cmdNewHashed = new SqlCommand();
-            cmdNewHashed.Connection = new SqlConnection(AuthConnString);
-            cmdNewHashed.CommandText = newHashedCredsQuery;
-            cmdNewHashed.Parameters.AddWithValue("@Username", p.username);
-            cmdNewHashed.Parameters.AddWithValue("@UserID", userID);
-            cmdNewHashed.Parameters.AddWithValue("@Password", PasswordHash.HashPassword(p.password));
-            cmdNewHashed.Connection.Open();
-
-            cmdNewHashed.ExecuteNonQuery();
-
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
+
 
 
         public static void UpdateHashedUser(UserUpdate p)
