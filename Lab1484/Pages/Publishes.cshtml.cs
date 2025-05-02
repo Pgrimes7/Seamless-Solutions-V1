@@ -32,9 +32,9 @@ namespace Lab1484.Pages
 
         }
 
-        public IActionResult OnPostCreate(Publish publish)
+        public async Task<IActionResult> OnPostCreate(Publish publish, IFormFile UploadFile)
         {
-            // Set ReferenceCount based on Status
+            
             switch (publish.Status?.ToLower())
             {
                 case "accepted":
@@ -50,10 +50,24 @@ namespace Lab1484.Pages
                     publish.ReferenceCount = 0;
                     break;
             }
+            if (UploadFile != null && UploadFile.Length > 0)
+            {
+                string uploadsFolder = Path.Combine("wwwroot", "uploads");
+                string fileName = Path.GetFileName(UploadFile.FileName);
+                string filePath = Path.Combine(uploadsFolder, fileName);
 
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await UploadFile.CopyToAsync(fileStream);
+                }
+
+                publish.Requirements += $" (Attached: {fileName})";
+                publish.FileName = fileName;
+            }
+
+           
             DBClass.InsertPublish(publish);
 
-            // Reload data to refresh the table immediately
             PublishList = DBClass.GetAllPublishes();
             Users = new List<User>();
             using (SqlDataReader reader = DBClass.AllUsersReader())
@@ -69,30 +83,9 @@ namespace Lab1484.Pages
                 }
             }
 
-            return Page(); // Stay on the same page and reload model data
+            return Page();  
+
+
         }
-        public IActionResult OnPostEditReference(int PublishID, int ReferenceCount)
-        {
-            DBClass.UpdateReferenceCount(PublishID, ReferenceCount);
-
-            // Reload updated data
-            PublishList = DBClass.GetAllPublishes();
-            Users = new();
-            using (SqlDataReader reader = DBClass.AllUsersReader())
-            {
-                while (reader.Read())
-                {
-                    Users.Add(new User
-                    {
-                        userID = (int)reader["userID"],
-                        firstName = reader["firstName"].ToString(),
-                        lastName = reader["lastName"].ToString()
-                    });
-                }
-            }
-
-            return Page();
-        }
-
     }
 }

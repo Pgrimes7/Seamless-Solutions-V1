@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http.Extensions;
 using System.Diagnostics.Eventing.Reader;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Lab1484.Pages
 {
@@ -18,7 +19,9 @@ namespace Lab1484.Pages
 
         public List<Project> ProjectList { get; set; }
         public List<Grant> GrantList { get; set; }
-        public List<ProjTask> TaskList { get; set; } = new List<ProjTask>();
+        public List<ProjTask> tasks { get; set; } = new List<ProjTask>();
+
+        public List<GrantTask> gtasks { get; set; } = new List<GrantTask>();
 
         [BindProperty]
         public Grant newGrant { get; set; } = new Grant();
@@ -51,21 +54,84 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Login");
             }
 
-            SqlDataReader taskReader = DBClass.TaskReader();
-            while (taskReader.Read())
+            if (DBClass.checkUserType(HttpContext) == 0)
             {
-                TaskList.Add(new ProjTask
+                //Read DB Tasks into tasks list
+                SqlDataReader taskReader = DBClass.TaskReader();
+                while (taskReader.Read())
                 {
-                    TaskID = Int32.Parse(taskReader["TaskID"].ToString()),
-                    //GrantID = Int32.Parse(taskReader["GrantID"].ToString()),
-                    ProjectID = Int32.Parse(taskReader["ProjectID"].ToString()),
-                    //UserID = Int32.Parse(taskReader["UserID"].ToString()),
-                    taskDescription = taskReader["taskDescription"].ToString(),
-                    //EmployeeName = taskReader["EmployeeName"].ToString(),
-                    ProjectName = taskReader["ProjectName"].ToString(),
-                    //grantName = taskReader["grantName"].ToString(),
-                    dueDate = taskReader.GetDateTime(taskReader.GetOrdinal("dueDate"))
-                });
+                    tasks.Add(new ProjTask
+                    {
+                        TaskID = Int32.Parse(taskReader["TaskID"].ToString()),
+                        ProjectID = Int32.Parse(taskReader["ProjectID"].ToString()),
+                        UserID = Int32.Parse(taskReader["UserID"].ToString()),
+                        UserName = taskReader["UserName"].ToString(),
+                        taskDescription = taskReader["taskDescription"].ToString(),
+                        ProjectName = taskReader["ProjectName"].ToString(),
+                        dueDate = taskReader.GetDateTime(taskReader.GetOrdinal("dueDate")),
+                        PTStatus = taskReader["PTStatus"].ToString()
+                    });
+                }
+            }
+            else
+            {
+                int CurrentUserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
+                SqlDataReader userTaskReader = DBClass.UserTaskReader(CurrentUserID);
+                while (userTaskReader.Read())
+                {
+                    tasks.Add(new ProjTask
+                    {
+                        TaskID = Int32.Parse(userTaskReader["TaskID"].ToString()),
+                        ProjectID = Int32.Parse(userTaskReader["ProjectID"].ToString()),
+                        UserID = Int32.Parse(userTaskReader["UserID"].ToString()),
+                        UserName = userTaskReader["UserName"].ToString(),
+                        taskDescription = userTaskReader["taskDescription"].ToString(),
+                        ProjectName = userTaskReader["ProjectName"].ToString(),
+                        dueDate = userTaskReader.GetDateTime(userTaskReader.GetOrdinal("dueDate")),
+                        PTStatus = userTaskReader["PTStatus"].ToString()
+                    });
+                }
+            }
+
+
+
+            if (DBClass.checkUserType(HttpContext) == 0)
+            {
+                //Read DB Tasks into tasks list
+                SqlDataReader grantTaskReader = DBClass.GrantTaskReader();
+                while (grantTaskReader.Read())
+                {
+                    gtasks.Add(new GrantTask
+                    {
+                        GTaskID = Int32.Parse(grantTaskReader["GTaskID"].ToString()),
+                        GrantID = Int32.Parse(grantTaskReader["GrantID"].ToString()),
+                        UserID = Int32.Parse(grantTaskReader["UserID"].ToString()),
+                        UserName = grantTaskReader["UserName"].ToString(),
+                        taskDescription = grantTaskReader["taskDescription"].ToString(),
+                        GrantName = grantTaskReader["grantName"].ToString(),
+                        dueDate = grantTaskReader.GetDateTime(grantTaskReader.GetOrdinal("dueDate")),
+                        GTStatus = grantTaskReader["GTStatus"].ToString()
+                    });
+                }
+            }
+            else
+            {
+                int CurrentUserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
+                SqlDataReader grantTaskReader = DBClass.UserGrantTaskReader(CurrentUserID);
+                while (grantTaskReader.Read())
+                {
+                    gtasks.Add(new GrantTask
+                    {
+                        GTaskID = Int32.Parse(grantTaskReader["GTaskID"].ToString()),
+                        GrantID = Int32.Parse(grantTaskReader["GrantID"].ToString()),
+                        UserID = Int32.Parse(grantTaskReader["UserID"].ToString()),
+                        UserName = grantTaskReader["UserName"].ToString(),
+                        taskDescription = grantTaskReader["taskDescription"].ToString(),
+                        GrantName = grantTaskReader["grantName"].ToString(),
+                        dueDate = grantTaskReader.GetDateTime(grantTaskReader.GetOrdinal("dueDate")),
+                        GTStatus = grantTaskReader["GTStatus"].ToString()
+                    });
+                }
             }
 
             SqlDataReader adminReader = DBClass.AdminReader();
@@ -249,21 +315,84 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Login");
             }
 
-            SqlDataReader taskReader = DBClass.TaskReader();
-            while (taskReader.Read())
+            if (DBClass.checkUserType(HttpContext) == 0)
             {
-                TaskList.Add(new ProjTask
+                //Read DB Tasks into tasks list
+                SqlDataReader taskReader = DBClass.TaskReader();
+                while (taskReader.Read())
                 {
-                    TaskID = Int32.Parse(taskReader["TaskID"].ToString()),
-                    //GrantID = Int32.Parse(taskReader["GrantID"].ToString()),
-                    ProjectID = Int32.Parse(taskReader["ProjectID"].ToString()),
-                    //UserID = Int32.Parse(taskReader["UserID"].ToString()),
-                    taskDescription = taskReader["taskDescription"].ToString(),
-                    //EmployeeName = taskReader["EmployeeName"].ToString(),
-                    ProjectName = taskReader["ProjectName"].ToString(),
-                    //grantName = taskReader["grantName"].ToString(),
-                    dueDate = taskReader.GetDateTime(taskReader.GetOrdinal("dueDate"))
-                });
+                    tasks.Add(new ProjTask
+                    {
+                        TaskID = Int32.Parse(taskReader["TaskID"].ToString()),
+                        ProjectID = Int32.Parse(taskReader["ProjectID"].ToString()),
+                        UserID = Int32.Parse(taskReader["UserID"].ToString()),
+                        UserName = taskReader["UserName"].ToString(),
+                        taskDescription = taskReader["taskDescription"].ToString(),
+                        ProjectName = taskReader["ProjectName"].ToString(),
+                        dueDate = taskReader.GetDateTime(taskReader.GetOrdinal("dueDate")),
+                        PTStatus = taskReader["PTStatus"].ToString()
+                    });
+                }
+            }
+            else
+            {
+                int CurrentUserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
+                SqlDataReader userTaskReader = DBClass.UserTaskReader(CurrentUserID);
+                while (userTaskReader.Read())
+                {
+                    tasks.Add(new ProjTask
+                    {
+                        TaskID = Int32.Parse(userTaskReader["TaskID"].ToString()),
+                        ProjectID = Int32.Parse(userTaskReader["ProjectID"].ToString()),
+                        UserID = Int32.Parse(userTaskReader["UserID"].ToString()),
+                        UserName = userTaskReader["UserName"].ToString(),
+                        taskDescription = userTaskReader["taskDescription"].ToString(),
+                        ProjectName = userTaskReader["ProjectName"].ToString(),
+                        dueDate = userTaskReader.GetDateTime(userTaskReader.GetOrdinal("dueDate")),
+                        PTStatus = userTaskReader["PTStatus"].ToString()
+                    });
+                }
+            }
+
+
+
+            if (DBClass.checkUserType(HttpContext) == 0)
+            {
+                //Read DB Tasks into tasks list
+                SqlDataReader grantTaskReader = DBClass.GrantTaskReader();
+                while (grantTaskReader.Read())
+                {
+                    gtasks.Add(new GrantTask
+                    {
+                        GTaskID = Int32.Parse(grantTaskReader["GTaskID"].ToString()),
+                        GrantID = Int32.Parse(grantTaskReader["GrantID"].ToString()),
+                        UserID = Int32.Parse(grantTaskReader["UserID"].ToString()),
+                        UserName = grantTaskReader["UserName"].ToString(),
+                        taskDescription = grantTaskReader["taskDescription"].ToString(),
+                        GrantName = grantTaskReader["grantName"].ToString(),
+                        dueDate = grantTaskReader.GetDateTime(grantTaskReader.GetOrdinal("dueDate")),
+                        GTStatus = grantTaskReader["GTStatus"].ToString()
+                    });
+                }
+            }
+            else
+            {
+                int CurrentUserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
+                SqlDataReader grantTaskReader = DBClass.UserGrantTaskReader(CurrentUserID);
+                while (grantTaskReader.Read())
+                {
+                    gtasks.Add(new GrantTask
+                    {
+                        GTaskID = Int32.Parse(grantTaskReader["GTaskID"].ToString()),
+                        GrantID = Int32.Parse(grantTaskReader["GrantID"].ToString()),
+                        UserID = Int32.Parse(grantTaskReader["UserID"].ToString()),
+                        UserName = grantTaskReader["UserName"].ToString(),
+                        taskDescription = grantTaskReader["taskDescription"].ToString(),
+                        GrantName = grantTaskReader["grantName"].ToString(),
+                        dueDate = grantTaskReader.GetDateTime(grantTaskReader.GetOrdinal("dueDate")),
+                        GTStatus = grantTaskReader["GTStatus"].ToString()
+                    });
+                }
             }
 
             SqlDataReader adminReader = DBClass.AdminReader();

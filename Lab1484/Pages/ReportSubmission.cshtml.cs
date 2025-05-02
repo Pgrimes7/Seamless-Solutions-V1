@@ -28,17 +28,21 @@ namespace Lab1484.Pages
         public List<Project> ProjectList { get; set; }
         [BindProperty]
         public List<string> SelectedGrantOrProjectID { get; set; }
-
+        [BindProperty]
+        public List<PerformanceReport> PerformanceReportList { get; set; }
         public User CurrentUserID { get; set; }
-
+        [BindProperty]
+        public PerformanceReport PerformanceReport { get; set; }
 
         public ReportSubmissionModel()
         {
             ProjectList = new List<Project>();
             GrantList = new List<Grant>();
             ReportList = new List<Report>();
+            PerformanceReportList = new List<PerformanceReport>();
             SelectedGrantOrProjectID = new List<string>();
             CurrentUserID = new User();
+            PerformanceReport = new PerformanceReport();
         }
 
 
@@ -58,8 +62,8 @@ namespace Lab1484.Pages
                 ReportList.Add(new Report
                 {
                     ReportName = reportReader["ReportName"].ToString(),
-                    ReportDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate"))
-
+                    ReportDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate")),
+                    AuthorName = reportReader["AuthorName"].ToString()
 
 
                 });
@@ -96,15 +100,61 @@ namespace Lab1484.Pages
                 });
             }
 
+            //Performance report reader
+            SqlDataReader performanceReportReader = DBClass.AllPerformanceReportReader();
+            while(performanceReportReader.Read())
+            {
+                PerformanceReportList.Add(new PerformanceReport
+                {
+                    PerformanceReportName = performanceReportReader["ReportName"].ToString(),
+                    PerformanceReportID = performanceReportReader.GetInt32(performanceReportReader.GetOrdinal("PerformanceReportID")),
+                    ReportID = performanceReportReader.GetInt32(performanceReportReader.GetOrdinal("ReportID")),
+                    Description = performanceReportReader["Description"]?.ToString(),
+                    AuthorName = performanceReportReader["AuthorName"]?.ToString(),
+                    StartDate = performanceReportReader.GetDateTime(performanceReportReader.GetOrdinal("StartDate")),
+                    EndDate = performanceReportReader.GetDateTime(performanceReportReader.GetOrdinal("EndDate")),
+                    
+                });
+            }
+
+
 
             return Page();
         }
 
 
+        public async Task<IActionResult> OnPostCreatePerformanceReportAsync()
+        {
+            int UserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
+            CurrentUserID = DBClass.GetUserInfoById(UserID);
+
+            PerformanceReport.AuthorName = $"{CurrentUserID.firstName} {CurrentUserID.lastName}";
+            PerformanceReport.StartDate = PerformanceReport.StartDate;
+            PerformanceReport.EndDate = PerformanceReport.EndDate;
+
+            // Get the aggregated data
+            var reportData = DBClass.GetPerformanceReportData(PerformanceReport.StartDate, PerformanceReport.EndDate);
+
+            // Populate the PerformanceReport object
+            PerformanceReport.Funding = reportData.Funding;
+            PerformanceReport.ProjectsCompleted = reportData.ProjectsCompleted;
+            PerformanceReport.GrantsArchived = reportData.GrantsArchived;
+            PerformanceReport.ActiveGrants = reportData.ActiveGrants;
+            PerformanceReport.GrantsInProgress = reportData.GrantsInProgress;
+            PerformanceReport.GrantsSubmitted = reportData.GrantsSubmitted;
+            PerformanceReport.ProjectsWIP = reportData.ProjectsWIP;
+            PerformanceReport.PapersPublished = reportData.PapersPublished;
+
+            // Insert the performance report into the database
+            DBClass.InsertPerformanceReport(PerformanceReport);
+
+            return RedirectToPage("/ReportSubmission");
+        }
 
 
 
-        public async Task<IActionResult> OnPostAsync()
+
+        public async Task<IActionResult> OnPostProgressReportAsync()
         {
             if (SelectedGrantOrProjectID == null || !SelectedGrantOrProjectID.Any())
             {
@@ -117,12 +167,10 @@ namespace Lab1484.Pages
             }
 
             int UserID = Convert.ToInt32(HttpContext.Session.GetString("userID"));
-            Console.WriteLine($"Debug: UserID from session = {UserID}");
 
             CurrentUserID = DBClass.GetUserInfoById(UserID);
 
             string authorName = string.Concat(CurrentUserID.firstName, " ", CurrentUserID.lastName);
-            Console.WriteLine($"Debug: AuthorName = {CurrentUserID.lastName}");
 
             var report = new Report
             {
@@ -155,7 +203,6 @@ namespace Lab1484.Pages
                     }
                 }
 
-                Console.WriteLine($"Subject {i}: Title = {SubjectTitle[i]}, GrantID = {grantID}, ProjectID = {projectID}");
 
                 subjects.Add(new ReportSubject
                 {
@@ -166,11 +213,7 @@ namespace Lab1484.Pages
                 });
             }
 
-            Console.WriteLine("SelectedGrantOrProjectID values:");
-            foreach (var id in SelectedGrantOrProjectID)
-            {
-                Console.WriteLine(id);
-            }
+         
 
             DBClass.InsertReport(report, new List<int>(), new List<int>(), subjects);
 
