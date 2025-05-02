@@ -1622,7 +1622,7 @@ namespace Lab1484.Pages.DB
 
             // Corrected SQL query
             cmdReportRead.CommandText = @"
-        SELECT PerformanceReport.*, Reports.ReportName 
+        SELECT PerformanceReport.*, Reports.ReportName, Reports.AuthorName
         FROM PerformanceReport 
         JOIN Reports ON PerformanceReport.ReportID = Reports.ReportID;";
 
@@ -1965,14 +1965,12 @@ namespace Lab1484.Pages.DB
             }
         }
 
-            Lab3DBConnection.Open();
-            cmd.ExecuteNonQuery();
-            Lab3DBConnection.Close();
+          
         }
 
 
 
     }
-}
+
 
 
