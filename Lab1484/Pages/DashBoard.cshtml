@@ -98,12 +98,12 @@
                     <div class="row">
 
                         <!--donut chart column-->
-                        <div class="col-5">
+                        <div class="col-3">
                             <canvas id="grantsChart"></canvas>
                         </div> <!--close donut chart column-->
                         <!--calendar column-->
 
-                        <div class="col-4 border-light-subtle rounded p-3">
+                        <div class="col-9 border-light-subtle rounded p-3">
                             <h4></h4>
                             <div id="calendar"></div>
                         </div> <!--close calendar column-->
@@ -409,7 +409,7 @@
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            height: 500,
+            height: 450,
             eventDisplay: 'block', 
             eventDidMount: function (info) {
                 info.el.setAttribute('title', info.event.title);
@@ -450,7 +450,7 @@
                     }
                 }
 
-                @foreach (var task in Model.TaskList)
+                @foreach (var task in Model.tasks)
                 {
                     if (task.dueDate.HasValue)
                     {
@@ -462,9 +462,30 @@
                                 dueDate: "@task.dueDate.Value.ToShortDateString()",
                                 description: "@task.taskDescription",
                                 relatedProject: "@task.ProjectName",
-                                relatedProjectID: "@task.ProjectID" 
+                                relatedProjectID: "@task.ProjectID",
+                                relatedUser: "@task.UserName"
                             },
                             color: "#BA55D3"
+                        },</text>
+                    }
+                }
+
+                @foreach (var gtask in Model.gtasks)
+                {
+                    if (gtask.dueDate.HasValue)
+                    {
+                        <text>{
+                            title: "@gtask.taskDescription ",
+                            start: "@gtask.dueDate.Value.ToString("yyyy-MM-dd")",
+                            extendedProps: {
+                                type: "GTask",
+                                dueDate: "@gtask.dueDate.Value.ToShortDateString()",
+                                description: "@gtask.taskDescription",
+                                relatedGrant: "@gtask.GrantName",
+                                relatedGrantID: "@gtask.GrantID",
+                                relatedUser: "@gtask.UserName"
+                            },
+                                color: "#D42298"
                         },</text>
                     }
                 }
@@ -486,14 +507,29 @@
                 else if (event.extendedProps.type === "Task") {
                     var relatedProjectLink = '';
                     if (event.extendedProps.relatedProject && event.extendedProps.relatedProjectID) {
-                        relatedProjectLink = `<b>Related Project:</b> <a href="/UpdateProject?id=${event.extendedProps.relatedProjectID}" class="link-primary">${event.extendedProps.relatedProject}</a><br/>`;
+                        relatedProjectLink = `<b>Related Project:</b> ${event.extendedProps.relatedProject}</a><br/>`;
                     }
 
                     details = `
-                        <b>Type:</b> Task<br/>
+                        <b>Type:</b> Project Task<br/>
+						<b>Assigned User:</b> ${event.extendedProps.relatedUser}<br/>
                         <b>Description:</b> ${event.extendedProps.description}<br/>
                         <b>Due Date:</b> ${event.extendedProps.dueDate}<br/>
                         ${relatedProjectLink}
+                    `;
+                }
+                else if (event.extendedProps.type === "GTask") {
+                    var relatedGrantLink = '';
+                    if (event.extendedProps.relatedGrant && event.extendedProps.relatedGrantID) {
+                        relatedGrantLink = `<b>Related Grant:</b> ${event.extendedProps.relatedGrant}</a><br/>`;
+                    }
+
+                    details = `
+                        <b>Type:</b> Grant Task<br/>
+                        <b>Assigned User:</b> ${event.extendedProps.relatedUser}<br/>
+                        <b>Description:</b> ${event.extendedProps.description}<br/>
+                        <b>Due Date:</b> ${event.extendedProps.dueDate}<br/>
+                        ${relatedGrantLink}
                     `;
                 }
 

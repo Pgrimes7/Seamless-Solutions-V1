@@ -25,6 +25,11 @@ namespace Lab1484.Pages
 
         public List<UserDisplay> Users { get; set; } = new();
 
+        [BindProperty]
+        public string? ProfileImagePath { get; set; } = "/images/default.png";
+
+       
+
         public IActionResult OnGet()
         {
             string currentUser = HttpContext.Session.GetString("username");
@@ -37,6 +42,21 @@ namespace Lab1484.Pages
             if (userType != 0) 
             {
                 return RedirectToPage("/Dashboard");
+            }
+
+            string? currentUserIdStr = HttpContext.Session.GetString("userID");
+            if (int.TryParse(currentUserIdStr, out int currentUserId))
+            {
+                NewUser = DBClass.GetUserInfoById(currentUserId);
+
+                if (!string.IsNullOrEmpty(NewUser?.ProfileImageFileName))
+                {
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", NewUser.ProfileImageFileName);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        ProfileImagePath = $"/images/{NewUser.ProfileImageFileName}";
+                    }
+                }
             }
 
             SqlCommand cmd = new SqlCommand();
@@ -58,19 +78,19 @@ namespace Lab1484.Pages
 
             if (UserType.HasValue)
             {
-                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber FROM Lab3.dbo.Users WHERE Users.UserType = @UserType ORDER BY Users.UserID;" ;
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber, Users.ProfileImageFileName FROM Lab3.dbo.Users WHERE Users.UserType = @UserType ORDER BY Users.UserID;" ;
                 cmd.Parameters.AddWithValue("@UserType", UserType.Value);
             }
             
 
             else if (!string.IsNullOrEmpty(SearchQuery))
             {
-                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber FROM Lab3.dbo.Users WHERE Users.firstName LIKE @SearchQuery OR Users.lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR Users.phoneNumber LIKE @SearchQuery ORDER BY Users.UserID;";
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber, Users.ProfileImageFileName FROM Lab3.dbo.Users WHERE Users.firstName LIKE @SearchQuery OR Users.lastName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR email LIKE @SearchQuery OR Users.phoneNumber LIKE @SearchQuery ORDER BY Users.UserID;";
                 cmd.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
             }
             else
             {
-                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber FROM Lab3.dbo.Users ORDER BY Users.UserID;";
+                cmd.CommandText = "SELECT Users.UserID, Users.userType, Concat(Users.firstName, ' ', Users.lastName) AS UsersName, Users.email, Users.phoneNumber, Users.ProfileImageFileName FROM Lab3.dbo.Users ORDER BY Users.UserID;";
             }
 
             SqlDataReader reader = cmd.ExecuteReader();
@@ -99,6 +119,7 @@ namespace Lab1484.Pages
 
                     Email = reader.GetString(3),
                     Phone = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    ProfileImageFileName = reader.IsDBNull(5) ? "" : reader.GetString(5)
 
                 });
             }
@@ -130,6 +151,8 @@ namespace Lab1484.Pages
             public string Username { get; set;}
             [BindProperty]
             public string Password { get; set; }
+            [BindProperty]
+            public string ProfileImageFileName { get; set; }
         }
 
 

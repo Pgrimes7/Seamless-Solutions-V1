@@ -26,12 +26,12 @@ namespace Lab1484.Pages.DB
          //Connection String - How to find and connect to DB - Uncomment when making local changes
         private static readonly String? Lab3DBConnString ="Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-       // private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-         //   "Database=Lab3;" +
-         //   "User Id=capstoneadmin;" +
-         //   "Password=Seamless123!@#;" +
-           // "Encrypt=True;" +
-           // "TrustServerCertificate=True;";
+        //private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+        //    "Database=Lab3;" +
+        //    "User Id=capstoneadmin;" +
+        //    "Password=Seamless123!@#;" +
+        //    "Encrypt=True;" +
+        //    "TrustServerCertificate=True;";
 
 
         // A second connection String - Uncomment when making local changes
@@ -39,11 +39,11 @@ namespace Lab1484.Pages.DB
         private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
         //private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-         //   "Database=AUTH;" +
+        //    "Database=AUTH;" +
         //    "User Id=capstoneadmin;" +
-          //  "Password=Seamless123!@#;" +
-         //   "Encrypt=True;" +
-         //   "TrustServerCertificate=True;";
+        //    "Password=Seamless123!@#;" +
+        //    "Encrypt=True;" +
+        //    "TrustServerCertificate=True;";
 
         //Connection Methods:
 
@@ -148,6 +148,30 @@ namespace Lab1484.Pages.DB
             cmdProjectRead.Connection.Close();
         }
 
+        //Task Reader with UserID
+        public static SqlDataReader UserTaskReader(int UserID)
+        {
+            SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdProjectRead.Connection = Lab3DBConnection;
+            cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdProjectRead.CommandText = "SELECT ProjTasks.*, Project.ProjectName, CONCAT(Users.FirstName, ' ', Users.LastName) AS 'UserName' " +
+                "FROM ProjTasks " +
+                "JOIN Project ON Project.ProjectID = ProjTasks.ProjectID " +
+                "JOIN Users ON Users.UserID = ProjTasks.UserID " +
+                "WHERE ProjTasks.UserID = @UserID " +
+                "ORDER BY CASE WHEN PTStatus = 'Incomplete' THEN 1 WHEN PTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
+            cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
+            cmdProjectRead.Parameters.AddWithValue("@UserID", UserID);
+            SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
+
+            return tempReader;
+            cmdProjectRead.Connection.Close();
+        }
+
         //Insert Task
         public static void InsertTask(ProjTask t)
         {
@@ -210,6 +234,30 @@ namespace Lab1484.Pages.DB
 
             return tempReader;
             cmdGrantTaskRead.Connection.Close();
+        }
+
+        //Grant Task Reader with UserID
+        public static SqlDataReader UserGrantTaskReader(int UserID)
+        {
+            SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdProjectRead.Connection = Lab3DBConnection;
+            cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdProjectRead.CommandText = "SELECT GrantTasks.*, Grants.grantName, CONCAT(Users.FirstName, ' ', Users.LastName) AS 'UserName' " +
+                "FROM GrantTasks " +
+                "JOIN Grants ON Grants.GrantID = GrantTasks.GrantID " +
+                "JOIN Users ON Users.UserID = GrantTasks.UserID " +
+                "WHERE GrantTasks.UserID = @UserID " +
+                "ORDER BY CASE WHEN GTStatus = 'Incomplete' THEN 1 WHEN GTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
+            cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
+            cmdProjectRead.Parameters.AddWithValue("@UserID", UserID);
+            SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
+
+            return tempReader;
+            cmdProjectRead.Connection.Close();
         }
 
         //Insert  GrantTask
@@ -1917,7 +1965,11 @@ namespace Lab1484.Pages.DB
             }
         }
 
-        
+            Lab3DBConnection.Open();
+            cmd.ExecuteNonQuery();
+            Lab3DBConnection.Close();
+        }
+
 
 
     }
