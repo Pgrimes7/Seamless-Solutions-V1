@@ -26,29 +26,35 @@ namespace Lab1484.Pages
 
         public IActionResult OnGet()
         {
-            var currentUser = HttpContext.Session.GetString("username");
+            currentUser = HttpContext.Session.GetString("username");
             if (string.IsNullOrEmpty(currentUser))
             {
                 return RedirectToPage("/Login");
             }
 
-            // Retrieve messages for the current user
-            var messages = DBClass.GetReceivedMessages(currentUser);
+            // Get all messages involving the current user (sent or received)
+            var allMessages = DBClass.GetAllMessagesForUser(currentUser);
 
-            // Calculate unread messages count
-            UnreadMessagesCount = messages.Count(m => m.IsRead == 0);
+            // Group by the conversation partner
+            Messages = allMessages
+                .GroupBy(m => m.Sender == currentUser ? m.Receiver : m.Sender)
+                .Select(g => g.OrderByDescending(m => m.SentDate).First()) // most recent per conversation
+                .OrderByDescending(m => m.SentDate) // sort all by date
+                .ToList();
+
+            UnreadMessagesCount = allMessages.Count(m => m.Receiver == currentUser && m.IsRead == 0);
 
             return Page();
         }
+
 
         public IActionResult OnPostMarkAsRead(int messageId)
         {
             DBClass.MarkMessageAsRead(messageId);
 
-            // Refresh counts after marking as read
             currentUser = HttpContext.Session.GetString("username");
-            UnreadMessagesCount = DBClass.GetUnreadMessagesCount(currentUser);
             Messages = DBClass.GetReceivedMessages(currentUser);
+            UnreadMessagesCount = Messages.Count(m => m.IsRead == 0);
 
             return Page();
         }

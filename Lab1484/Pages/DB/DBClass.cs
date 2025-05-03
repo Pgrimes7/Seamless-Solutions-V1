@@ -330,6 +330,28 @@ namespace Lab1484.Pages.DB
             cmdSpecGrantRead.Connection.Close();
         }
 
+        //Read one project
+        public static SqlDataReader SpecProjectReader(int ProjectID)
+        {
+            SqlCommand cmdSpecProjectRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdSpecProjectRead.Connection = Lab3DBConnection;
+            cmdSpecProjectRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdSpecProjectRead.CommandText = "Select Project.*, Concat(Users.firstName, ' ', Users.lastName) AS AdminName, Users.email AS AdminEmail " +
+                    "from Project " +
+                    "join Users ON Users.UserID = Project.ProjectAdminID " +
+                    "where Project.ProjectID = @ProjectID;";
+            cmdSpecProjectRead.Connection.Open(); // Open connection here, close in Model!
+            cmdSpecProjectRead.Parameters.AddWithValue("@ProjectID", ProjectID);
+            SqlDataReader tempReader = cmdSpecProjectRead.ExecuteReader();
+
+            return tempReader;
+            cmdSpecProjectRead.Connection.Close();
+        }
+
         //Insert  GrantTask
         public static bool InsertGrantTask(GrantTask g)
         {
