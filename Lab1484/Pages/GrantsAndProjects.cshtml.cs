@@ -468,7 +468,7 @@ namespace Lab1484.Pages
 
             DBClass.Lab3DBConnection.Close();
 
-            return Page();
+            return RedirectToPage("/GrantsAndProjects", null, null, "profile-tab-pane");
         }
         public IActionResult OnPostUpdateGrant()
         {
