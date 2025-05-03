@@ -133,6 +133,39 @@
 
                 <!--main content div-->
                 <div class="col py-3">
+                    @if (Model.CreateGrantTaskSuccess != null)
+                    {
+                        <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                            @Model.CreateGrantTaskSuccess
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (Model.CreateGrantTaskFailure != null)
+                    {
+                        <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @Model.CreateGrantTaskFailure
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (Model.CreateProjTaskSuccess != null)
+                    {
+                        <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                            @Model.CreateProjTaskSuccess
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (Model.CreateProjTaskFailure != null)
+                    {
+                        <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @Model.CreateProjTaskFailure
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+
+
+
                     <h1>Tasks for Grants and Projects</h1>
 
                     <!--tabs-->
@@ -430,6 +463,30 @@
             document.getElementById('floatingGrantTaskDesc').value = "Create a progress report for the REDI Research Support Center Grant";
         });
     </script>
+
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
+    </script>
+
 
 
 </body>

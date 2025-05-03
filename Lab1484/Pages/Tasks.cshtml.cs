@@ -25,6 +25,18 @@ namespace Lab1484.Pages
         [BindProperty]
         public GrantTask NewGrantTask { get; set; } = new GrantTask();
 
+        [TempData]
+        public string? CreateGrantTaskSuccess { get; set; }
+
+        [TempData]
+        public string? CreateGrantTaskFailure { get; set; }
+
+        [TempData]
+        public string? CreateProjTaskSuccess { get; set; }
+
+        [TempData]
+        public string? CreateProjTaskFailure { get; set; }
+
         public IActionResult OnGet()
         {
             //Check to see if the user is logged in
@@ -169,8 +181,25 @@ namespace Lab1484.Pages
         {
             if (!string.IsNullOrWhiteSpace(NewGrantTask.taskDescription))
             {
-                DBClass.InsertGrantTask(NewGrantTask);
+                bool success = DBClass.InsertGrantTask(NewGrantTask);
+
+                if (success)
+                {
+                    CreateProjTaskSuccess = "Note was successfully added.";
+
+                }
+
+                else
+                {
+                    CreateProjTaskFailure = "Error: Note could not be added.";
+                }
             }
+            else
+            {
+                CreateGrantTaskFailure = "Error: Note could not be added.";
+            }
+
+
             return RedirectToPage("/Tasks");
         }
 
@@ -178,10 +207,30 @@ namespace Lab1484.Pages
         {
             if (!string.IsNullOrWhiteSpace(NewTask.taskDescription))
             {
-                DBClass.InsertTask(NewTask);
+                bool success = DBClass.InsertTask(NewTask);
+
+                if (success)
+                {
+                    CreateProjTaskSuccess = "Note was successfully added.";
+                   
+                }
+
+                else
+                {
+                    CreateProjTaskFailure = "Error: Note could not be added.";
+                }
             }
+            
+
+
+            else
+            {
+                CreateGrantTaskFailure = "Error: Note could not be added.";
+            }
+        
             return RedirectToPage("/Tasks", null, null, "profile-tab-pane");
         }
+
 
         public IActionResult OnPostCompleteGrantTask(int GTaskID)
         {
