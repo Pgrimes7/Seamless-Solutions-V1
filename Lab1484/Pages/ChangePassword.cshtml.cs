@@ -88,6 +88,8 @@ namespace Lab1484.Pages
         {
             UsernameConfirmed = true;
 
+            ConfirmedUsername = HttpContext.Session.GetString("username");
+
             if (NewPassword != ConfirmPassword)
             {
                 PasswordError = "Passwords do not match.";
