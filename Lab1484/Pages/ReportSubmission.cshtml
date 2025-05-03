@@ -307,12 +307,10 @@
                                 {
                                     <tr>
                                         <td>
-                                            <p>Debug: ReportID = @PerformanceReport.ReportID</p>
                                             <form method="post" asp-page-handler="SelectPerformanceReport">
                                                 <input type="hidden" name="ReportID" value="@PerformanceReport.ReportID" />
                                                 <button type="submit" class="btn btn-link p-0">@PerformanceReport.PerformanceReportName</button>
                                             </form>
-
                                         </td>
                                         <td>@PerformanceReport.Description</td>
                                         <td>@PerformanceReport.StartDate.ToString("MM/dd/yyyy")</td>
