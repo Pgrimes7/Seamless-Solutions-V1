@@ -267,13 +267,13 @@ CREATE TABLE PerformanceReport (
     EndDate DATE,
     Funding FLOAT,
     ProjectsCompleted INT,
-    GrantsArchived INT,
-    ActiveGrants INT,
-    GrantsInProgress INT,
     GrantsSubmitted INT,
     ProjectsWIP INT,
 PapersPublished INT,
-    BudgetUsed FLOAT,
+    BudgetUsed FLOAT, AwardedGrants INT DEFAULT 0,
+    ActiveGrants INT DEFAULT 0,
+    RejectedGrants INT DEFAULT 0,
+    ArchivedGrants INT DEFAULT 0;
 FOREIGN KEY (ReportID) REFERENCES Reports(ReportID) );
 
 
