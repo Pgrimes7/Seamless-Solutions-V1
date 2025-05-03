@@ -241,7 +241,12 @@
                                 <label for="reportContent" class="form-label">Content</label>
                                 <textarea class="form-control" id="reportContent" name="SubjectText" rows="4" required></textarea>
                             </div>
+                            <div id="additionalSections"></div>
+                            <button type="button" class="btn btn-secondary mb-3" id="addSectionButton" onclick="addSection()">Add Section</button>
+                            <div>
                             <button type="submit" class="btn btn-primary">Create Report</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
                         </form>
                     </div>
                 </div>
