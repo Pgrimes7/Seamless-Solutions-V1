@@ -35,9 +35,22 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Messages");
             }
 
+            // Retrieve messages between current user and the specified user
             Conversation = DBClass.GetConversationBetween(CurrentUser, WithUser);
+
+            // Mark unread messages as read
+            var unreadMessages = Conversation
+                .Where(m => m.Receiver == CurrentUser && m.IsRead == 0)
+                .ToList();
+
+            foreach (var message in unreadMessages)
+            {
+                DBClass.MarkMessageAsRead(message.MessageId);
+            }
+
             return Page();
         }
+
 
         public IActionResult OnPost()
         {

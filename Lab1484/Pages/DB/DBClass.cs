@@ -104,25 +104,38 @@ namespace Lab1484.Pages.DB
 
 
         //Update Project
-        public static void UpdateProject(Project p)
+        public static bool UpdateProject(Project p)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
+
+
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+                string sqlQuery = "UPDATE Project " +
+                    "SET projectStatus = @ProjectStatus, dueDate = @DueDate, projectName = @ProjectName " +
+                    "WHERE ProjectID = @ProjectID;";
+                SqlCommand cmdProjectUpdate = new SqlCommand();
+                cmdProjectUpdate.Connection = Lab3DBConnection;
+                cmdProjectUpdate.Connection.ConnectionString = Lab3DBConnString;
+                cmdProjectUpdate.CommandText = sqlQuery;
+                cmdProjectUpdate.Parameters.AddWithValue("@ProjectStatus", p.ProjectStatus);
+                cmdProjectUpdate.Parameters.AddWithValue("@DueDate", p.DateDue);
+                cmdProjectUpdate.Parameters.AddWithValue("@ProjectName", p.ProjectName);
+                cmdProjectUpdate.Parameters.AddWithValue("@ProjectID", p.ProjectID);
+                cmdProjectUpdate.Connection.Open();
+                cmdProjectUpdate.ExecuteNonQuery();
+
+                return true;
             }
-            string sqlQuery = "UPDATE Project " +
-                "SET projectStatus = @ProjectStatus, dueDate = @DueDate, projectName = @ProjectName " +
-                "WHERE ProjectID = @ProjectID;";
-            SqlCommand cmdProjectUpdate = new SqlCommand();
-            cmdProjectUpdate.Connection = Lab3DBConnection;
-            cmdProjectUpdate.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectUpdate.CommandText = sqlQuery;
-            cmdProjectUpdate.Parameters.AddWithValue("@ProjectStatus", p.ProjectStatus);
-            cmdProjectUpdate.Parameters.AddWithValue("@DueDate", p.DateDue);
-            cmdProjectUpdate.Parameters.AddWithValue("@ProjectName", p.ProjectName);
-            cmdProjectUpdate.Parameters.AddWithValue("@ProjectID", p.ProjectID);
-            cmdProjectUpdate.Connection.Open();
-            cmdProjectUpdate.ExecuteNonQuery();
+
+            catch 
+            {
+                return false;
+            }
+
         }
 
         //Task Reader
@@ -173,9 +186,13 @@ namespace Lab1484.Pages.DB
         }
 
         //Insert Task
-        public static void InsertTask(ProjTask t)
+        public static bool InsertTask(ProjTask t)
         {
+            try
             {
+
+
+
                 if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
                 {
                     Lab3DBConnection.Close();
@@ -193,6 +210,13 @@ namespace Lab1484.Pages.DB
                 cmdTaskInsert.Parameters.AddWithValue("@dueDate", t.dueDate);
                 cmdTaskInsert.Connection.Open();
                 cmdTaskInsert.ExecuteNonQuery();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 
@@ -306,26 +330,37 @@ namespace Lab1484.Pages.DB
         }
 
         //Insert  GrantTask
-        public static void InsertGrantTask(GrantTask g)
+        public static bool InsertGrantTask(GrantTask g)
         {
+            try
             {
-                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
-                {
-                    Lab3DBConnection.Close();
-                }
 
-                string sqlQuery = "INSERT INTO GrantTasks (GrantID, UserID, taskDescription, dueDate) VALUES (@GrantID, @UserID, @taskDescription, @dueDate);";
 
-                SqlCommand cmdGrantTaskInsert = new SqlCommand();
-                cmdGrantTaskInsert.Connection = Lab3DBConnection;
-                cmdGrantTaskInsert.Connection.ConnectionString = Lab3DBConnString;
-                cmdGrantTaskInsert.CommandText = sqlQuery;
-                cmdGrantTaskInsert.Parameters.AddWithValue("@GrantID", g.GrantID);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@UserID", g.UserID);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@taskDescription", g.taskDescription);
-                cmdGrantTaskInsert.Parameters.AddWithValue("@dueDate", g.dueDate);
-                cmdGrantTaskInsert.Connection.Open();
-                cmdGrantTaskInsert.ExecuteNonQuery();
+                
+                    if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                    {
+                        Lab3DBConnection.Close();
+                    }
+
+                    string sqlQuery = "INSERT INTO GrantTasks (GrantID, UserID, taskDescription, dueDate) VALUES (@GrantID, @UserID, @taskDescription, @dueDate);";
+
+                    SqlCommand cmdGrantTaskInsert = new SqlCommand();
+                    cmdGrantTaskInsert.Connection = Lab3DBConnection;
+                    cmdGrantTaskInsert.Connection.ConnectionString = Lab3DBConnString;
+                    cmdGrantTaskInsert.CommandText = sqlQuery;
+                    cmdGrantTaskInsert.Parameters.AddWithValue("@GrantID", g.GrantID);
+                    cmdGrantTaskInsert.Parameters.AddWithValue("@UserID", g.UserID);
+                    cmdGrantTaskInsert.Parameters.AddWithValue("@taskDescription", g.taskDescription);
+                    cmdGrantTaskInsert.Parameters.AddWithValue("@dueDate", g.dueDate);
+                    cmdGrantTaskInsert.Connection.Open();
+                    cmdGrantTaskInsert.ExecuteNonQuery();
+                
+
+                return true;
+            }
+            catch (Exception ex) 
+            {
+                return false;
             }
         }
 
@@ -1328,24 +1363,35 @@ namespace Lab1484.Pages.DB
             return Notes;
         }
 
-        public static void InsertNote(Note n)
+        public static bool InsertNote(Note n)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
+
+
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+                string sqlQuery = "INSERT INTO Notes (ProjectID, noteBody) VALUES (@ProjectID, @noteBody);";
+
+
+                SqlCommand cmdNoteInsert = new SqlCommand();
+                cmdNoteInsert.Connection = Lab3DBConnection;
+                cmdNoteInsert.Connection.ConnectionString = Lab3DBConnString;
+                cmdNoteInsert.CommandText = sqlQuery;
+                cmdNoteInsert.Parameters.AddWithValue("@ProjectID", n.ProjectID);
+                cmdNoteInsert.Parameters.AddWithValue("@noteBody", n.NoteBody);
+
+                cmdNoteInsert.Connection.Open();
+                cmdNoteInsert.ExecuteNonQuery();
+
+                return true;
             }
-            string sqlQuery = "INSERT INTO Notes (ProjectID, noteBody) VALUES (@ProjectID, @noteBody);";
-
-
-            SqlCommand cmdNoteInsert = new SqlCommand();
-            cmdNoteInsert.Connection = Lab3DBConnection;
-            cmdNoteInsert.Connection.ConnectionString = Lab3DBConnString;
-            cmdNoteInsert.CommandText = sqlQuery;
-            cmdNoteInsert.Parameters.AddWithValue("@ProjectID", n.ProjectID);
-            cmdNoteInsert.Parameters.AddWithValue("@noteBody", n.NoteBody);
-
-            cmdNoteInsert.Connection.Open();
-            cmdNoteInsert.ExecuteNonQuery();
+            catch 
+            { 
+                return false; 
+            }
         }
         public static int checkUserType(HttpContext httpContext)//Calls httpContext to pull UserID 
         {

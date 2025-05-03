@@ -15,6 +15,13 @@ namespace Lab1484.Pages
         [BindProperty]
         public string NewNoteBody { get; set; }
 
+        [TempData]
+        public string? CreateProjectNoteSuccess { get; set; }
+
+        [TempData]
+        public string? CreateProjectNoteFailure { get; set; }
+
+
         public IActionResult OnPost()
         {
             TempData["ProjectID"] = ProjectID;
@@ -41,7 +48,7 @@ namespace Lab1484.Pages
             return Page();
         }
 
-        public void OnPostAddNote()
+        public IActionResult OnPostAddNote()
         {
             //Add note when textbox isn't null
             if(!string.IsNullOrWhiteSpace(NewNoteBody))
@@ -51,10 +58,27 @@ namespace Lab1484.Pages
                     ProjectID = ProjectID,
                     NoteBody = NewNoteBody
                 };
-                DBClass.InsertNote(newNote);
+                bool success = DBClass.InsertNote(newNote);
+
+                if (success)
+                {
+                    CreateProjectNoteSuccess = "Note was successfully added.";
+                    return RedirectToPage("/GrantsAndProjects");
+                }
+
+                else
+                {
+                    CreateProjectNoteFailure = "Error: Note could not be added.";
+                }
+            }
+            else
+            {
+                CreateProjectNoteFailure = "Error: Note could not be added.";
             }
 
             Notes = DBClass.GetProjNotes(ProjectID);
+
+            return Page();
         }
     }
 }

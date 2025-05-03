@@ -68,5 +68,16 @@
     color: #6c757d;
 }
 
+.modal-backdrop {
+    --bs-modal-backdrop-bg: #000;
+    --bs-modal-backdrop-opacity: .5;
+    --bs-modal-backdrop-filter: none; /* ? no blur by default */
+    position: fixed;
+    inset: 0;
+    background-color: var(--bs-modal-backdrop-bg);
+    opacity: var(--bs-modal-backdrop-opacity);
+    backdrop-filter: var(--bs-modal-backdrop-filter);
+}
+
 
 
