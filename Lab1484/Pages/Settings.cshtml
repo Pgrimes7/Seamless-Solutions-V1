@@ -44,12 +44,15 @@
 
                 <div class="col py-3">
                     <div class="row">
-                        @if (!string.IsNullOrEmpty(Model.SuccessfulChange))
+                        @if (Model.PassChangeSuccess != null)
                         {
                             <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
-                                @Model.SuccessfulChange
+                                @Model.PassChangeSuccess
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         }
+                        
+
                         <h1 class="mb-3">Settings</h1>
                         <form method="post" enctype="multipart/form-data" asp-page-handler="UploadProfileImage">
                         <!--row for profile pic-->

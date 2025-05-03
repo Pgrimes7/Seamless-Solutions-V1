@@ -1306,25 +1306,34 @@ namespace Lab1484.Pages.DB
 
         public static bool UpdateHashedPassword(string userID, string newPassword)
         {
-            if (Lab3DBConnection.State == ConnectionState.Open)
-                Lab3DBConnection.Close();
+            try
+            {
 
-            string updatePasswordQuery = @"
+                if (Lab3DBConnection.State == ConnectionState.Open)
+                    Lab3DBConnection.Close();
+
+                string updatePasswordQuery = @"
         UPDATE HashedCredentials
         SET Password = @NewHashedPassword
         WHERE UserID = @userID;";
 
-            using (SqlCommand cmdUpdatePassword = new SqlCommand(updatePasswordQuery, new SqlConnection(AuthConnString)))
-            {
-                cmdUpdatePassword.Parameters.AddWithValue("@userID", userID);
-                cmdUpdatePassword.Parameters.AddWithValue("@NewHashedPassword", PasswordHash.HashPassword(newPassword));
+                using (SqlCommand cmdUpdatePassword = new SqlCommand(updatePasswordQuery, new SqlConnection(AuthConnString)))
+                {
+                    cmdUpdatePassword.Parameters.AddWithValue("@userID", userID);
+                    cmdUpdatePassword.Parameters.AddWithValue("@NewHashedPassword", PasswordHash.HashPassword(newPassword));
 
-                cmdUpdatePassword.Connection.Open();
-                int rowsAffected = cmdUpdatePassword.ExecuteNonQuery();
-                cmdUpdatePassword.Connection.Close();
+                    cmdUpdatePassword.Connection.Open();
+                    int rowsAffected = cmdUpdatePassword.ExecuteNonQuery();
+                    cmdUpdatePassword.Connection.Close();
 
-                return rowsAffected > 0; //true if password was updated
+                    return rowsAffected > 0; //true if password was updated
+                }
+                
+
             }
+
+            catch (Exception ex) 
+            { return false; }
         }
 
 

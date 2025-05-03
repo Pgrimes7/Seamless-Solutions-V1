@@ -18,7 +18,11 @@ namespace Lab1484.Pages
         public UserUpdate UpdateUser { get; set; } = new UserUpdate();
 
         [TempData]
-        public string SuccessfulChange { get; set; }
+        public string PassChangeSuccess { get; set; }
+
+        [TempData]
+        public string PassChangeFailure { get; set; }
+
 
         public IActionResult OnGet()
         {
