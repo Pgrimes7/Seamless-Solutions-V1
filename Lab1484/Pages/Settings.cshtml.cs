@@ -29,6 +29,21 @@ namespace Lab1484.Pages
         [TempData]
         public string UserUpdateFailure { get; set; }
 
+        [TempData]
+        public string AddPFPSuccess { get; set; }
+
+        [TempData]
+        public string AddPFPFailure { get; set; }
+
+
+        [TempData]
+        public string DeletePFPSuccess { get; set; }
+
+        [TempData]
+        public string DeletePFPFailure { get; set; }
+
+        
+
 
         public IActionResult OnGet()
         {
@@ -80,11 +95,23 @@ namespace Lab1484.Pages
                 if (user != null)
                 {
                     user.ProfileImageFileName = fileName;
-                    DBClass.AddProfileImage(user);
+                    bool success = DBClass.AddProfileImage(user);
+
+                    if (success)
+                    {
+                        AddPFPSuccess = "Profile picture successfully added.";
+                    }
+
+                    else
+                    {
+                        AddPFPFailure = "Error: Profile picture could not be added.";
+                    }
                 }
 
                 return RedirectToPage();
             }
+
+
 
             return Page();
         }
@@ -111,7 +138,17 @@ namespace Lab1484.Pages
 
                 //update the user's profile picture in the database to the default picture
                 user.ProfileImageFileName = "default.png";  //set to default image
-                DBClass.AddProfileImage(user);  //update the database
+                bool success = DBClass.AddProfileImage(user);  //update the database
+
+                if (success)
+                {
+                    DeletePFPSuccess = "Profile picture successfully removed.";
+                }
+
+                else
+                {
+                    DeletePFPFailure = "Error: Profile picture could not be removed.";
+                }
 
                 
                 return RedirectToPage();

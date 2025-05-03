@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using Lab1484.Pages.DataClasses;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -1680,77 +1681,87 @@ namespace Lab1484.Pages.DB
         }
 
 
-        public static void InsertReport(Report report, List<int> grantIDs, List<int> projectIDs, List<ReportSubject> subjects)
+        public static bool InsertReport(Report report, List<int> grantIDs, List<int> projectIDs, List<ReportSubject> subjects)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
-            }
-
-            using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
-            {
-                connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction())
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
                 {
-                    try
+                    Lab3DBConnection.Close();
+                }
+
+                using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
+                {
+                    connection.Open();
+                    using (SqlTransaction transaction = connection.BeginTransaction())
                     {
-                        // Insert Report
-                        string insertReportQuery = @"
+                        try
+                        {
+                            // Insert Report
+                            string insertReportQuery = @"
                     INSERT INTO Reports (ReportDate, ReportName, AuthorName) 
                     VALUES (@ReportDate, @ReportName, @AuthorName);
                     SELECT SCOPE_IDENTITY();";
 
-                        SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
-                        cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.ReportDate);
-                        cmdInsertReport.Parameters.AddWithValue("@ReportName", report.ReportName);
-                        Console.WriteLine("AuthorName: " + report.AuthorName);
-                        cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName);
+                            SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
+                            cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.ReportDate);
+                            cmdInsertReport.Parameters.AddWithValue("@ReportName", report.ReportName);
+                            Console.WriteLine("AuthorName: " + report.AuthorName);
+                            cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName);
 
-                        Console.WriteLine("Executing SQL Query: " + insertReportQuery);
-                        Console.WriteLine($"Parameters: ReportDate = {report.ReportDate}, ReportName = {report.ReportName}, AuthorName = {report.AuthorName}");
+                            Console.WriteLine("Executing SQL Query: " + insertReportQuery);
+                            Console.WriteLine($"Parameters: ReportDate = {report.ReportDate}, ReportName = {report.ReportName}, AuthorName = {report.AuthorName}");
 
-                        object result = cmdInsertReport.ExecuteScalar();
-                        if (result == null || result == DBNull.Value)
-                        {
-                            throw new Exception("Failed to retrieve the ReportID after inserting the report.");
-                        }
+                            object result = cmdInsertReport.ExecuteScalar();
+                            if (result == null || result == DBNull.Value)
+                            {
+                                throw new Exception("Failed to retrieve the ReportID after inserting the report.");
+                            }
 
-                        // Explicitly convert the result to an int
-                        int reportID = Convert.ToInt32(result);
-                        Console.WriteLine($"Report inserted successfully with ReportID = {reportID}");
+                            // Explicitly convert the result to an int
+                            int reportID = Convert.ToInt32(result);
+                            Console.WriteLine($"Report inserted successfully with ReportID = {reportID}");
 
-                        // Insert ReportSubjects
-                        string insertReportSubjectQuery = @"
+                            // Insert ReportSubjects
+                            string insertReportSubjectQuery = @"
                     INSERT INTO ReportSubjects (ReportID, SubjectTitle, SubjectText, GrantID, ProjectID) 
                     VALUES (@ReportID, @SubjectTitle, @SubjectText, @GrantID, @ProjectID);";
 
-                        foreach (var subject in subjects)
-                        {
-                            Console.WriteLine($"Inserting ReportSubject: ReportID = {reportID}, SubjectTitle = {subject.SubjectTitle}, SubjectText = {subject.SubjectText}, GrantID = {subject.GrantID}, ProjectID = {subject.ProjectID}");
+                            foreach (var subject in subjects)
+                            {
+                                Console.WriteLine($"Inserting ReportSubject: ReportID = {reportID}, SubjectTitle = {subject.SubjectTitle}, SubjectText = {subject.SubjectText}, GrantID = {subject.GrantID}, ProjectID = {subject.ProjectID}");
 
-                            SqlCommand cmdInsertReportSubject = new SqlCommand(insertReportSubjectQuery, connection, transaction);
-                            cmdInsertReportSubject.Parameters.AddWithValue("@ReportID", reportID);
-                            cmdInsertReportSubject.Parameters.AddWithValue("@SubjectTitle", subject.SubjectTitle);
-                            cmdInsertReportSubject.Parameters.AddWithValue("@SubjectText", subject.SubjectText);
-                            cmdInsertReportSubject.Parameters.AddWithValue("@GrantID", subject.GrantID.HasValue ? (object)subject.GrantID.Value : DBNull.Value);
-                            cmdInsertReportSubject.Parameters.AddWithValue("@ProjectID", subject.ProjectID.HasValue ? (object)subject.ProjectID.Value : DBNull.Value);
+                                SqlCommand cmdInsertReportSubject = new SqlCommand(insertReportSubjectQuery, connection, transaction);
+                                cmdInsertReportSubject.Parameters.AddWithValue("@ReportID", reportID);
+                                cmdInsertReportSubject.Parameters.AddWithValue("@SubjectTitle", subject.SubjectTitle);
+                                cmdInsertReportSubject.Parameters.AddWithValue("@SubjectText", subject.SubjectText);
+                                cmdInsertReportSubject.Parameters.AddWithValue("@GrantID", subject.GrantID.HasValue ? (object)subject.GrantID.Value : DBNull.Value);
+                                cmdInsertReportSubject.Parameters.AddWithValue("@ProjectID", subject.ProjectID.HasValue ? (object)subject.ProjectID.Value : DBNull.Value);
 
-                            Console.WriteLine($"SQL Parameters: GrantID = {cmdInsertReportSubject.Parameters["@GrantID"].Value}, ProjectID = {cmdInsertReportSubject.Parameters["@ProjectID"].Value}");
+                                Console.WriteLine($"SQL Parameters: GrantID = {cmdInsertReportSubject.Parameters["@GrantID"].Value}, ProjectID = {cmdInsertReportSubject.Parameters["@ProjectID"].Value}");
 
-                            cmdInsertReportSubject.ExecuteNonQuery();
+                                cmdInsertReportSubject.ExecuteNonQuery();
+                            }
+
+                            // Commit transaction
+                            transaction.Commit();
                         }
-
-                        // Commit transaction
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Rollback transaction if any error occurs
-                        transaction.Rollback();
-                        Console.WriteLine($"Error inserting report information: {ex.Message}");
-                        throw;
+                        catch (Exception ex)
+                        {
+                            // Rollback transaction if any error occurs
+                            transaction.Rollback();
+                            Console.WriteLine($"Error inserting report information: {ex.Message}");
+                            throw;
+                        }
                     }
                 }
+
+                return true;
+            }
+
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 
@@ -1983,49 +1994,51 @@ Reports.ReportDate,
 
 
 
-        public static void InsertPerformanceReport(PerformanceReport report)
+        public static bool  InsertPerformanceReport(PerformanceReport report)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
-            }
-
-            using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
-            {
-                connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction())
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
                 {
-                    try
+                    Lab3DBConnection.Close();
+                }
+
+                using (SqlConnection connection = new SqlConnection(Lab3DBConnString))
+                {
+                    connection.Open();
+                    using (SqlTransaction transaction = connection.BeginTransaction())
                     {
-                        // Step 1: Insert into Reports table (if ReportID is not null)
-                        int? reportID = null;
-                        if (report.ReportID == 0) // If no ReportID is provided, insert a new Report
+                        try
                         {
-                            string insertReportQuery = @"
+                            // Step 1: Insert into Reports table (if ReportID is not null)
+                            int? reportID = null;
+                            if (report.ReportID == 0) // If no ReportID is provided, insert a new Report
+                            {
+                                string insertReportQuery = @"
                         INSERT INTO Reports (ReportDate, ReportName, AuthorName) 
                         VALUES (@ReportDate, @ReportName, @AuthorName);
                         SELECT SCOPE_IDENTITY();";
 
-                            SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
-                            cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.StartDate); // Use StartDate as the report date
-                            cmdInsertReport.Parameters.AddWithValue("@ReportName", report.PerformanceReportName ?? "Performance Report");
-                            cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName ?? "Unknown");
+                                SqlCommand cmdInsertReport = new SqlCommand(insertReportQuery, connection, transaction);
+                                cmdInsertReport.Parameters.AddWithValue("@ReportDate", report.StartDate); // Use StartDate as the report date
+                                cmdInsertReport.Parameters.AddWithValue("@ReportName", report.PerformanceReportName ?? "Performance Report");
+                                cmdInsertReport.Parameters.AddWithValue("@AuthorName", report.AuthorName ?? "Unknown");
 
-                            object result = cmdInsertReport.ExecuteScalar();
-                            if (result == null || result == DBNull.Value)
+                                object result = cmdInsertReport.ExecuteScalar();
+                                if (result == null || result == DBNull.Value)
+                                {
+                                    throw new Exception("Failed to retrieve the ReportID after inserting into the Reports table.");
+                                }
+
+                                reportID = Convert.ToInt32(result);
+                            }
+                            else
                             {
-                                throw new Exception("Failed to retrieve the ReportID after inserting into the Reports table.");
+                                reportID = report.ReportID; // Use the provided ReportID
                             }
 
-                            reportID = Convert.ToInt32(result);
-                        }
-                        else
-                        {
-                            reportID = report.ReportID; // Use the provided ReportID
-                        }
-
-                        // Step 2: Insert into PerformanceReport table
-                        string insertPerformanceReportQuery = @"
+                            // Step 2: Insert into PerformanceReport table
+                            string insertPerformanceReportQuery = @"
                     INSERT INTO PerformanceReport 
                     (ReportID, Description, StartDate, EndDate, Funding, ProjectsCompleted, GrantsSubmitted, ProjectsWIP, PapersPublished, 
                      UnawardedFunding, PotentialGrants, AwardedGrants, ActiveGrants, RejectedGrants, ArchivedGrants)
@@ -2033,36 +2046,44 @@ Reports.ReportDate,
                     (@ReportID, @Description, @StartDate, @EndDate, @Funding, @ProjectsCompleted, @GrantsSubmitted, @ProjectsWIP, @PapersPublished, 
                      @UnawardedFunding, @PotentialGrants, @AwardedGrants, @ActiveGrants, @RejectedGrants, @ArchivedGrants);";
 
-                        SqlCommand cmdInsertPerformanceReport = new SqlCommand(insertPerformanceReportQuery, connection, transaction);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ReportID", reportID);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@Description", report.Description ?? (object)DBNull.Value);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@StartDate", report.StartDate);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@EndDate", report.EndDate);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@Funding", report.Funding);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ProjectsCompleted", report.ProjectsCompleted);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@GrantsSubmitted", report.GrantsSubmitted);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ProjectsWIP", report.ProjectsWIP);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@PapersPublished", report.PapersPublished);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@UnawardedFunding", report.UnawardedFunding);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@PotentialGrants", report.PotentialGrants);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@AwardedGrants", report.AwardedGrants);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ActiveGrants", report.ActiveGrants);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@RejectedGrants", report.RejectedGrants);
-                        cmdInsertPerformanceReport.Parameters.AddWithValue("@ArchivedGrants", report.ArchivedGrants);
+                            SqlCommand cmdInsertPerformanceReport = new SqlCommand(insertPerformanceReportQuery, connection, transaction);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@ReportID", reportID);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@Description", report.Description ?? (object)DBNull.Value);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@StartDate", report.StartDate);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@EndDate", report.EndDate);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@Funding", report.Funding);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@ProjectsCompleted", report.ProjectsCompleted);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@GrantsSubmitted", report.GrantsSubmitted);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@ProjectsWIP", report.ProjectsWIP);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@PapersPublished", report.PapersPublished);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@UnawardedFunding", report.UnawardedFunding);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@PotentialGrants", report.PotentialGrants);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@AwardedGrants", report.AwardedGrants);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@ActiveGrants", report.ActiveGrants);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@RejectedGrants", report.RejectedGrants);
+                            cmdInsertPerformanceReport.Parameters.AddWithValue("@ArchivedGrants", report.ArchivedGrants);
 
-                        cmdInsertPerformanceReport.ExecuteNonQuery();
+                            cmdInsertPerformanceReport.ExecuteNonQuery();
 
-                        // Commit the transaction
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Rollback the transaction in case of an error
-                        transaction.Rollback();
-                        Console.WriteLine($"Error inserting performance report: {ex.Message}");
-                        throw;
+                            // Commit the transaction
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Rollback the transaction in case of an error
+                            transaction.Rollback();
+                            Console.WriteLine($"Error inserting performance report: {ex.Message}");
+                            throw;
+                        }
                     }
                 }
+
+                return true;
+            }
+
+            catch ( Exception ex ) 
+            {
+                return false;
             }
         }
 
@@ -2249,17 +2270,29 @@ Reports.ReportDate,
 
 
 
-        public static void AddProfileImage(User user)
+        public static bool AddProfileImage(User user)
         {
-            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            try
             {
-                string query = "UPDATE Users SET ProfileImageFileName = @ProfileImageFileName WHERE userID = @userID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@ProfileImageFileName", user.ProfileImageFileName);
-                cmd.Parameters.AddWithValue("@userID", user.userID);
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
+
+                using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+                {
+                    string query = "UPDATE Users SET ProfileImageFileName = @ProfileImageFileName WHERE userID = @userID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@ProfileImageFileName", user.ProfileImageFileName);
+                    cmd.Parameters.AddWithValue("@userID", user.userID);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                return true;
+            }
+
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 
