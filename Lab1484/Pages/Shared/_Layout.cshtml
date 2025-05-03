@@ -2,6 +2,9 @@
 @using Lab1484.Pages.DB
 @using System.IO
 @using Lab1484.Pages.DataClasses
+@{
+    var userType = DBClass.checkUserType(ViewContext.HttpContext);
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -143,12 +146,15 @@
                                         <span class="ms-1 d-none d-sm-inline">Tasks</span>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/AllUsers", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
-                                        <i class="fa-solid fa-users"></i>
-                                        <span class="ms-1 d-none d-sm-inline">All Users</span>
-                                    </a>
-                                </li>
+                                    @if (userType == 0)
+                                    {
+                                    <li class="nav-item">
+                                        <a asp-page="/AllUsers" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/AllUsers", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                                            <i class="fa-solid fa-users"></i>
+                                            <span class="ms-1 d-none d-sm-inline">All Users</span>
+                                        </a>
+                                    </li>
+                                    }
                                 @*<li class="nav-item">
                                     <a asp-page="/UpdatePermission" class="nav-link link-body-emphasis px-0 align-middle @(string.Equals(currentPath, "/UpdatePermission", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
                                         <i class="fa-solid fa-user-gear"></i>
