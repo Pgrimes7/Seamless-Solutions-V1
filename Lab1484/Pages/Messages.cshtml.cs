@@ -33,15 +33,15 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Login");
             }
 
-            UnreadMessagesCount = DBClass.GetUnreadMessagesCount(currentUser);
+            // Retrieve only received messages
+            Messages = DBClass.GetReceivedMessages(currentUser);
 
-            // ?? FIX THIS TO CALL GetReceivedMessages() not all messages
-            Messages = DBClass.GetAllMessagesForUser(currentUser);
-
-
+            // Calculate unread messages count
+            UnreadMessagesCount = Messages.Count(m => m.IsRead == 0);
 
             return Page();
         }
+
         public IActionResult OnPostMarkAsRead(int messageId)
         {
             DBClass.MarkMessageAsRead(messageId);
