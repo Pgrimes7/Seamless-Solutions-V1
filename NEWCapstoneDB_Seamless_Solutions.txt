@@ -270,7 +270,7 @@ CREATE TABLE PerformanceReport (
     GrantsSubmitted INT,
     ProjectsWIP INT,
 PapersPublished INT,
-    BudgetUsed FLOAT, AwardedGrants INT DEFAULT 0,
+AwardedGrants INT DEFAULT 0,
     ActiveGrants INT DEFAULT 0,
     RejectedGrants INT DEFAULT 0,
     ArchivedGrants INT DEFAULT 0;
