@@ -24,6 +24,40 @@
     <div class="container mt-4">
         <h1 class="mb-4">Reports</h1>
 
+        @if (Model.ProgReportSuccess != null)
+        {
+            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                @Model.ProgReportSuccess
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (Model.ProgReportFailure != null)
+        {
+            <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                @Model.ProgReportFailure
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (Model.PerformReportSuccess != null)
+        {
+            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                @Model.PerformReportSuccess
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (Model.PerformReportFailure != null)
+        {
+            <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                @Model.PerformReportFailure
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+
+
+
+
         @if (Model.SelectedReportID > 0)
         {
             if (Model.SelectedReportType == "Progress")
@@ -424,6 +458,28 @@
 </body>
 </html>
 
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -477,6 +533,8 @@
         }
 
     </script>
+
+
 
 
   <script>
@@ -593,7 +651,9 @@
         }
     });
 </script>
+
 <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 

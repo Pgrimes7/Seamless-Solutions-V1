@@ -48,6 +48,22 @@ namespace Lab1484.Pages
         public string SelectedReportType { get; set; } // "Progress" or "Performance"
         [BindProperty]
         public PerformanceReport SelectedPerformanceReport { get; set; }
+
+        [TempData]
+        public string ProgReportSuccess { get; set; }
+
+        [TempData]
+        public string ProgReportFailure { get; set; }
+
+
+        [TempData]
+        public string PerformReportSuccess { get; set; }
+
+        [TempData]
+        public string PerformReportFailure { get; set; }
+
+        
+
         public static bool IsPageLoaded { get; private set; }
         [JSInvokable]
         public static void PageLoaded()
@@ -195,7 +211,17 @@ namespace Lab1484.Pages
             PerformanceReport.ArchivedGrants = reportData.ArchivedGrants;
 
             // Insert the performance report into the database
-            DBClass.InsertPerformanceReport(PerformanceReport);
+            bool success = DBClass.InsertPerformanceReport(PerformanceReport);
+
+            if (success)
+            {
+                PerformReportSuccess = "Performance report successfully added.";
+            }
+
+            else
+            {
+                PerformReportFailure = "Error: Performance report could not be added.";
+            }
 
             // Redirect back to the ReportSubmission page
             return RedirectToPage("/ReportSubmission");
@@ -266,7 +292,18 @@ namespace Lab1484.Pages
 
 
 
-            DBClass.InsertReport(report, new List<int>(), new List<int>(), subjects);
+            bool success = DBClass.InsertReport(report, new List<int>(), new List<int>(), subjects);
+
+            if (success)
+            {
+                ProgReportSuccess = "Progress report successfully added.";
+
+            }
+
+            else
+            {
+                ProgReportFailure = "Error: Report could not be added.";
+            }
 
             return RedirectToPage("/ReportSubmission");
         }
