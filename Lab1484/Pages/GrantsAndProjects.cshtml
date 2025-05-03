@@ -106,6 +106,22 @@
                         </div>
                     }
 
+                    @if (Model.CreateProjectNoteSuccess != null)
+                    {
+                        <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                            @Model.CreateProjectNoteSuccess
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (Model.CreateProjectNoteFailure != null)
+                    {
+                        <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @Model.CreateProjectNoteFailure
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+
                     <h1>Grants and Projects</h1>
 
                     <!--tabs-->

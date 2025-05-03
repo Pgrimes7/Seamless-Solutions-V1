@@ -1341,24 +1341,35 @@ namespace Lab1484.Pages.DB
             return Notes;
         }
 
-        public static void InsertNote(Note n)
+        public static bool InsertNote(Note n)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
+
+
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+                string sqlQuery = "INSERT INTO Notes (ProjectID, noteBody) VALUES (@ProjectID, @noteBody);";
+
+
+                SqlCommand cmdNoteInsert = new SqlCommand();
+                cmdNoteInsert.Connection = Lab3DBConnection;
+                cmdNoteInsert.Connection.ConnectionString = Lab3DBConnString;
+                cmdNoteInsert.CommandText = sqlQuery;
+                cmdNoteInsert.Parameters.AddWithValue("@ProjectID", n.ProjectID);
+                cmdNoteInsert.Parameters.AddWithValue("@noteBody", n.NoteBody);
+
+                cmdNoteInsert.Connection.Open();
+                cmdNoteInsert.ExecuteNonQuery();
+
+                return true;
             }
-            string sqlQuery = "INSERT INTO Notes (ProjectID, noteBody) VALUES (@ProjectID, @noteBody);";
-
-
-            SqlCommand cmdNoteInsert = new SqlCommand();
-            cmdNoteInsert.Connection = Lab3DBConnection;
-            cmdNoteInsert.Connection.ConnectionString = Lab3DBConnString;
-            cmdNoteInsert.CommandText = sqlQuery;
-            cmdNoteInsert.Parameters.AddWithValue("@ProjectID", n.ProjectID);
-            cmdNoteInsert.Parameters.AddWithValue("@noteBody", n.NoteBody);
-
-            cmdNoteInsert.Connection.Open();
-            cmdNoteInsert.ExecuteNonQuery();
+            catch 
+            { 
+                return false; 
+            }
         }
         public static int checkUserType(HttpContext httpContext)//Calls httpContext to pull UserID 
         {

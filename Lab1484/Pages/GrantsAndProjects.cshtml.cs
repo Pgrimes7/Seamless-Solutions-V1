@@ -50,6 +50,12 @@ namespace Lab1484.Pages
         [TempData]
         public string? CreateOrEditProjectFailure { get; set; }
 
+        [TempData]
+        public string? CreateProjectNoteSuccess { get; set; }
+
+        [TempData]
+        public string? CreateProjectNoteFailure { get; set; }
+
 
         //public GrantsAndProjectsModel()
         //{
