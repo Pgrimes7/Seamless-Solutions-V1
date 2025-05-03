@@ -4,12 +4,16 @@ using Lab1484.Pages.DataClasses;
 using Lab1484.Pages.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
+using Microsoft.JSInterop;
+
 
 namespace Lab1484.Pages
 {
     public class ReportSubmissionModel : PageModel
     {
-
+        private readonly IJSRuntime _jsRuntime;//uses AI to learn how to do this
+        
 
         [BindProperty]
         public string ReportName { get; set; }
@@ -44,11 +48,19 @@ namespace Lab1484.Pages
         public string SelectedReportType { get; set; } // "Progress" or "Performance"
         [BindProperty]
         public PerformanceReport SelectedPerformanceReport { get; set; }
-
-
-
-        public ReportSubmissionModel()
+        public static bool IsPageLoaded { get; private set; }
+        [JSInvokable]
+        public static void PageLoaded()
         {
+            IsPageLoaded = true;
+            Console.WriteLine("Page has fully loaded in the browser.");
+        }
+
+        public ReportSubmissionModel(IJSRuntime jsRuntime)
+        {
+            _jsRuntime = jsRuntime;
+
+            // Initialize properties
             ProjectList = new List<Project>();
             GrantList = new List<Grant>();
             ReportList = new List<Report>();
@@ -59,6 +71,7 @@ namespace Lab1484.Pages
         }
 
 
+
         public IActionResult OnGet()
         {
             // Check if the user is logged in
@@ -67,7 +80,11 @@ namespace Lab1484.Pages
             {
                 return RedirectToPage("/Login");
             }
-
+            SelectedPerformanceReport = new PerformanceReport
+            {
+                Funding = 15000,
+                UnawardedFunding = 10000
+            };
             // Initialize Progress Reports and Performance Reports
             SqlDataReader reportReader = DBClass.AllReportReader();
             while (reportReader.Read())
@@ -318,10 +335,15 @@ namespace Lab1484.Pages
             // Log for debugging
             Console.WriteLine($"SelectedReport: {SelectedReport?.ReportName}, Author: {SelectedReport?.AuthorName}, Date: {SelectedReport?.ReportDate}");
             Console.WriteLine($"Total Projects: {ProjectList.Count}");
+            foreach (var project in ProjectList)
+            {
+                Console.WriteLine($"ProjectID: {project.ProjectID}, ProjectName: {project.ProjectName}, Status: {project.ProjectStatus}, DueDate: {project.DateDue}");
+            }
         }
-        public void OnPostSelectPerformanceReport(int ReportID)
+
+
+        public async Task<IActionResult> OnPostSelectPerformanceReport(int ReportID)
         {
-            Console.WriteLine($"OnPostSelectPerformanceReport called with PerformanceReportID: {ReportID}");
             SelectedReportID = ReportID;
             SelectedReportType = "Performance";
 
@@ -333,7 +355,6 @@ namespace Lab1484.Pages
             {
                 while (reader.Read())
                 {
-                    Console.WriteLine($"DB ReportID: {reader["ReportID"]}, Expected ReportID: {ReportID}");
                     
                         PerformanceReport = new PerformanceReport
                         {
@@ -354,6 +375,7 @@ namespace Lab1484.Pages
                             ActiveGrants = reader["ActiveGrants"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("ActiveGrants")) : 0,
                             RejectedGrants = reader["RejectedGrants"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("RejectedGrants")) : 0,
                             ArchivedGrants = reader["ArchivedGrants"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("ArchivedGrants")) : 0,
+                            CreatedDate = reader["ReportDate"] != DBNull.Value ? reader.GetDateTime(reader.GetOrdinal("ReportDate")) : DateTime.MinValue,
                             AuthorName = reader["AuthorName"]?.ToString()
                         };
 
@@ -362,15 +384,12 @@ namespace Lab1484.Pages
                          // Exit the loop once the matching report is found
                     }
                 }
-            
+            // Log the updated data for debugging
+            Console.WriteLine($"SelectedPerformanceReport: {SelectedPerformanceReport.PerformanceReportName}, Funding: {SelectedPerformanceReport.Funding}, UnawardedFunding: {SelectedPerformanceReport.UnawardedFunding}");
 
-            if (SelectedPerformanceReport == null)
-            {
-                throw new Exception($"No performance report found with ReportID: {ReportID}");
-            }
 
-            // Log for debugging
-            Console.WriteLine($"Selected Performance Report: {SelectedPerformanceReport.PerformanceReportName}, Author: {SelectedPerformanceReport.AuthorName}, Start Date: {SelectedPerformanceReport.StartDate}, End Date: {SelectedPerformanceReport.EndDate}");
+
+            return Page();
         }
 
 

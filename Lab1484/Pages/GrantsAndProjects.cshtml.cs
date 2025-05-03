@@ -357,7 +357,7 @@ namespace Lab1484.Pages
             }
 
 
-            return RedirectToPage("/UpdatePermission", new { handler = "" });
+            return RedirectToPage("/ViewGrant", new { handler = "" });
         }
 
         public IActionResult OnPostInsertProject()
@@ -468,7 +468,7 @@ namespace Lab1484.Pages
 
             DBClass.Lab3DBConnection.Close();
 
-            return Page();
+            return RedirectToPage("/GrantsAndProjects", null, null, "profile-tab-pane");
         }
         public IActionResult OnPostUpdateGrant()
         {
