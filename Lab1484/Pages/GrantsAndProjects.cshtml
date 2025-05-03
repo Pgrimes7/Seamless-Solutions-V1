@@ -632,12 +632,17 @@
                                                     </form>
                                                 </td>
                                                 <td>
-                                                    <form method="post" asp-page="/UpdateProject">
-                                                        <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
-                                                        <button type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                        </button>
-                                                    </form>
+                                                    <!--edit grant button trigger modal-->
+                                                    <button type="button"
+                                                            class="btn btn-link btn-rounded btn-sm fw-bold"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editprojectModal"
+                                                            data-project-id="@prod.ProjectID"
+                                                            data-project-name="@prod.ProjectName"
+                                                            data-project-duedate="@prod.DateDue.ToString("yyyy-MM-dd")"
+                                                            data-project-status="@prod.ProjectStatus">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
                                                 </td>
 
                                             </tr>
@@ -647,6 +652,59 @@
                                     </tbody>
                                 </table>
                             </div> <!--close table div-->
+                            <!--edit project modal -->
+                            <div class="modal fade" id="editprojectModal" tabindex="-1" aria-labelledby="editprojectModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="editprojectModalLabel">Save Changes</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" asp-page-handler="UpdateProject" class="form-floating">
+                                                <input type="hidden" asp-for="newProject.ProjectID" name="newProject.ProjectID" />
+                                                <div class="row mb-4">
+                                                    <h6>Project Information</h6>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <input asp-for="newProject.ProjectName" type="text" class="form-control" id="floatingName" placeholder="Project Name">
+                                                            <label for="floatingName">Project Name</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-floating">
+                                                            <input asp-for="newProject.DateDue" type="date" class="form-control" id="floatingDate" placeholder="Due Date">
+                                                            <label for="floatingDate">Due Date</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-floating">
+                                                        <select asp-for="newProject.ProjectStatus" class="form-select" id="floatingStatus" aria-label="Project Status">
+                                                            <option value="Incomplete">Incomplete</option>
+                                                            <option value="In Progress">In Progress</option>
+                                                            <option value="Completed">Completed</option>
+                                                        </select>
+                                                        <label for="floatingStatus">Grant Status</label>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Save Changes
+                                                    </button>
+                                                </div>
+                                            </form>
+                                            @*<form method="post" asp-page="/ProjectNotes">
+                                                        <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
+                                                        <button type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                            Notes
+                                                        </button>
+                                                    </form>*@
+                                        </div>
+                                    </div> <!--close modal content-->
+                                </div> <!--close modal dialog-->
+                            </div> <!--close modal-->
                         </div> <!--close projects tab-->
 
                     </div>
@@ -700,6 +758,26 @@
           modal.querySelector('input[name="newGrant.amount"]').value       = amount;
         });
     </script>
+
+    <script>
+        var editModal = document.getElementById('editprojectModal');
+        editModal.addEventListener('show.bs.modal', function (event) {
+          var btn = event.relatedTarget;
+          var modal = this;
+          // grab the data- attributes
+          var id       = btn.getAttribute('data-project-id');
+          var name     = btn.getAttribute('data-project-name');
+          var due      = btn.getAttribute('data-project-duedate');
+          var status   = btn.getAttribute('data-project-status');
+
+          // populate the inputs
+          modal.querySelector('input[name="newProject.ProjectID"]').value      = id;
+          modal.querySelector('input[name="newProject.ProjectName"]').value    = name;
+          modal.querySelector('input[name="newProject.DateDue"]').value      = due;
+          modal.querySelector('select[name="newProject.ProjectStatus"]').value = status;
+        });
+    </script>
+
     <script>
         document.getElementById('populateGrantBtn').addEventListener('click', function () {
             document.querySelector('input[name="newGrant.grantName"]').value = "REDI Research Support Center";

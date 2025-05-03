@@ -583,5 +583,13 @@ namespace Lab1484.Pages
             HttpContext.Session.SetInt32("GrantID", grantId);
             return RedirectToPage("/ViewGrant", new { handler = "" });
         }
+
+        //Update project w/ modal
+        public IActionResult OnPostUpdateProject()
+        {
+            DBClass.UpdateProject(newProject);
+
+            return RedirectToPage("/GrantsAndProjects", null, null, "profile-tab-pane");
+        }
     }
 }
