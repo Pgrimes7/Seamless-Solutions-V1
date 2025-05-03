@@ -26,22 +26,21 @@ namespace Lab1484.Pages
 
         public IActionResult OnGet()
         {
-            currentUser = HttpContext.Session.GetString("username");
-
+            var currentUser = HttpContext.Session.GetString("username");
             if (string.IsNullOrEmpty(currentUser))
             {
                 return RedirectToPage("/Login");
             }
 
-            UnreadMessagesCount = DBClass.GetUnreadMessagesCount(currentUser);
+            // Retrieve messages for the current user
+            var messages = DBClass.GetReceivedMessages(currentUser);
 
-            // ?? FIX THIS TO CALL GetReceivedMessages() not all messages
-            Messages = DBClass.GetAllMessagesForUser(currentUser);
-
-
+            // Calculate unread messages count
+            UnreadMessagesCount = messages.Count(m => m.IsRead == 0);
 
             return Page();
         }
+
         public IActionResult OnPostMarkAsRead(int messageId)
         {
             DBClass.MarkMessageAsRead(messageId);
