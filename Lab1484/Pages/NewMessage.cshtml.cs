@@ -33,7 +33,7 @@ namespace Lab1484.Pages
             DBClass.InsertMessage(NewMessage);
             DBClass.Lab3DBConnection.Close();
 
-            return RedirectToPage("/SentMessage");
+            return RedirectToPage("/Messages");
         }
     }
 }

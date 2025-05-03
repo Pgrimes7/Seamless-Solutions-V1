@@ -47,11 +47,7 @@
             <i class="fa-solid fa-plus"></i> New Message
         </a>
 
-        <a asp-page="SentMessage" class="action-btn">
-            <i class="fa-solid fa-paper-plane"></i> Sent Messages
-        </a>
-
-        <p class="mt-3">You have <strong>@Model.UnreadMessagesCount</strong> unread messages.</p>
+     
 
         @foreach (var message in grouped)
         {
@@ -71,6 +67,8 @@
                 </div>
             </div>
         }
+
+
     </main>
 </body>
 </html>
