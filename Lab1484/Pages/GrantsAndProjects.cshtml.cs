@@ -38,6 +38,9 @@ namespace Lab1484.Pages
         [BindProperty]
         public int grantId { get; set; }
 
+        [BindProperty]
+        public int ProjectID { get; set; }
+
         [TempData]
         public string? CreateOrEditGAndPSuccess { get; set; }
 
@@ -582,6 +585,12 @@ namespace Lab1484.Pages
             
             HttpContext.Session.SetInt32("GrantID", grantId);
             return RedirectToPage("/ViewGrant", new { handler = "" });
+        }
+
+        public IActionResult OnPostViewProject()
+        {
+            HttpContext.Session.SetInt32("ProjectID", ProjectID);
+            return RedirectToPage("/ViewProject", new { handler = "" });
         }
 
         //Update project w/ modal

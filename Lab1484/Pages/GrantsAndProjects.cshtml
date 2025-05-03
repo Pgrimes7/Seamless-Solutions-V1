@@ -580,7 +580,6 @@
                                             <th>Contact</th>
                                             <th>Due date</th>
                                             <th>Status</th>
-                                            <th>Funding Organization</th>
                                             <th>Notes</th>
                                             <th class="fw-bold">
                                                 <button class="btn btn-rounded btn-sm fw-bold">
@@ -606,10 +605,16 @@
 
 
                                             <tr>
-                                                <td>@prod.ProjectName</td>
+                                                <td>
+                                                    <form method="post" asp-page-handler="ViewProject">
+                                                        <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
+                                                        <button type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                            @prod.ProjectName
+                                                        </button>
+                                                    </form>
+                                                </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
                                                         <div class="ms-3">
                                                             <p class="fw-bold mb-1">@prod.AdminName</p>
                                                             <p class="text-muted mb-0">@prod.AdminEmail</p>
@@ -618,7 +623,6 @@
                                                 </td>
                                                 <td>@prod.DateDue.ToShortDateString()</td>
                                                 <td><span class="@statusClass">@prod.ProjectStatus</span></td>
-                                                <td>Organization Name</td>
                                                 <td>
                                                     <form method="post" asp-page="/ProjectNotes">
                                                         <input type="hidden" name="ProjectID" value="@prod.ProjectID" />
