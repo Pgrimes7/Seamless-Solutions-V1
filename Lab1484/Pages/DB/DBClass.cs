@@ -104,25 +104,38 @@ namespace Lab1484.Pages.DB
 
 
         //Update Project
-        public static void UpdateProject(Project p)
+        public static bool UpdateProject(Project p)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
+
+
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+                string sqlQuery = "UPDATE Project " +
+                    "SET projectStatus = @ProjectStatus, dueDate = @DueDate, projectName = @ProjectName " +
+                    "WHERE ProjectID = @ProjectID;";
+                SqlCommand cmdProjectUpdate = new SqlCommand();
+                cmdProjectUpdate.Connection = Lab3DBConnection;
+                cmdProjectUpdate.Connection.ConnectionString = Lab3DBConnString;
+                cmdProjectUpdate.CommandText = sqlQuery;
+                cmdProjectUpdate.Parameters.AddWithValue("@ProjectStatus", p.ProjectStatus);
+                cmdProjectUpdate.Parameters.AddWithValue("@DueDate", p.DateDue);
+                cmdProjectUpdate.Parameters.AddWithValue("@ProjectName", p.ProjectName);
+                cmdProjectUpdate.Parameters.AddWithValue("@ProjectID", p.ProjectID);
+                cmdProjectUpdate.Connection.Open();
+                cmdProjectUpdate.ExecuteNonQuery();
+
+                return true;
             }
-            string sqlQuery = "UPDATE Project " +
-                "SET projectStatus = @ProjectStatus, dueDate = @DueDate, projectName = @ProjectName " +
-                "WHERE ProjectID = @ProjectID;";
-            SqlCommand cmdProjectUpdate = new SqlCommand();
-            cmdProjectUpdate.Connection = Lab3DBConnection;
-            cmdProjectUpdate.Connection.ConnectionString = Lab3DBConnString;
-            cmdProjectUpdate.CommandText = sqlQuery;
-            cmdProjectUpdate.Parameters.AddWithValue("@ProjectStatus", p.ProjectStatus);
-            cmdProjectUpdate.Parameters.AddWithValue("@DueDate", p.DateDue);
-            cmdProjectUpdate.Parameters.AddWithValue("@ProjectName", p.ProjectName);
-            cmdProjectUpdate.Parameters.AddWithValue("@ProjectID", p.ProjectID);
-            cmdProjectUpdate.Connection.Open();
-            cmdProjectUpdate.ExecuteNonQuery();
+
+            catch 
+            {
+                return false;
+            }
+
         }
 
         //Task Reader

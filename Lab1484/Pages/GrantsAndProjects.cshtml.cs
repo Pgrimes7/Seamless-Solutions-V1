@@ -44,6 +44,12 @@ namespace Lab1484.Pages
         [TempData]
         public string? CreateOrEditGAndPFailure { get; set; }
 
+        [TempData]
+        public string? CreateOrEditProjectSuccess { get; set; }
+
+        [TempData]
+        public string? CreateOrEditProjectFailure { get; set; }
+
 
         //public GrantsAndProjectsModel()
         //{
@@ -350,14 +356,26 @@ namespace Lab1484.Pages
 
         public IActionResult OnPostInsertProject()
         {
-            //Inserts new project into DB and returns its ProjectID
-            int newProjectID = DBClass.InsertProject(newProject);
-            DBClass.Lab3DBConnection.Close();
-
-            //Uses the returned ProjectID to insert entries for each employee in EmployeeProject
-            foreach (int employeeID in EmployeeIDs)
+            try
             {
-                DBClass.InsertEmployeeProject(newProjectID, employeeID);
+
+
+                //Inserts new project into DB and returns its ProjectID
+                int newProjectID = DBClass.InsertProject(newProject);
+                DBClass.Lab3DBConnection.Close();
+
+                //Uses the returned ProjectID to insert entries for each employee in EmployeeProject
+                foreach (int employeeID in EmployeeIDs)
+                {
+                    DBClass.InsertEmployeeProject(newProjectID, employeeID);
+                }
+
+                CreateOrEditGAndPSuccess = "Project was successfully created.";
+
+            }
+            catch (Exception ex)
+            {
+                CreateOrEditGAndPFailure = "Error: Project could not be created.";
             }
 
             SqlDataReader projectReader = DBClass.ProjectReader(ProjectSearchQuery);

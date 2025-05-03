@@ -4,6 +4,21 @@
     <link href="~/css/style.css" rel="stylesheet">
 
     <br />
+    @if (Model.CreateOrEditProjectSuccess != null)
+    {
+        <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.CreateOrEditProjectSuccess
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (Model.CreateOrEditProjectFailure != null)
+    {
+        <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+            @Model.CreateOrEditProjectFailure
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <h2>Edit Project: @Model.UpdateProj.ProjectName</h2>
     <br />
 
@@ -41,6 +56,33 @@
             </div>
         </div>
 
-        <input type="submit" asp-page-handler="UpdateProjectPost" value="Edit Project" />
+        <input type="submit" class="btn btn-primary" asp-page-handler="UpdateProjectPost" value="Edit Project" />
+        <a class="btn btn-outline-danger" asp-page="/GrantsAndProjects">Cancel</a>
+        
+        
     </form>
+
+
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('success-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
+    </script>
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
+    </script>
 }
