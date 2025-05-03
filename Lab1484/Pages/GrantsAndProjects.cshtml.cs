@@ -351,7 +351,7 @@ namespace Lab1484.Pages
             }
 
 
-            return RedirectToPage("/UpdatePermission", new { handler = "" });
+            return RedirectToPage("/ViewGrant", new { handler = "" });
         }
 
         public IActionResult OnPostInsertProject()

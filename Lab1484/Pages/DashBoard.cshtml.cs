@@ -310,7 +310,10 @@ namespace Lab1484.Pages
                 return RedirectToPage("/Dashboard");
             }
 
-            return RedirectToPage("/UpdatePermission");
+            grantId = DBClass.GetLastGrantID();
+            HttpContext.Session.SetInt32("GrantID", grantId);
+
+            return RedirectToPage("/ViewGrant", new { handler = "" });
         }
 
         public JsonResult OnGetGrantStatusData()
