@@ -28,7 +28,14 @@ namespace Lab1484.Pages
         public string PasswordError { get; set; }
 
         [TempData]
-        public string SuccessfulChange { get; set; }
+        public string PassChangeSuccess { get; set; }
+
+        [TempData]
+        public string PassChangeFailure { get; set; }
+
+
+
+
 
         public IActionResult OnGet()
         {
@@ -81,21 +88,34 @@ namespace Lab1484.Pages
         {
             UsernameConfirmed = true;
 
+            ConfirmedUsername = HttpContext.Session.GetString("username");
+
             if (NewPassword != ConfirmPassword)
             {
                 PasswordError = "Passwords do not match.";
                 return Page();
             }
 
+            if (string.IsNullOrEmpty(NewPassword) || string.IsNullOrEmpty(ConfirmPassword))
+            {
+                PasswordError = "Password fields cannot be empty.";
+                return Page();
+            }
+
             string userIdString = HttpContext.Session.GetString("userID");
 
-            DBClass.UpdateHashedPassword(userIdString, NewPassword);
+            bool success = DBClass.UpdateHashedPassword(userIdString, NewPassword);
             DBClass.Lab3DBConnection.Close();
 
-            if (NewPassword == ConfirmPassword)
+            if (success) 
             {
-                SuccessfulChange = "Password successfully changed.";
+                PassChangeSuccess = "Password successfully changed.";
                 return RedirectToPage("/Settings");
+            }
+
+            else
+            {
+                PassChangeFailure = "Error: Password could not be changed.";
             }
 
             return Page();
