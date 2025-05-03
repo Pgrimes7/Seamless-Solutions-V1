@@ -17,6 +17,12 @@ namespace Lab1484.Pages
         [BindProperty]
         public Project UpdateProj { get; set; } = new Project();
 
+        [TempData]
+        public string? CreateOrEditProjectSuccess { get; set; }
+
+        [TempData]
+        public string? CreateOrEditProjectFailure { get; set; }
+
         public IActionResult OnPost()
         {
             //UPDATE THESE VALUES
@@ -57,7 +63,19 @@ namespace Lab1484.Pages
 
         public IActionResult OnPostUpdateProjectPost()
         {
-            DBClass.UpdateProject(UpdateProj);
+            bool success = DBClass.UpdateProject(UpdateProj);
+           
+
+            if (success)
+            {
+                CreateOrEditProjectSuccess = "Project was successfully updated.";
+            }
+            else
+            {
+                CreateOrEditProjectFailure = "Error: Project could not be updated.";
+                return RedirectToPage("/UpdateProject");
+            }
+
             return RedirectToPage("/GrantsAndProjects");
         }
     }

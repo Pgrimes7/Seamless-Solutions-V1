@@ -359,7 +359,7 @@ namespace Lab1484.Pages
 
                         // Assign to SelectedPerformanceReport
                         SelectedPerformanceReport = PerformanceReport;
-                        break; // Exit the loop once the matching report is found
+                         // Exit the loop once the matching report is found
                     }
                 }
             

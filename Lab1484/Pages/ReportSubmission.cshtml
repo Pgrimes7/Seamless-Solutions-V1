@@ -88,7 +88,6 @@
                 </ul>
             }
         }
-        }
         else if (Model.SelectedReportType == "Performance")
         {
             if (Model.SelectedPerformanceReport == null)
@@ -106,6 +105,7 @@
                     <p><strong>End Date:</strong> @Model.SelectedPerformanceReport.EndDate.ToString("MM/dd/yyyy")</p>
                 </div>
             }
+        }
         }
         else 
         {
@@ -173,7 +173,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            <p>Debug: PerformanceReportID = @PerformanceReport.PerformanceReportID, ReportID = @PerformanceReport.ReportID</p>
+                                            <p>Debug: ReportID = @PerformanceReport.ReportID</p>
                                             <form method="post" asp-page-handler="SelectPerformanceReport">
                                                 <input type="hidden" name="ReportID" value="@PerformanceReport.ReportID" />
                                                 <button type="submit" class="btn btn-link p-0">@PerformanceReport.PerformanceReportName</button>
@@ -241,7 +241,12 @@
                                 <label for="reportContent" class="form-label">Content</label>
                                 <textarea class="form-control" id="reportContent" name="SubjectText" rows="4" required></textarea>
                             </div>
+                            <div id="additionalSections"></div>
+                            <button type="button" class="btn btn-secondary mb-3" id="addSectionButton" onclick="addSection()">Add Section</button>
+                            <div>
                             <button type="submit" class="btn btn-primary">Create Report</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
                         </form>
                     </div>
                 </div>
