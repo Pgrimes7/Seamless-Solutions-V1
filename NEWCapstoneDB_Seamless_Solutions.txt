@@ -274,7 +274,7 @@ AwardedGrants INT DEFAULT 0,
     ActiveGrants INT DEFAULT 0,
     RejectedGrants INT DEFAULT 0,
     ArchivedGrants INT DEFAULT 0,
-PotentialGrant,
+PotentialGrantS INT DEFAULT 0,
 UnawardedFunding FLOAT,
 FOREIGN KEY (ReportID) REFERENCES Reports(ReportID) );
 
