@@ -23,27 +23,27 @@ namespace Lab1484.Pages.DB
         public static SqlConnection AUTHDBConnection = new SqlConnection();
 
 
-         //Connection String - How to find and connect to DB - Uncomment when making local changes
+        //Connection String - How to find and connect to DB - Uncomment when making local changes
         private static readonly String? Lab3DBConnString ="Server=LocalHost;Database=Lab3;Trusted_Connection=True";
 
-        //private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-        //    "Database=Lab3;" +
-        //    "User Id=capstoneadmin;" +
-        //    "Password=Seamless123!@#;" +
-        //    "Encrypt=True;" +
-        //    "TrustServerCertificate=True;";
+        /*private static readonly String? Lab3DBConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+            "Database=Lab3;" +
+            "User Id=capstoneadmin;" +
+            "Password=Seamless123!@#;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=True;";*/
 
 
         // A second connection String - Uncomment when making local changes
         // For Hashed Passwords
         private static readonly String? AuthConnString = "Server=Localhost;Database=AUTH;Trusted_Connection=True";
 
-        //private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
-        //    "Database=AUTH;" +
-        //    "User Id=capstoneadmin;" +
-        //    "Password=Seamless123!@#;" +
-        //    "Encrypt=True;" +
-        //    "TrustServerCertificate=True;";
+        /*private static readonly String? AuthConnString = "Server=seamless-solutions-server.database.windows.net,1433;" +
+            "Database=AUTH;" +
+            "User Id=capstoneadmin;" +
+            "Password=Seamless123!@#;" +
+            "Encrypt=True;" +
+            "TrustServerCertificate=True;";*/
 
         //Connection Methods:
 
@@ -273,6 +273,51 @@ namespace Lab1484.Pages.DB
             cmdProjectRead.Connection.Close();
         }
 
+        //Read GrantTask for specific Grant
+        public static SqlDataReader SpecGrantTaskReader(int GrantID)
+        {
+            SqlCommand cmdProjectRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdProjectRead.Connection = Lab3DBConnection;
+            cmdProjectRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdProjectRead.CommandText = "SELECT GrantTasks.*, Grants.grantName, CONCAT(Users.FirstName, ' ', Users.LastName) AS 'UserName' " +
+                "FROM GrantTasks " +
+                "JOIN Grants ON Grants.GrantID = GrantTasks.GrantID " +
+                "JOIN Users ON Users.UserID = GrantTasks.UserID " +
+                "WHERE GrantTasks.GrantID = @GrantID " +
+                "ORDER BY CASE WHEN GTStatus = 'Incomplete' THEN 1 WHEN GTStatus = 'Complete' THEN 2 END ASC, dueDate ASC;";
+            cmdProjectRead.Connection.Open(); // Open connection here, close in Model!
+            cmdProjectRead.Parameters.AddWithValue("@GrantID", GrantID);
+            SqlDataReader tempReader = cmdProjectRead.ExecuteReader();
+
+            return tempReader;
+            cmdProjectRead.Connection.Close();
+        }
+
+        //Read one grant
+        public static SqlDataReader SpecGrantReader(int GrantID)
+        {
+            SqlCommand cmdSpecGrantRead = new SqlCommand();//Make new sqlCommand object
+            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            {
+                Lab3DBConnection.Close();
+            }
+            cmdSpecGrantRead.Connection = Lab3DBConnection;
+            cmdSpecGrantRead.Connection.ConnectionString = Lab3DBConnString;
+            cmdSpecGrantRead.CommandText = "SELECT Grants.*, CONCAT(Users.firstName, ' ', Users.lastName) AS 'UserName' FROM Grants " +
+                "JOIN Users ON Grants.FacultyLeadID = Users.UserID " +
+                "WHERE Grants.GrantID = @GrantID;";
+            cmdSpecGrantRead.Connection.Open(); // Open connection here, close in Model!
+            cmdSpecGrantRead.Parameters.AddWithValue("@GrantID", GrantID);
+            SqlDataReader tempReader = cmdSpecGrantRead.ExecuteReader();
+
+            return tempReader;
+            cmdSpecGrantRead.Connection.Close();
+        }
+
         //Insert  GrantTask
         public static void InsertGrantTask(GrantTask g)
         {
@@ -334,7 +379,7 @@ namespace Lab1484.Pages.DB
                     "from Grants " +
                     "join Users ON Users.UserID = Grants.FacultyLeadID " +
                     "where grantName LIKE @SearchQuery OR Concat(Users.firstName, ' ', Users.lastName) LIKE @SearchQuery OR Users.email LIKE @SearchQuery OR amount LIKE @SearchQuery OR dueDate LIKE @SearchQuery OR grantStatus LIKE @SearchQuery OR businessName LIKE @SearchQuery OR category LIKE @SearchQuery " +
-                    "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC;";
+                    "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC, Grants.dueDate ASC;";
 
                 cmdGrantRead.Parameters.AddWithValue("@SearchQuery", "%" + SearchQuery + "%");
 
@@ -345,7 +390,7 @@ namespace Lab1484.Pages.DB
                 cmdGrantRead.CommandText = "Select Grants.*, Concat(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail " +
                     "from Grants " +
                     "join Users ON Users.UserID = Grants.FacultyLeadID " +
-                    "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC; ";
+                    "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC, Grants.dueDate ASC; ";
             }
 
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
@@ -1463,7 +1508,8 @@ namespace Lab1484.Pages.DB
             cmdGrantRead.CommandText = "select Grants.*, CONCAT(Users.firstName, ' ', Users.lastName) AS FacultyLead, Users.email AS FacultyLeadEmail" +
                 " from Grants JOIN Grant_User ON Grants.GrantID = Grant_User.GrantID " +
                 "join Users ON Users.UserID = Grants.FacultyLeadID " +
-                "where Grant_User.userID = @UserID;";
+                "where Grant_User.userID = @UserID " +
+                "ORDER BY CASE WHEN grantStatus = 'Active' THEN 1 WHEN grantStatus = 'Funded' THEN 2 WHEN grantStatus = 'Potential' THEN 3 WHEN grantStatus = 'Rejected' THEN 4 WHEN grantStatus = 'Archived' THEN 5 END ASC, Grants.dueDate ASC;";
 
             cmdGrantRead.Connection.Open(); // Open connection here, close in Model!
 
@@ -1707,28 +1753,52 @@ namespace Lab1484.Pages.DB
 
 
 
-        public static SqlDataReader AllPerformanceReportReader()
+        public static SqlDataReader AllPerformanceReportReader(int reportID)
         {
-            SqlCommand cmdReportRead = new SqlCommand();
             if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
             {
                 Lab3DBConnection.Close();
             }
-            cmdReportRead.Connection = Lab3DBConnection;
-            cmdReportRead.Connection.ConnectionString = Lab3DBConnString;
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = Lab3DBConnection;
+            cmd.Connection.ConnectionString = Lab3DBConnString;
 
             // Corrected SQL query
-            cmdReportRead.CommandText = @"
-        SELECT PerformanceReport.*, Reports.ReportName, Reports.AuthorName
-        FROM PerformanceReport 
-        JOIN Reports ON PerformanceReport.ReportID = Reports.ReportID;";
+            cmd.CommandText = @"
+        SELECT 
+            PerformanceReport.PerformanceReportID,
+            PerformanceReport.ReportID,
+            PerformanceReport.Description,
+            PerformanceReport.StartDate,
+            PerformanceReport.EndDate,
+            PerformanceReport.Funding,
+            PerformanceReport.ProjectsCompleted,
+            PerformanceReport.GrantsSubmitted,
+            PerformanceReport.ProjectsWIP,
+            PerformanceReport.PapersPublished,
+            PerformanceReport.UnawardedFunding,
+            PerformanceReport.PotentialGrants,
+            PerformanceReport.AwardedGrants,
+            PerformanceReport.ActiveGrants,
+            PerformanceReport.RejectedGrants,
+            PerformanceReport.ArchivedGrants,
+            Reports.ReportName,
+            Reports.AuthorName
+        FROM 
+            PerformanceReport
+        INNER JOIN 
+            Reports ON PerformanceReport.ReportID = Reports.ReportID
+        WHERE 
+            PerformanceReport.ReportID = @ReportID;";
 
-            cmdReportRead.Connection.Open(); // Open connection here, close in Model!
+            cmd.Parameters.AddWithValue("@ReportID", reportID);
 
-            SqlDataReader tempReader = cmdReportRead.ExecuteReader();
-
-            return tempReader;
+            cmd.Connection.Open();
+            return cmd.ExecuteReader();
         }
+
+
 
 
 

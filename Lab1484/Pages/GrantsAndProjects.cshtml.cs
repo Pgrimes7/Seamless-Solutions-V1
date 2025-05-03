@@ -570,5 +570,12 @@ namespace Lab1484.Pages
             return Page();
 
         }
+
+        public IActionResult OnPostViewGrant()
+        {
+            
+            HttpContext.Session.SetInt32("GrantID", grantId);
+            return RedirectToPage("/ViewGrant", new { handler = "" });
+        }
     }
 }

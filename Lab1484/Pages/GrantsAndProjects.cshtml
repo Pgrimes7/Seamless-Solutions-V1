@@ -314,7 +314,14 @@
                                             };
 
                                             <tr>
-                                                <td>@prod.grantName</td>
+                                                <td>
+                                                    <form method="post" asp-page-handler="ViewGrant">
+                                                        <input type="hidden" name="grantId" value="@prod.GrantID" />
+                                                        <button type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                                            @prod.grantName
+                                                        </button>
+                                                    </form>
+                                                </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         @*<img src="https://mdbootstrap.com/img/new/avatars/8.jpg" alt="" style="width: 45px; height: 45px" class="rounded-circle">*@
