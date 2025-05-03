@@ -1817,6 +1817,7 @@ namespace Lab1484.Pages.DB
             PerformanceReport.RejectedGrants,
             PerformanceReport.ArchivedGrants,
             Reports.ReportName,
+Reports.ReportDate,
             Reports.AuthorName
         FROM 
             PerformanceReport
@@ -2134,7 +2135,6 @@ namespace Lab1484.Pages.DB
                                 UserType = reader["UserType"] as int?,
                                 ProfileImageFileName = reader["ProfileImageFileName"] as string
                             };
-                            Console.WriteLine($"User retrieved: {user.firstName} {user.lastName}");
                         }
                         else
                         {

@@ -1,5 +1,8 @@
 ﻿@page
 @model Lab1484.Pages.ReportSubmissionModel
+@using Lab1484.Pages.DataClasses
+@using System.Text.Json
+
 @{
     ViewData["Title"] = "Create Report";
 }
@@ -25,67 +28,137 @@
         {
             if (Model.SelectedReportType == "Progress")
             {
-            @if (Model.SelectedReport == null)
+            if (Model.SelectedReport == null)
             {
                 <p class="text-danger">Selected report not found.</p>
             }
             else
             {
                 <!-- Display the selected report's details -->
+                    <!--row for breadcrumbs-->
+                    <div class="row row-cols-auto my-2 mb-md-0">
+                        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="ReportSubmission">Reports</a></li>
+                                <li class="breadcrumb-item"><a href="#">Progress Report</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">@Model.SelectedReport.ReportName</li>
+                            </ol>
+                        </nav>
+                    </div>
+
                 <div class="mb-4">
                     <h2>@Model.SelectedReport.ReportName</h2>
-                    <p><strong>Author:</strong> @Model.SelectedReport.AuthorName</p>
-                    <p><strong>Date:</strong> @Model.SelectedReport.ReportDate.ToString("MM/dd/yyyy")</p>
+                    <br/>
+                        <div class="row row-cols-auto">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead></thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row" class="table-light">Author</th>
+                                            <td>@Model.SelectedReport.AuthorName</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="table-light">Date Created</th>
+                                            <td>@Model.SelectedReport.ReportDate.ToString("MM/dd/yyyy")</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                 </div>
-
+                    <hr>
                 <!-- Display associated subjects, grants, and projects -->
-                <h3>Subjects and Associated Grants/Projects</h3>
-                <ul>
-                    @for (int i = 0; i < Model.SubjectTitle.Count; i++)
+
+
+    int projectIndex = 0; // Separate index for ProjectList
+    int grantIndex = 0;   // Separate index for GrantList
+
+
+
+    
+
+
+@for (int i = 0; i < Model.SubjectTitle.Count; i++)
+{
+    <div class="row row-cols-auto">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="2"><h3>@Model.SubjectTitle[i]</h3></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Display Grant Details -->
+                    @if (grantIndex < Model.GrantList.Count)
                     {
-                        <li>
-                            <strong>Subject:</strong> @Model.SubjectTitle[i]<br />
-                            <strong>Details:</strong> @Model.SubjectText[i]<br />
-
-                            @if (i < Model.GrantList.Count)
-                            {
-                                <strong>Associated Grant:</strong> @(Model.GrantList[i].grantName + " - " + Model.GrantList[i].businessName)
-
-                                <br />
-                                <strong>Category:</strong> @Model.GrantList[i].category
-
-                                <br />
-                                <strong>Due Date:</strong> @Model.GrantList[i].dueDate.ToString("MM/dd/yyyy")
-
-                                <br />
-                                <strong>Status:</strong> @Model.GrantList[i].grantStatus
-
-                                <br />
-                                <strong>Amount:</strong> @Model.GrantList[i].amount.ToString("C")
-
-                                <br />
-                            }
-                            else if (i < Model.ProjectList.Count)
-                            {
-                                <strong>Associated Project:</strong> @Model.ProjectList[i].ProjectName
-
-                                <br />
-                                <strong>Status:</strong> @Model.ProjectList[i].ProjectStatus
-
-                                <br />
-                                <strong>Due Date:</strong> @Model.ProjectList[i].DateDue.ToString("MM/dd/yyyy")
-
-                                <br />
-                                <strong>Created:</strong> @Model.ProjectList[i].DateCreated?.ToString("MM/dd/yyyy")
-
-                                <br />
-                                <strong>Completed:</strong> @Model.ProjectList[i].DateCompleted?.ToString("MM/dd/yyyy")
-
-                                <br />
-                            }
-                        </li>
+                        <tr>
+                            <th scope="row">Grant</th>
+                            <td>@(Model.GrantList[grantIndex].grantName + " - " + Model.GrantList[grantIndex].businessName)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Category</th>
+                            <td>@Model.GrantList[grantIndex].category</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Due</th>
+                            <td>@Model.GrantList[grantIndex].dueDate.ToString("MM/dd/yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Status</th>
+                            <td>@Model.GrantList[grantIndex].grantStatus</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Amount</th>
+                            <td>@Model.GrantList[grantIndex].amount.ToString("C")</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Details</th>
+                            <td>@Model.SubjectText[i]</td>
+                        </tr>
+                   
+                            grantIndex++; // Increment the grant index
+                        
                     }
-                </ul>
+                        else if (projectIndex < Model.ProjectList.Count)
+                    {
+                        <tr>
+                            <th scope="row">Associated Project</th>
+                            <td>@Model.ProjectList[projectIndex].ProjectName</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Status</th>
+                            <td>@Model.ProjectList[projectIndex].ProjectStatus</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Due Date</th>
+                            <td>@Model.ProjectList[projectIndex].DateDue.ToString("MM/dd/yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date Created</th>
+                            <td>@Model.ProjectList[projectIndex].DateCreated?.ToString("MM/dd/yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date Completed</th>
+                            <td>@Model.ProjectList[projectIndex].DateCompleted?.ToString("MM/dd/yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Details</th>
+                            <td>@Model.SubjectText[i]</td>
+                        </tr>
+                        
+                            projectIndex++; // Increment the project index
+                        
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
+            
             }
         }
         else if (Model.SelectedReportType == "Performance")
@@ -96,14 +169,75 @@
             }
             else
             {
+                    <!--row for breadcrumbs-->
+                    <div class="row row-cols-auto my-2 mb-md-0">
+                        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="ReportSubmission">Reports</a></li>
+                                <li class="breadcrumb-item"><a href="#">Performance Report</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">@Model.SelectedPerformanceReport.PerformanceReportName</li>
+                            </ol>
+                        </nav>
+                    </div>
                 <div class="mb-4">
-                    <p>ReportID: @Model.SelectedPerformanceReport.ReportID</p>
                     <h2>@Model.SelectedPerformanceReport.PerformanceReportName</h2>
-                    <p><strong>Author:</strong> @Model.SelectedPerformanceReport.AuthorName</p>
-                    <p><strong>Description:</strong> @Model.SelectedPerformanceReport.Description</p>
-                    <p><strong>Start Date:</strong> @Model.SelectedPerformanceReport.StartDate.ToString("MM/dd/yyyy")</p>
-                    <p><strong>End Date:</strong> @Model.SelectedPerformanceReport.EndDate.ToString("MM/dd/yyyy")</p>
-                </div>
+						<br />
+
+                        <!--row for project details-->
+                        <div class="row row-cols-auto">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <colgroup>
+                                        <col style="width: 10%;">
+                                        <col style="width: 90%;">
+                                    </colgroup>
+                                    <thead></thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row" class="table-light">Author</th>
+                                            <td>@Model.SelectedPerformanceReport.AuthorName</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="table-light">Date Created</th>
+                                            <td>@Model.SelectedPerformanceReport.CreatedDate</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="table-light">Date Range</th>
+                                            <td>@Model.SelectedPerformanceReport.StartDate - @Model.SelectedPerformanceReport.EndDate</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="table-light">Details</th>
+                                            <td>@Model.SelectedPerformanceReport.Description</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="my-4 text-center">
+                                    <h5>Funding</h5>
+                                    <p>Funding Goal for @Model.SelectedPerformanceReport.StartDate - @Model.SelectedPerformanceReport.EndDate: $30,000</p>
+                                    <div style="max-width: 250px; margin: 0 auto;">
+                                        <canvas id="stackedBarChart" width="600" height="400"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="my-4 text-center">
+                                    <h5>Grant Status Overview</h5>
+                                    <div style="max-width: 250px; margin: 0 auto;">
+                                        <canvas id="grantDonutChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
             }
         }
         }
@@ -342,5 +476,125 @@
             container.insertAdjacentHTML('beforeend', newSection);
             sectionCount++;
         }
+
     </script>
+
+
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          // Updated data from the server
+          const fundingData = @Json.Serialize(Model.SelectedPerformanceReport);
+
+          console.log("Serialized funding data:", fundingData);
+
+          if (fundingData) {
+              console.log("Updating chart with new data:", fundingData);
+
+              // Extract funding data
+              const fundingReceived = fundingData.Funding;
+              const fundingUnawarded = fundingData.UnawardedFunding;
+
+              // Update the chart
+              updateChart(fundingReceived, fundingUnawarded);
+          }
+      });
+
+          function updateChart(fundingReceived, fundingUnawarded) {
+        console.log("Updating chart with data:", fundingReceived, fundingUnawarded);
+
+        // Update the chart data
+        stackedBarChart.data.datasets[0].data = [fundingReceived];
+        stackedBarChart.data.datasets[1].data = [fundingUnawarded];
+
+        console.log("Updated chart data:", stackedBarChart.data.datasets);
+
+        stackedBarChart.update();
+    }
+
+
+      let stackedBarChart;
+
+      document.addEventListener('DOMContentLoaded', function () {
+          const ctxBar = document.getElementById('stackedBarChart').getContext('2d');
+          stackedBarChart = new Chart(ctxBar, {
+              type: 'bar',
+              data: {
+                  labels: ['Funding Overview'],
+                  datasets: [
+                      {
+                          label: 'Funding Received',
+                          data: [0], // Initial data
+                          backgroundColor: '#C9E265',
+                      },
+                      {
+                          label: 'Funding Needed to Reach Goal',
+                          data: [0], // Initial data
+                          backgroundColor: '#B2B2B2',
+                      }
+                  ]
+              },
+              options: {
+                  responsive: true,
+                  indexAxis: 'y',
+                  scales: {
+                      x: { stacked: true },
+                      y: { stacked: true }
+                  },
+                  plugins: {
+                      legend: { position: 'top' }
+                  }
+              }
+          });
+      });
+
+
+
+
+
+
+
+    //donut
+    const ctx = document.getElementById('grantDonutChart').getContext('2d');
+    const grantDonutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+        labels: ['Awarded', 'Rejected', 'Archived', 'Active'],
+        datasets: [{
+            label: 'Grants',
+            data: [12, 8, 3, 5], // example values
+            backgroundColor: [
+            '#C9E265',
+            '#E85C6F',
+            '#B2B2B2',
+            '#A3DAF5'
+            ],
+            borderWidth: 1
+        }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '50%',
+        plugins: {
+            legend: {
+            position: 'top',
+            align: 'center',
+            labels: {
+                boxWidth: 12,
+                padding: 15
+            }
+            },
+            title: {
+            display: false
+            }
+        },
+        layout: {
+            padding: 10
+        }
+        }
+    });
+</script>
+<script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/4ccc3672e0.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
