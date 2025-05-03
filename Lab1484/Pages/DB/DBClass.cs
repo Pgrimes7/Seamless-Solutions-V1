@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using Lab1484.Pages.DataClasses;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -2227,17 +2228,29 @@ Reports.ReportDate,
 
 
 
-        public static void AddProfileImage(User user)
+        public static bool AddProfileImage(User user)
         {
-            using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+            try
             {
-                string query = "UPDATE Users SET ProfileImageFileName = @ProfileImageFileName WHERE userID = @userID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@ProfileImageFileName", user.ProfileImageFileName);
-                cmd.Parameters.AddWithValue("@userID", user.userID);
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
+
+                using (SqlConnection conn = new SqlConnection(Lab3DBConnString))
+                {
+                    string query = "UPDATE Users SET ProfileImageFileName = @ProfileImageFileName WHERE userID = @userID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@ProfileImageFileName", user.ProfileImageFileName);
+                    cmd.Parameters.AddWithValue("@userID", user.userID);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                return true;
+            }
+
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

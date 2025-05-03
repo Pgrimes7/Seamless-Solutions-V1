@@ -67,6 +67,39 @@
                             </div>
                         }
 
+                        @if (Model.AddPFPSuccess != null)
+                        {
+                            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                @Model.AddPFPSuccess
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                        @if (Model.AddPFPFailure != null)
+                        {
+                            <div id="failure-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                @Model.AddPFPFailure
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        @if (Model.DeletePFPSuccess != null)
+                        {
+                            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                @Model.DeletePFPSuccess
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                        @if (Model.DeletePFPFailure != null)
+                        {
+                            <div id="failure-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                @Model.DeletePFPFailure
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+
+
+
                         
 
                         <h1 class="mb-3">Settings</h1>
