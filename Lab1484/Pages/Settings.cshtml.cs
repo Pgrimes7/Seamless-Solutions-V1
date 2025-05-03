@@ -18,7 +18,17 @@ namespace Lab1484.Pages
         public UserUpdate UpdateUser { get; set; } = new UserUpdate();
 
         [TempData]
-        public string SuccessfulChange { get; set; }
+        public string PassChangeSuccess { get; set; }
+
+        [TempData]
+        public string PassChangeFailure { get; set; }
+
+        [TempData]
+        public string UserUpdateSuccess { get; set; }
+
+        [TempData]
+        public string UserUpdateFailure { get; set; }
+
 
         public IActionResult OnGet()
         {
@@ -117,8 +127,17 @@ namespace Lab1484.Pages
 
 
 
-            DBClass.UpdateHashedUser(UpdateUser);
+            bool success = DBClass.UpdateHashedUser(UpdateUser);
             DBClass.Lab3DBConnection.Close();
+
+            if (success)
+            {
+                UserUpdateSuccess = "User successfully updated.";
+            }
+            else
+            {
+                UserUpdateFailure = "Error: Password could not be changed.";
+            }
 
             return RedirectToPage("/Settings");
         }

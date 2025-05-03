@@ -87,9 +87,14 @@ namespace Lab1484.Pages
             };
             // Initialize Progress Reports and Performance Reports
             SqlDataReader reportReader = DBClass.AllReportReader();
+            var addedReportIDs = new HashSet<int>(); // List to Track added ReportIDs since I am burger and didn't make progress report table flexible
+            //Hashset list cause it guarantees uniqueness 
             while (reportReader.Read())
             {
-                if (reportReader["SubjectID"] != DBNull.Value) // Progress Reports (have SubjectID)
+                int reportID = reportReader.GetInt32(reportReader.GetOrdinal("ReportID"));
+                if (!addedReportIDs.Contains(reportID)) // Add the report only if it hasn't been added yet
+                {
+                    if (reportReader["SubjectID"] != DBNull.Value) // Progress Reports (have SubjectID)
                 {
                     ReportList.Add(new Report
                     {
@@ -98,6 +103,8 @@ namespace Lab1484.Pages
                         ReportDate = reportReader.GetDateTime(reportReader.GetOrdinal("ReportDate")),
                         AuthorName = reportReader["AuthorName"].ToString()
                     });
+                        addedReportIDs.Add(reportID); // Mark this ReportID as added
+                    }
                 }
                 else // Performance Reports (no SubjectID)
                 {
@@ -281,9 +288,7 @@ namespace Lab1484.Pages
                 while (reader.Read())
                 {
                     // Log the retrieved data for debugging
-                    Console.WriteLine($"DB ReportName: {reader["ReportName"]}");
-                    Console.WriteLine($"DB AuthorName: {reader["AuthorName"]}");
-                    Console.WriteLine($"DB ReportDate: {reader["ReportDate"]}");
+                    
 
                     // Always assign the SelectedReport property
                     SelectedReport = new Report

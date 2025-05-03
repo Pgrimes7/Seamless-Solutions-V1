@@ -1306,25 +1306,34 @@ namespace Lab1484.Pages.DB
 
         public static bool UpdateHashedPassword(string userID, string newPassword)
         {
-            if (Lab3DBConnection.State == ConnectionState.Open)
-                Lab3DBConnection.Close();
+            try
+            {
 
-            string updatePasswordQuery = @"
+                if (Lab3DBConnection.State == ConnectionState.Open)
+                    Lab3DBConnection.Close();
+
+                string updatePasswordQuery = @"
         UPDATE HashedCredentials
         SET Password = @NewHashedPassword
         WHERE UserID = @userID;";
 
-            using (SqlCommand cmdUpdatePassword = new SqlCommand(updatePasswordQuery, new SqlConnection(AuthConnString)))
-            {
-                cmdUpdatePassword.Parameters.AddWithValue("@userID", userID);
-                cmdUpdatePassword.Parameters.AddWithValue("@NewHashedPassword", PasswordHash.HashPassword(newPassword));
+                using (SqlCommand cmdUpdatePassword = new SqlCommand(updatePasswordQuery, new SqlConnection(AuthConnString)))
+                {
+                    cmdUpdatePassword.Parameters.AddWithValue("@userID", userID);
+                    cmdUpdatePassword.Parameters.AddWithValue("@NewHashedPassword", PasswordHash.HashPassword(newPassword));
 
-                cmdUpdatePassword.Connection.Open();
-                int rowsAffected = cmdUpdatePassword.ExecuteNonQuery();
-                cmdUpdatePassword.Connection.Close();
+                    cmdUpdatePassword.Connection.Open();
+                    int rowsAffected = cmdUpdatePassword.ExecuteNonQuery();
+                    cmdUpdatePassword.Connection.Close();
 
-                return rowsAffected > 0; //true if password was updated
+                    return rowsAffected > 0; //true if password was updated
+                }
+                
+
             }
+
+            catch (Exception ex) 
+            { return false; }
         }
 
 
@@ -1430,80 +1439,90 @@ namespace Lab1484.Pages.DB
             }
 
         }
-        public static void updatePermission(grant_user g)
+        public static bool updatePermission(grant_user g)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
-            }
 
-            string checkPermission = "checkPermissionRecord";
-            string updatePermission = "updatePermissionRecord";
-            string insertPermission = "insertPermissionRecord";
-
-            //Need if statement to check if theres already a record for the user and grant in the table
-            //If there is, update the record
-            //If there isn't, insert a new record THEN Update.. 
-            SqlCommand cmdCheckUserPermission = new SqlCommand();
-            cmdCheckUserPermission.Connection = Lab3DBConnection;
-
-            cmdCheckUserPermission.CommandText = checkPermission;
-            cmdCheckUserPermission.CommandType = CommandType.StoredProcedure;
-
-            cmdCheckUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
-            cmdCheckUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
-
-
-
-            Lab3DBConnection.Open();
-
-
-
-            //If there is a record, update it
-            if (cmdCheckUserPermission.ExecuteScalar() != null)
-            {
                 if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
                 {
                     Lab3DBConnection.Close();
                 }
-                SqlCommand cmdUpdateUserPermission = new SqlCommand();
-                cmdUpdateUserPermission.Connection = Lab3DBConnection;
-                cmdUpdateUserPermission.CommandText = updatePermission;
-                cmdUpdateUserPermission.CommandType = CommandType.StoredProcedure;
-                cmdUpdateUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
-                cmdUpdateUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
-                cmdUpdateUserPermission.Parameters.AddWithValue("@ViewPermission", Convert.ToInt32(g.viewPermission));
-                cmdUpdateUserPermission.Parameters.AddWithValue("@EditPermission", Convert.ToInt32(g.editPermission));
-                cmdUpdateUserPermission.Parameters.AddWithValue("@SensitivePermission", Convert.ToInt32(g.sensitiveInfoPermission));
+
+                string checkPermission = "checkPermissionRecord";
+                string updatePermission = "updatePermissionRecord";
+                string insertPermission = "insertPermissionRecord";
+
+                //Need if statement to check if theres already a record for the user and grant in the table
+                //If there is, update the record
+                //If there isn't, insert a new record THEN Update.. 
+                SqlCommand cmdCheckUserPermission = new SqlCommand();
+                cmdCheckUserPermission.Connection = Lab3DBConnection;
+
+                cmdCheckUserPermission.CommandText = checkPermission;
+                cmdCheckUserPermission.CommandType = CommandType.StoredProcedure;
+
+                cmdCheckUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
+                cmdCheckUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
+
+
 
                 Lab3DBConnection.Open();
-                cmdUpdateUserPermission.ExecuteNonQuery();
 
 
 
-            }
-            else //If there isn't a record, insert a new one then allow up
-            {
-                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                //If there is a record, update it
+                if (cmdCheckUserPermission.ExecuteScalar() != null)
                 {
-                    Lab3DBConnection.Close();
+                    if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                    {
+                        Lab3DBConnection.Close();
+                    }
+                    SqlCommand cmdUpdateUserPermission = new SqlCommand();
+                    cmdUpdateUserPermission.Connection = Lab3DBConnection;
+                    cmdUpdateUserPermission.CommandText = updatePermission;
+                    cmdUpdateUserPermission.CommandType = CommandType.StoredProcedure;
+                    cmdUpdateUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
+                    cmdUpdateUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
+                    cmdUpdateUserPermission.Parameters.AddWithValue("@ViewPermission", Convert.ToInt32(g.viewPermission));
+                    cmdUpdateUserPermission.Parameters.AddWithValue("@EditPermission", Convert.ToInt32(g.editPermission));
+                    cmdUpdateUserPermission.Parameters.AddWithValue("@SensitivePermission", Convert.ToInt32(g.sensitiveInfoPermission));
+
+                    Lab3DBConnection.Open();
+                    cmdUpdateUserPermission.ExecuteNonQuery();
+
+
+
                 }
-                SqlCommand cmdInsertUserPermission = new SqlCommand();
-                cmdInsertUserPermission.Connection = Lab3DBConnection;
-                cmdInsertUserPermission.CommandText = insertPermission;
-                cmdInsertUserPermission.CommandType = CommandType.StoredProcedure;
-                cmdInsertUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
-                cmdInsertUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
-                cmdInsertUserPermission.Parameters.AddWithValue("@ViewPermission", Convert.ToInt32(g.viewPermission));
-                cmdInsertUserPermission.Parameters.AddWithValue("@EditPermission", Convert.ToInt32(g.editPermission));
-                cmdInsertUserPermission.Parameters.AddWithValue("@SensitivePermission", Convert.ToInt32(g.sensitiveInfoPermission));
+                else //If there isn't a record, insert a new one then allow up
+                {
+                    if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                    {
+                        Lab3DBConnection.Close();
+                    }
+                    SqlCommand cmdInsertUserPermission = new SqlCommand();
+                    cmdInsertUserPermission.Connection = Lab3DBConnection;
+                    cmdInsertUserPermission.CommandText = insertPermission;
+                    cmdInsertUserPermission.CommandType = CommandType.StoredProcedure;
+                    cmdInsertUserPermission.Parameters.AddWithValue("@UserID", Convert.ToInt32(g.userID));
+                    cmdInsertUserPermission.Parameters.AddWithValue("@GrantID", Convert.ToInt32(g.grantID));
+                    cmdInsertUserPermission.Parameters.AddWithValue("@ViewPermission", Convert.ToInt32(g.viewPermission));
+                    cmdInsertUserPermission.Parameters.AddWithValue("@EditPermission", Convert.ToInt32(g.editPermission));
+                    cmdInsertUserPermission.Parameters.AddWithValue("@SensitivePermission", Convert.ToInt32(g.sensitiveInfoPermission));
 
-                Lab3DBConnection.Open();
-                cmdInsertUserPermission.ExecuteNonQuery();
+                    Lab3DBConnection.Open();
+                    cmdInsertUserPermission.ExecuteNonQuery();
 
+                    
 
+                }
+                return true;
             }
 
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public static SqlDataReader Grant_UserReader(int GrantID)//reads grant user table in sql that is associated with grant value passed
@@ -1581,25 +1600,37 @@ namespace Lab1484.Pages.DB
         }
 
 
-        public static void addGrantUser(int GrantID, int UserID)
+        public static bool addGrantUser(int GrantID, int UserID)
         {
-            if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+            try
             {
-                Lab3DBConnection.Close();
+
+
+                if (Lab3DBConnection.State == System.Data.ConnectionState.Open)
+                {
+                    Lab3DBConnection.Close();
+                }
+                SqlCommand cmdAddUsers = new SqlCommand();
+                cmdAddUsers.Connection = Lab3DBConnection;
+                cmdAddUsers.Connection.ConnectionString = Lab3DBConnString;
+
+                //add parameters grandID and userID
+                cmdAddUsers.Parameters.Add(new SqlParameter("@GrantID", SqlDbType.Int) { Value = GrantID });
+                cmdAddUsers.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
+
+                cmdAddUsers.CommandText = "INSERT INTO Grant_User (GrantID, UserID) VALUES (@GrantID, @UserID);";
+
+                cmdAddUsers.Connection.Open(); // Open connection here, close in Model!
+
+                cmdAddUsers.ExecuteNonQuery();
+
+                return true;
             }
-            SqlCommand cmdAddUsers = new SqlCommand();
-            cmdAddUsers.Connection = Lab3DBConnection;
-            cmdAddUsers.Connection.ConnectionString = Lab3DBConnString;
 
-            //add parameters grandID and userID
-            cmdAddUsers.Parameters.Add(new SqlParameter("@GrantID", SqlDbType.Int) { Value = GrantID });
-            cmdAddUsers.Parameters.Add(new SqlParameter("@UserID", SqlDbType.Int) { Value = UserID });
-
-            cmdAddUsers.CommandText = "INSERT INTO Grant_User (GrantID, UserID) VALUES (@GrantID, @UserID);";
-
-            cmdAddUsers.Connection.Open(); // Open connection here, close in Model!
-
-            cmdAddUsers.ExecuteNonQuery();
+            catch (Exception ex) 
+            {
+                return false;
+            }
         }
 
 

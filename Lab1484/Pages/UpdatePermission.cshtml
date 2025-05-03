@@ -40,6 +40,34 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
+            @if (Model.AddUserSuccess != null)
+            {
+                <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                    @Model.AddUserSuccess
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (Model.AddUserFailure != null)
+            {
+                <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @Model.AddUserFailure
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (Model.UpdatePermissionSuccess != null)
+            {
+                <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                    @Model.UpdatePermissionSuccess
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (Model.UpdatePermissionFailure != null)
+            {
+                <div id="failure-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @Model.UpdatePermissionFailure
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
 
 
 
