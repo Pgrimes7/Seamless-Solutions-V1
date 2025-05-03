@@ -51,6 +51,22 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         }
+
+                        @if (Model.UserUpdateSuccess != null)
+                        {
+                            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                @Model.UserUpdateSuccess
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                        @if (Model.UserUpdateFailure != null)
+                        {
+                            <div id="failure-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                                @Model.UserUpdateFailure
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
                         
 
                         <h1 class="mb-3">Settings</h1>
@@ -144,44 +160,63 @@
                             <input type="hidden" id="editUserID" asp-for="UpdateUser.UserID" value="@Model.CurrentUser?.userID" />
                             <input type="hidden" id="editUserType" asp-for="UpdateUser.UserType" value="@Model.CurrentUser?.UserType" />
                         <div class="row mb-3">
-                            <div class="col-4">
-                                <label for="inputFirst" class="form-label">First Name</label>
-                                <div class="position-relative">
-                                        <input asp-for="UpdateUser.FirstName" type="text" class="form-control" id="inputFirst" value="@Model.CurrentUser?.firstName" readonly>
-                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputFirst')">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </span>
+                                <div class="col-4">
+                                    <div class="mb-1" style="position: relative;">
+                                        <label for="inputFirst" class="form-label">First Name</label>
+                                        <span type="button"
+                                              class="edit-icon"
+                                              onclick="toggleEdit('inputFirst')"
+                                              style="position: absolute; right: 0; top: 0; cursor: pointer;">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="UpdateUser.FirstName"
+                                           type="text"
+                                           class="form-control"
+                                           id="inputFirst"
+                                           value="@Model.CurrentUser?.firstName"
+                                           readonly>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <label for="inputLast" class="form-label">Last Name</label>
-                                <div class="position-relative">
-                                        <input asp-for="UpdateUser.LastName" type="text" class="form-control" id="inputLast" value="@Model.CurrentUser?.lastName" readonly>
-                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputLast')">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </span>
+                                <div class="col-4">
+                                    <div class="mb-1" style="position: relative;">
+                                        <label for="inputLast" class="form-label">Last Name</label>
+                                        <span type="button"
+                                              class="edit-icon"
+                                              onclick="toggleEdit('inputLast')"
+                                              style="position: absolute; right: 0; top: 0; cursor: pointer;">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="UpdateUser.LastName" type="text" class="form-control" id="inputLast" value="@Model.CurrentUser?.lastName" readonly>
                                 </div>
-                            </div>
+
                         </div>
                         <div class="row mb-3">
-                            <div class="col-4">
-                                <label for="inputEmail" class="form-label">Email</label>
-                                <div class="position-relative">
-                                        <input asp-for="UpdateUser.Email" type="email" class="form-control" id="inputEmail" value="@Model.CurrentUser?.email" readonly>
-                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputEmail')">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </span>
+                                <div class="col-4">
+                                    <div class="mb-1" style="position: relative;">
+                                        <label for="inputEmail" class="form-label">Email</label>
+                                        <span type="button"
+                                              class="edit-icon"
+                                              onclick="toggleEdit('inputEmail')"
+                                              style="position: absolute; right: 0; top: 0; cursor: pointer;">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="UpdateUser.Email" type="email" class="form-control" id="inputEmail" value="@Model.CurrentUser?.email" readonly>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <label for="inputPhone" class="form-label">Phone Number</label>
-                                <div class="position-relative">
-                                        <input asp-for="UpdateUser.Phone" type="tel" class="form-control" id="inputPhone" value="@Model.CurrentUser?.phone" readonly>
-                                    <span type="button" class="edit-icon" onclick="toggleEdit('inputPhone')">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </span>
+                            
+                                <div class="col-4">
+                                    <div class="mb-1" style="position: relative;">
+                                        <label for="inputPhone" class="form-label">Phone Number</label>
+                                        <span type="button"
+                                              class="edit-icon"
+                                              onclick="toggleEdit('inputPhone')"
+                                              style="position: absolute; right: 0; top: 0; cursor: pointer;">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </span>
+                                    </div>
+                                    <input asp-for="UpdateUser.Phone" type="tel" class="form-control" id="inputPhone" value="@Model.CurrentUser?.phone" readonly>
                                 </div>
-                            </div>
                         </div>
                         
                         <button type="submit" class="btn btn-primary">Update</button>
@@ -223,6 +258,18 @@
                 setTimeout(() => alertBox.remove(), 500);
             }
         }, 4000); // 4 seconds before starting fade-out
+    </script>
+    
+    <script>
+        window.setTimeout(function () {
+            const alertBox = document.getElementById('failure-alert');
+            if (alertBox) {
+                //fade out
+                alertBox.classList.remove('show');
+                alertBox.classList.add('fade');
+                setTimeout(() => alertBox.remove(), 500);
+            }
+        }, 4000); //4 seconds before starting fade-out
     </script>
 
 
