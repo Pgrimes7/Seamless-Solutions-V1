@@ -245,21 +245,19 @@
         {
             <!-- Display the list of reports -->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
+                <li  role="presentation">
                     <button class="nav-link active" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress-tab-pane" type="button" role="tab" aria-controls="progress-tab-pane" aria-selected="true">Progress</button>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li  role="presentation">
                     <button class="nav-link" id="performance-tab" data-bs-toggle="tab" data-bs-target="#performance-tab-pane" type="button" role="tab" aria-controls="performance-tab-pane" aria-selected="false">Performance</button>
                 </li>
             </ul>
-            <!-- Create Report Buttons -->
-            <div class="mt-4">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#progressModal">Create Progress Report</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#performanceModal">Create Performance Report</button>
-            </div>
             <div class="tab-content" id="myTabContent">
                 <!-- Progress Reports Tab -->
                 <div class="tab-pane fade show active" id="progress-tab-pane" role="tabpanel" aria-labelledby="progress-tab">
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#progressModal">Create Progress Report</button>
+                    </div>
                     <h2>Progress Reports</h2>
                     <table class="table table-bordered table-hover">
                         <thead>
@@ -289,6 +287,9 @@
 
                 <!-- Performance Reports Tab -->
                 <div class="tab-pane fade" id="performance-tab-pane" role="tabpanel" aria-labelledby="performance-tab">
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#performanceModal">Create Performance Report</button>
+                    </div>
                     <h2>Performance Reports</h2>
                     <table class="table table-bordered table-hover">
                         <thead>
