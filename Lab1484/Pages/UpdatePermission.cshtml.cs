@@ -49,6 +49,19 @@ namespace Lab1484.Pages
         [TempData]
         public string? CreateOrEditGAndPFailure { get; set; }
 
+        [TempData]
+        public string? AddUserSuccess { get; set; }
+
+        [TempData]
+        public string? AddUserFailure { get; set; }
+
+        [TempData]
+        public string? UpdatePermissionSuccess { get; set; }
+
+        [TempData]
+        public string? UpdatePermissionFailure { get; set; }
+
+
 
         public UpdatePermissionModel()
         {
@@ -240,10 +253,22 @@ namespace Lab1484.Pages
             };
 
             // Update the database with the new permission values
-            DBClass.updatePermission(grantUser);
+            bool success = DBClass.updatePermission(grantUser);
+
+            if (success)
+            {
+                UpdatePermissionSuccess = "Permission was successfully updated.";
+            }
+            else
+            {
+                UpdatePermissionFailure = "Error: Permission could not be updated.";
+            }
+
             HttpContext.Session.SetInt32("GrantID", grantId);
             return RedirectToPage();
         }
+
+
 
         public IActionResult OnPostAddUser(int UserID, int GrantID)
         {
@@ -251,8 +276,16 @@ namespace Lab1484.Pages
      
             UserID = userId;
             GrantID = grantId;
-            DBClass.addGrantUser(GrantID, UserID);
+            bool success = DBClass.addGrantUser(GrantID, UserID);
 
+            if (success)
+            {
+                AddUserSuccess = "User was successfully added.";
+            }
+            else 
+            {
+                AddUserFailure = "Error: User could not be added.";
+            }
 
 
             HttpContext.Session.SetInt32("GrantID", GrantID);
